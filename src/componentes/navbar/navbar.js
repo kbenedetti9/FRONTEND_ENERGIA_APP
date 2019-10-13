@@ -17,7 +17,7 @@ export class Navbar extends Component {
 
     render() {
 
-        const { className_icon } = this.props;
+        const { className_icon, correo, admin } = this.props;
 
         return (
             <header className="navbar pcoded-header navbar-expand-lg header-default">
@@ -75,7 +75,7 @@ export class Navbar extends Component {
                                 <Dropdown.Menu alignRight className='profile-notification'>
                                     <div className="pro-head">
                                         <span>Nombre del usuario</span>
-                                        <Link to='#' className='dud-logout' tittle='Salir' onClick={()=> this.props.cerrarSesion()}>
+                                        <Link to='#' className='dud-logout' tittle='Salir' onClick={()=> this.props.cerrarSesion(correo, admin)}>
                                             <i className='feather icon-log-out' />
                                         </Link>
                                     </div>

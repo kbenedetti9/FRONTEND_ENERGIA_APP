@@ -24,10 +24,11 @@ export class Menu extends Component {
 
     render() {
 
-        const { className, accion, className_icon } = this.props;
+        const { className, accion, className_icon, admin, usuario } = this.props;
         const nuevoClassName = className + " " + accion;
+
         return (
-            
+
             <nav className={nuevoClassName}>
                 <div className="navbar-wrapper">
                     {/* Logo menu - Inicio */}
@@ -36,7 +37,7 @@ export class Menu extends Component {
                             <div className="b-bg">
                                 <i className="icon feather icon-paperclip"></i>
                             </div>
-                            <span className="b-title">Menu</span>
+                            <span className="b-title">Energía App</span>
                         </a>
                         <a className={className_icon} id="mobile-collapse" onClick={this.cambiarEstadoMenu} href="#!"><span></span></a>
                     </div>
@@ -45,50 +46,52 @@ export class Menu extends Component {
                     {/* Lista de opciones del menu - Inicio */}
                     <div className="navbar-content datta-scroll">
                         <PerfectScrollabar>
-                            <ul className="nav pcoded-inner-navbar">
-
-                                {/* Item normal - inicio */}
-                                <li className="nav-item pcoded-menu-caption">
-                                    <label>Ejemplo</label>
-                                </li>
-                                <li className="nav-item">
-                                    <NavLink to="/" className="nav-link" exact={true} target="">
-                                        <span className="pcoded-micon">
-                                            <i className="icon feather icon-home"></i>
-                                        </span>
-                                        <span className="pcoded-mtext">Dashboard</span>
-                                    </NavLink>
-                                </li>
-                                {/* Item normal - Fin */}
-
-                                {/* Item Dropdiwn - Inicio */}
-                                <li className="nav-item pcoded-menu-caption">
-                                    <label>Dropdown</label>
-                                </li>
-
-                                <li className={this.props.estadoDropdown}>
-                                    <NavLink to="#" onClick={this.cambairEstadoDropdown}>
-                                        <span className="pcoded-micon">
-                                            <i className="feather icon-box"></i>
-                                        </span>
-                                        <span className="pcoded-mtext">Componet</span>
-                                    </NavLink>
-                                    <ul className="pcoded-submenu">
-                                        <li>
-                                            <NavLink className="nav-link" to="/iniciarSesion">
-                                                Iniciar Sesion
-                                            </NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink className="nav-link" to="/Registrarme">
-                                                Registrarme
-                                            </NavLink>
-                                        </li>
-                                    </ul>
-                                </li>
-                                {/* Item Dropdiwn - Fin */}
-
-                            </ul>
+                            {admin ?
+                                <ul className="nav pcoded-inner-navbar">
+                                    <li className="nav-item pcoded-menu-caption">
+                                        <label>Hola Administrador!</label>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/administrar" className="nav-link" exact={true} target="">
+                                            <span className="pcoded-micon">
+                                                <i className="icon feather icon-home"></i>
+                                            </span>
+                                            <span className="pcoded-mtext">Administrar</span>
+                                        </NavLink>
+                                    </li>
+                                </ul>
+                                :
+                                <ul className="nav pcoded-inner-navbar">
+                                    {/* Item normal - inicio */}
+                                    <li className="nav-item pcoded-menu-caption">
+                                        <label>Hola {usuario.nombre + ' ' + usuario.apellidos}</label>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/App/consumoReal" className="nav-link" exact={true} target="">
+                                            <span className="pcoded-micon">
+                                                <i className="icon feather icon-home"></i>
+                                            </span>
+                                            <span className="pcoded-mtext">Mi consumo Real</span>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/App/historial" className="nav-link" exact={true} target="">
+                                            <span className="pcoded-micon">
+                                                <i className="icon feather icon-home"></i>
+                                            </span>
+                                            <span className="pcoded-mtext">Mi historial de consumo</span>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/App/ajustes" className="nav-link" exact={true} target="">
+                                            <span className="pcoded-micon">
+                                                <i className="icon feather icon-home"></i>
+                                            </span>
+                                            <span className="pcoded-mtext">Mis ajustes</span>
+                                        </NavLink>
+                                    </li>
+                                </ul>
+                            }
                         </PerfectScrollabar>
                     </div>
                     {/* Lista de opciones del menu - Fin */}

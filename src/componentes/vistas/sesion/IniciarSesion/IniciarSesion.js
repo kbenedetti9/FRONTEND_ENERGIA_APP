@@ -1,12 +1,12 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 
 import Aux from "../../../_Aux/_Aux";
+import { Alert } from 'react-bootstrap';
 
 //Redux
 import { connect } from 'react-redux';
 
-import {iniciarSesion} from '../../../../redux/acciones/autenticacionAcciones';
+import { iniciarSesion, cerrarAlerta } from '../../../../redux/acciones/autenticacionAcciones';
 
 class IniciarSesion extends React.Component {
 
@@ -15,7 +15,8 @@ class IniciarSesion extends React.Component {
         contraseña: ''
     }
 
-    _iniciarSesion = () => {
+    _iniciarSesion = (evento) => {
+        evento.preventDefault();
         this.props.iniciarSesion(this.state);
     }
 
@@ -24,13 +25,15 @@ class IniciarSesion extends React.Component {
         const name = evento.target.name;
         const value = evento.target.value;
         this.setState({
-            [name]:value
+            [name]: value
         });
     }
 
     render() {
 
         const { correo, contraseña } = this.state;
+        const { mensaje } = this.props;
+
 
         return (
             <Aux>
@@ -49,19 +52,31 @@ class IniciarSesion extends React.Component {
                                     <i className="feather icon-unlock auth-icon" />
                                 </div>
 
-                                <h3 className="mb-4">Ingresar a ExampleApp</h3>
+                                <h3 className="mb-4">Ingresar a EnergiaApp</h3>
 
-                                <div className="input-group mb-3">
-                                    <input type="mail" className="form-control" name='correo' value={correo} placeholder="Correo" onChange={this._teclearFormulario} />
-                                </div>
+                                <form onSubmit={this._iniciarSesion}>
+                                    <div className="input-group mb-3">
+                                        <input type="email" className="form-control" name='correo' value={correo} placeholder="Correo" onChange={this._teclearFormulario} required />
+                                    </div>
 
-                                <div className="input-group mb-4">
-                                    <input type="password" className="form-control" name='contraseña' value={contraseña} placeholder="Contraseña" onChange={this._teclearFormulario} />
-                                </div>
+                                    <div className="input-group mb-4">
+                                        <input type="password" className="form-control" name='contraseña' value={contraseña} placeholder="Contraseña" onChange={this._teclearFormulario} required/>
+                                    </div>
 
-                                <button className="btn btn-primary shadow-2 mb-4" onClick={this._iniciarSesion}>Ingresar</button>
-                                <p className="mb-2 text-muted">¿Olvido su contraseña? <NavLink to="#">Restaurar</NavLink></p>
-                                <p className="mb-0 text-muted">¿Aun no tienes una cuenta? <NavLink to="#">Registrarme!</NavLink></p>
+                                    <button className="btn btn-primary shadow-2 mb-4" type= "submit">Ingresar</button>
+
+                                </form>
+                                {mensaje
+                                    ?
+                                    <Alert variant="danger" onClose={() => this.props.cerrarAlerta()} dismissible>
+                                        <Alert.Heading>
+                                            <h5>Error:</h5>
+                                        </Alert.Heading>
+                                        <h5>{mensaje}
+                                        </h5>
+                                    </Alert>
+                                    :
+                                    null}
                             </div>
                         </div>
                     </div>
@@ -71,10 +86,17 @@ class IniciarSesion extends React.Component {
     }
 }
 
+const mapStateToProps = (state) => {
+    return {
+        mensaje: state.autenticacion.mensaje
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
-      iniciarSesion: (credeciales) => {dispatch(iniciarSesion(credeciales))}
+        iniciarSesion: (credeciales) => { dispatch(iniciarSesion(credeciales)) },
+        cerrarAlerta: () => { dispatch(cerrarAlerta()) }
     }
-  }
+}
 
-export default connect(null, mapDispatchToProps)(IniciarSesion);
+export default connect(mapStateToProps, mapDispatchToProps)(IniciarSesion);

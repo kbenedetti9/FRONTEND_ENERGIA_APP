@@ -1,5 +1,7 @@
 const initState = {
     usuario: null,
+    mensaje: null,
+    admin: false,
     autenticacionLista: false
 }
 
@@ -8,27 +10,36 @@ const autenticacionReducer = (state = initState, action) => {
         case 'INICIAR_SESION':
             return {
                 ...state,
-                usuario: action.resultado,
+                usuario: action.resultado.usuario,
+                admin: action.resultado.admin,
+                mensaje: action.resultado.mensaje,
                 autenticacionLista: true
-            }
+            };
 
         case 'INICIAR_SESION_ERROR':
-            console.log(action.error);
-            return state;
+            return {
+                ...state,
+                mensaje: action.error
+            };
 
+        case 'CERRAR_ALERTA':
+            return {
+                ...state,
+                mensaje: null
+            };
         case 'AUTENTICACION_LISTA':
-            console.log(action)
             return {
                 ...state,
                 usuario: action.usuario,
+                admin: action.admin,
                 autenticacionLista: true
-            }
+            };
         case 'CERRAR_SESION':
             return {
                 ...state,
                 usuario: null,
                 autenticacionLista: true
-            }
+            };
         default:
             break;
     }
