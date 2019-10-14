@@ -1,4 +1,5 @@
-import {URLSERVER} from '../configuracion/configuracion';
+import { URLSERVER } from '../configuracion/configuracion';
+import { async } from 'q';
 
 const Api = {};
 
@@ -8,7 +9,7 @@ Api.iniciarSesion = async (credenciales) => {
     let mensaje = null;
     let admin = false;
 
-    const resultado = await fetch(URLSERVER+'/iniciarSesion', {
+    const resultado = await fetch(URLSERVER + '/iniciarSesion', {
         method: 'POST',
         credentials: 'include',
         body: JSON.stringify({ correo: credenciales.correo, contraseña: credenciales.contraseña }),
@@ -31,7 +32,7 @@ Api.iniciarSesion = async (credenciales) => {
 
 Api.cerrarSesion = async () => {
 
-    const resultado = await fetch(URLSERVER+'/cerrarSesion', {
+    const resultado = await fetch(URLSERVER + '/cerrarSesion', {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',
@@ -46,7 +47,7 @@ Api.cerrarSesion = async () => {
 
 Api.estoyAutenticado = async () => {
 
-    const resultado = await fetch(URLSERVER+'/estoyAutenticado', {
+    const resultado = await fetch(URLSERVER + '/estoyAutenticado', {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',
@@ -59,11 +60,12 @@ Api.estoyAutenticado = async () => {
     return resultadoJson;
 }
 
-Api.actualizarContraseña = async (correo) => {
+Api.actualizarContraseña = async (correo, contraseña) => {
 
-    const resultado = await fetch(URLSERVER+'/cliente/'+correo, {
+    const resultado = await fetch(URLSERVER + '/cliente/' + correo, {
         method: 'PUT',
         credentials: 'include',
+        body: JSON.stringify({ sesionP: true, contraseña }),
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'Accept': 'application/json'
@@ -77,7 +79,31 @@ Api.actualizarContraseña = async (correo) => {
 
 Api.consultarConsumoReal = async (correo) => {
     let consumoMes = 0;
-    const resultado = await fetch(URLSERVER+'/consumo/'+correo, {
+    let costoU = 0;
+    const resultado = await fetch(URLSERVER + '/consumo/' + correo, {
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    if (resultadoJson.estado) {
+        consumoMes = resultadoJson.consumoMes;
+        costoU = resultadoJson.costoU;
+    }
+
+    return { consumoMes, costoU };
+}
+
+Api.consultarLimite = async (correo) => {
+
+    let limite = 0;
+    let tipoLimite = null;
+
+    const resultado = await fetch(URLSERVER + '/alerta/' + correo, {
         credentials: 'include',
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',
@@ -88,10 +114,11 @@ Api.consultarConsumoReal = async (correo) => {
     const resultadoJson = await resultado.json();
 
     if(resultadoJson.estado){
-        consumoMes = resultadoJson.consumoMes;
+        limite = resultadoJson.limite;
+        tipoLimite = resultadoJson.tipoLimite;
     }
 
-    return consumoMes;
+    return {limite, tipoLimite};
 }
 
 export default Api;

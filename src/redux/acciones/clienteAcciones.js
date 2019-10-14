@@ -1,19 +1,34 @@
 export const consultarConsumoReal = (correo) => {
     return (dispatch, getState, Api) => {
-        Api.consultarConsumoReal(correo).then((consumoMes)=>{
-            dispatch({type:'CONSUMO_REAL', consumoMes});
-        }).catch((error)=>{
+        Api.consultarConsumoReal(correo).then((respuesta) => {
+            dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
+            dispatch({ type: 'COSTO_U', costoU: respuesta.costoU });
+        }).catch((error) => {
             console.log(error);
         });
     }
 }
 
-export const actualizarContraseña = (correo) => {
+export const consultarLimite = (correo) => {
     return (dispatch, getState, Api) => {
-        Api.actualizarContraseña(correo).then((resultado)=>{
-            console.log(resultado)
-            //dispatch({type:'ACTUALIZAR_USUARIO', usuario});
-        }).catch((error)=>{
+        Api.consultarLimite(correo).then((respuesta) => {
+            dispatch({ type: 'LIMITE', limite: respuesta.limite, tipoLimite: respuesta.tipoLimite });
+        }).catch((error) => {
+            console.log(error);
+        })
+    }
+}
+
+export const actualizarContraseña = (correo, contraseña, usuario) => {
+    return (dispatch, getState, Api) => {
+        Api.actualizarContraseña(correo, contraseña).then((resultado) => {
+            if (resultado.estado) {
+                dispatch({ type: 'ACTUALIZAR_USUARIO', usuario });
+            } else {
+                console.log("Error")
+                console.log(resultado)
+            }
+        }).catch((error) => {
             console.log(error);
         });
     }

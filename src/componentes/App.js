@@ -5,7 +5,7 @@ import Loadable from 'react-loadable';
 //Redux
 import { connect } from 'react-redux';
 import { autenticacionLista, cerrarSesion } from '../redux/acciones/autenticacionAcciones';
-import { consultarConsumoReal } from '../redux/acciones/clienteAcciones';
+import { consultarConsumoReal, consultarLimite } from '../redux/acciones/clienteAcciones';
 
 import Aux from './_Aux/_Aux';
 import Cargando from './cargando/cargando';
@@ -31,6 +31,7 @@ const Home = Loadable({ loader: () => import('./vistas/administrador/home'), loa
 //Rutas para cliente
 const ConsumoReal = Loadable({ loader: () => import('./vistas/cliente/consumoReal'), loading: Cargando });
 const CambiarContraseña = Loadable({ loader: () => import('./vistas/cliente/CambiarContraseña'), loading: Cargando });
+const Historial = Loadable({ loader: () => import('./vistas/cliente/Historial'), loading: Cargando });
 
 export class App extends Component {
 
@@ -45,6 +46,7 @@ export class App extends Component {
     if (respuesta.estado) {
       if (!respuesta.admin) {
         this.props.consultarConsumoReal(respuesta.usuario.correo);
+        this.props.consultarLimite(respuesta.usuario.correo);
       }
       this.props.autenticacionLista(respuesta.usuario, respuesta.admin);
     } else {
@@ -90,7 +92,9 @@ export class App extends Component {
                             :
                             <Switch>
                               <Route exact path="/App/consumoReal" component={ConsumoReal} />
+                              <Route exact path="/App/historial" component={Historial} />
                               <Route path="/" render={() => <Redirect to='/App/consumoReal' />} />
+
                             </Switch>
                           }
                         </div>
@@ -127,7 +131,8 @@ const mapDispatchToProps = (dispatch) => {
     ocultarMenu: (accion) => { dispatch({ type: "ACCIONAR_MENU_APP", accion }) },
     autenticacionLista: (usuario, admin) => { dispatch(autenticacionLista(usuario, admin)) },
     cerrarSesion: (correo, admin) => { dispatch(cerrarSesion(correo, admin)) },
-    consultarConsumoReal: (correo) => { dispatch(consultarConsumoReal(correo)) }
+    consultarConsumoReal: (correo) => { dispatch(consultarConsumoReal(correo)) },
+    consultarLimite: (correo) => {dispatch(consultarLimite(correo))}
   }
 }
 

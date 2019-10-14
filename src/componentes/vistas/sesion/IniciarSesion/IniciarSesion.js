@@ -1,5 +1,7 @@
 import React from 'react';
 
+import '../IniciarSesion/IniciarSesion.css'
+
 import Aux from "../../../_Aux/_Aux";
 import { Alert } from 'react-bootstrap';
 
@@ -7,6 +9,7 @@ import { Alert } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 import { iniciarSesion, cerrarAlerta } from '../../../../redux/acciones/autenticacionAcciones';
+
 
 class IniciarSesion extends React.Component {
 
@@ -52,31 +55,31 @@ class IniciarSesion extends React.Component {
                                     <i className="feather icon-unlock auth-icon" />
                                 </div>
 
-                                <h3 className="mb-4">Ingresar a EnergiaApp</h3>
-
+                                <h3 className="mb-4">EnergiaApp</h3>
+                                {mensaje
+                                    ?
+                                    <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={() => this.props.cerrarAlerta()} dismissible>
+                                        <h6 style={{ color: 'white', fontSize: '11px' }}>{mensaje}</h6>
+                                    </Alert>
+                                    :
+                                    null}
                                 <form onSubmit={this._iniciarSesion}>
-                                    <div className="input-group mb-3">
+                                    <div className="input-group mb-3 ">
+                                        <div className="input-group-prepend">
+                                            <span className="input-group-text" ><i className="feather icon-user"></i></span>
+                                        </div>
                                         <input type="email" className="form-control" name='correo' value={correo} placeholder="Correo" onChange={this._teclearFormulario} required />
                                     </div>
 
                                     <div className="input-group mb-4">
-                                        <input type="password" className="form-control" name='contraseña' value={contraseña} placeholder="Contraseña" onChange={this._teclearFormulario} required/>
+                                        <div className="input-group-prepend">
+                                            <span className="input-group-text" ><i className="feather icon-lock"></i></span>
+                                        </div>
+                                        <input type="password" className="form-control" name='contraseña' value={contraseña} placeholder="Contraseña" onChange={this._teclearFormulario} required />
                                     </div>
-
-                                    <button className="btn btn-primary shadow-2 mb-4" type= "submit">Ingresar</button>
+                                    <button className="btn btn-primary shadow-2 mb-4" type="submit">Ingresar</button>
 
                                 </form>
-                                {mensaje
-                                    ?
-                                    <Alert variant="danger" onClose={() => this.props.cerrarAlerta()} dismissible>
-                                        <Alert.Heading>
-                                            <h5>Error:</h5>
-                                        </Alert.Heading>
-                                        <h5>{mensaje}
-                                        </h5>
-                                    </Alert>
-                                    :
-                                    null}
                             </div>
                         </div>
                     </div>

@@ -15,14 +15,23 @@ export const iniciarSesion = (credenciales) => {
                     socket.on('recibido', (dato) => {
                         if (dato) {
                             dispatch({ type: 'INICIAR_SESION', resultado });
-                            socket.on('consumoReal', (consumo) => {
-                                console.log(consumo);
+                            socket.on('consumoReal', (objeto) => {
+                                console.log(objeto);
+                                // dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
+                                // dispatch({type:'COSTO_U', costoU: respuesta.costoU});
                             });
-                            Api.consultarConsumoReal(resultado.usuario.correo).then((consumoMes) => {
-                                dispatch({ type: 'CONSUMO_REAL', consumoMes });
+                            Api.consultarConsumoReal(resultado.usuario.correo).then((respuesta) => {
+                                dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
+                                dispatch({type:'COSTO_U', costoU: respuesta.costoU});
                             }).catch((error) => {
                                 console.log(error);
                             });
+                            Api.consultarLimite(resultado.usuario.correo).then((respuesta)=>{
+                                dispatch({ type: 'LIMITE', limite: respuesta.limite, tipoLimite: respuesta.tipoLimite });
+                            }).catch((error)=>{
+                                console.log(error);
+                            });
+                            
                         }
                     });
                 }

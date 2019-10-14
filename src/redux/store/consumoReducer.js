@@ -1,5 +1,8 @@
 const initState = {
-    consumoMes: 0
+    consumoMes: 0,
+    costoU: 0,
+    limite: 0,
+    tipoLimite: null
 }
 
 const consumoReducer = (state = initState, action) => {
@@ -8,6 +11,17 @@ const consumoReducer = (state = initState, action) => {
             return {
                 ...state,
                 consumoMes: action.consumoMes
+            };
+        case 'COSTO_U':
+            return {
+                ...state,
+                costoU: action.costoU
+            };
+        case 'LIMITE':
+            return {
+                ...state,
+                limite: action.limite,
+                tipoLimite: action.tipoLimite
             };
         default:
             break;
