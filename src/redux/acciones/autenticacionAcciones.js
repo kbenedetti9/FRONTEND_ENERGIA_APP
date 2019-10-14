@@ -5,7 +5,6 @@ export const iniciarSesion = (credenciales) => {
     return (dispatch, getState, Api) => {
         Api.iniciarSesion(credenciales).then((resultado) => {
             if (resultado.usuario) {
-                console.log(resultado)
                 if (resultado.admin) {
                     dispatch({ type: 'INICIAR_SESION', resultado });
                 } else {
@@ -19,8 +18,8 @@ export const iniciarSesion = (credenciales) => {
                             socket.on('consumoReal', (consumo) => {
                                 console.log(consumo);
                             });
-                            Api.consultarConsumoReal(resultado.usuario.correo).then((consumoReal) => {
-                                dispatch({ type: 'CONSUMO_REAL', consumoMes: consumoReal.consumoMes });
+                            Api.consultarConsumoReal(resultado.usuario.correo).then((consumoMes) => {
+                                dispatch({ type: 'CONSUMO_REAL', consumoMes });
                             }).catch((error) => {
                                 console.log(error);
                             });

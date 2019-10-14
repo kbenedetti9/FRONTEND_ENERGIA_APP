@@ -8,7 +8,7 @@ class consumoReal extends Component {
     render() {
 
         const { consumoMes } = this.props;
-
+        
         return (
             <div>
                 Mi consumo actual {consumoMes} Kwh
@@ -19,8 +19,8 @@ class consumoReal extends Component {
 
 const mapStateToProps = (state) => {
     return {
-      consumoMes: state.consumo.consumoMes
+        consumoMes: state.consumo.consumoMes
     }
-  }
+}
 
 export default connect(mapStateToProps)(consumoReal);

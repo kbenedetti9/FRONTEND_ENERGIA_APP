@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import CardComponent from '../card/card';
+import CardComponent from '../../card/card';
 
 import { Row, Col } from 'react-bootstrap';
 

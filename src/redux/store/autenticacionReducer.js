@@ -40,6 +40,11 @@ const autenticacionReducer = (state = initState, action) => {
                 usuario: null,
                 autenticacionLista: true
             };
+        case 'ACTUALIZAR_USUARIO':
+            return {
+                ...state,
+                usuario: action.usuario
+            };
         default:
             break;
     }

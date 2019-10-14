@@ -59,8 +59,24 @@ Api.estoyAutenticado = async () => {
     return resultadoJson;
 }
 
+Api.actualizarContraseña = async (correo) => {
+
+    const resultado = await fetch(URLSERVER+'/cliente/'+correo, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    return resultadoJson;
+}
+
 Api.consultarConsumoReal = async (correo) => {
-    let consumoReal = null;
+    let consumoMes = 0;
     const resultado = await fetch(URLSERVER+'/consumo/'+correo, {
         credentials: 'include',
         headers: {
@@ -70,11 +86,12 @@ Api.consultarConsumoReal = async (correo) => {
     });
 
     const resultadoJson = await resultado.json();
+
     if(resultadoJson.estado){
-        consumoReal = resultadoJson.consumoMes;
+        consumoMes = resultadoJson.consumoMes;
     }
 
-    return consumoReal;
+    return consumoMes;
 }
 
 export default Api;

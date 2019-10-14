@@ -15,6 +15,7 @@ import App from './componentes/App';
 
 //Para usar metodos de forma asincrona
 import thunk from 'redux-thunk';
+//Metodos que hacen peticiones de forma asincrona al servidor
 import Api from './api/Api';
 
 //Se crea el store principal de nuestro Redux

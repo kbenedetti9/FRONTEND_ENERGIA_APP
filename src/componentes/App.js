@@ -5,7 +5,7 @@ import Loadable from 'react-loadable';
 //Redux
 import { connect } from 'react-redux';
 import { autenticacionLista, cerrarSesion } from '../redux/acciones/autenticacionAcciones';
-import { consultarConsumoReal } from '../redux/acciones/consumoAcciones';
+import { consultarConsumoReal } from '../redux/acciones/clienteAcciones';
 
 import Aux from './_Aux/_Aux';
 import Cargando from './cargando/cargando';
@@ -26,21 +26,13 @@ import Navbar from './navbar/navbar';
 //importamos la ruta por defecto (La importará cuando sea requerida)
 //Rutas para sesion
 const InicarSesion = Loadable({ loader: () => import('./vistas/sesion/IniciarSesion/IniciarSesion'), loading: Cargando });
-
 //Rutas para administrador
-
+const Home = Loadable({ loader: () => import('./vistas/administrador/home'), loading: Cargando });
 //Rutas para cliente
 const ConsumoReal = Loadable({ loader: () => import('./vistas/cliente/consumoReal'), loading: Cargando });
-
-//Prueba - Borrar
-const Home = Loadable({ loader: () => import('./administrador-vistas/home'), loading: Cargando });
-
+const CambiarContraseña = Loadable({ loader: () => import('./vistas/cliente/CambiarContraseña'), loading: Cargando });
 
 export class App extends Component {
-
-  cambiarTitulo = (titulo) => {
-    console.log(titulo)
-  }
 
   ocultarMenu = () => {
     if (this.props.menu_añadido === "mob-open") {
@@ -51,54 +43,62 @@ export class App extends Component {
   componentDidMount = async () => {
     const respuesta = await Api.estoyAutenticado();
     if (respuesta.estado) {
-      console.log(respuesta)
       if (!respuesta.admin) {
         this.props.consultarConsumoReal(respuesta.usuario.correo);
       }
       this.props.autenticacionLista(respuesta.usuario, respuesta.admin);
     } else {
-      this.props.autenticacionLista(null);
+      this.props.autenticacionLista(null, false);
     }
   }
 
   render() {
+
     const { usuario, autenticacion, admin } = this.props;
 
     if (!autenticacion) {
       return <Cargando />
     }
-    console.log(admin)
+
+    console.log(usuario)
+
     return (
 
       < Aux >
         <Suspense fallback={<Cargando />}>
           {/* Suspense se utiliza para mostrar "algo" miestras se carga el/los import necesarios */}
           {usuario ?
-            <Aux>
-              <Menu admin={admin} usuario={usuario} />
-              <Navbar cerrarSesion={this.props.cerrarSesion} admin={admin} correo={usuario.correo} />
-              <div className="pcoded-main-container" onClick={this.ocultarMenu}>
-                <div className="pcoded-wrapper">
-                  <div className="pcoded-content">
-                    <div className="pcoded-inner-content">
-                      <div className="main-body">
-                        {admin ?
-                          <Switch>
-                            <Route exact path="/administrar" component={Home} />
-                            <Route path="/" render={() => <Redirect to='/administrar' />} />
-                          </Switch>
-                          :
-                          <Switch>
-                            <Route exact path="/App/consumoReal" component={ConsumoReal} />
-                            <Route path="/" render={() => <Redirect to='/App/consumoReal' />} />
-                          </Switch>
-                        }
+            !admin && !usuario.activo ?
+              <Switch>
+                <Route exact path="/App/seguridad" component={CambiarContraseña} correo={usuario.correo} cerrarSesion={this.props.cerrarSesion} />
+                <Route path="/" render={() => <Redirect to='/App/seguridad' />} />
+              </Switch>
+              :
+              <Aux>
+                <Menu admin={admin} usuario={usuario} />
+                <Navbar cerrarSesion={this.props.cerrarSesion} admin={admin} correo={usuario.correo} />
+                <div className="pcoded-main-container" onClick={this.ocultarMenu}>
+                  <div className="pcoded-wrapper">
+                    <div className="pcoded-content">
+                      <div className="pcoded-inner-content">
+                        <div className="main-body">
+                          {admin ?
+                            <Switch>
+                              <Route exact path="/administrar" component={Home} />
+                              <Route path="/" render={() => <Redirect to='/administrar' />} />
+                            </Switch>
+                            :
+                            <Switch>
+                              <Route exact path="/App/consumoReal" component={ConsumoReal} />
+                              <Route path="/" render={() => <Redirect to='/App/consumoReal' />} />
+                            </Switch>
+                          }
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Aux>
+              </Aux>
             :
             <Switch>
               <Route exact path="/iniciarSesion" component={InicarSesion} />
