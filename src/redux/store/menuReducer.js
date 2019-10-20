@@ -8,7 +8,6 @@ const initState = {
 const menuReducer = (state = initState, action) => {
     switch (action.type) {
         case 'ACCIONAR_MENU_NAVBAR':
-            console.log(action)
             return {
                 ...state,
                 className_menu_añadido: action.accion,

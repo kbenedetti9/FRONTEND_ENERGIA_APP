@@ -43,3 +43,13 @@ export const actualizarLimite = (correo, limite, tipoLimite, primeraVez) => {
         });
     }
 }
+
+export const actualizarDatos = (correo, sesionP, cambiarContrasena, contrasena, contrasenaNueva, telefono, usuario) => {
+    return (dispatch, getState, Api) => {
+        Api.actualizarDatos(correo, sesionP, cambiarContrasena, contrasena, contrasenaNueva, telefono, usuario).then((resultado) => {
+            dispatch({ type: 'ACTUALIZAR_USUARIO', usuario: resultado.usuario, mensaje: resultado.mensaje, variante: resultado.variante });
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+}

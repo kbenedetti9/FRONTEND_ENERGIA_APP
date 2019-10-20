@@ -1,6 +1,7 @@
 const initState = {
     usuario: null,
     mensaje: null,
+    variante: null,
     admin: false,
     autenticacionLista: false
 }
@@ -43,7 +44,9 @@ const autenticacionReducer = (state = initState, action) => {
         case 'ACTUALIZAR_USUARIO':
             return {
                 ...state,
-                usuario: action.usuario
+                usuario: action.usuario,
+                mensaje: action.mensaje ? action.mensaje : null,
+                variante: action.variante ? action.variante : null
             };
         default:
             break;

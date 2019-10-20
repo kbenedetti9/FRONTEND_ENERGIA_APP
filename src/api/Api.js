@@ -111,7 +111,7 @@ Api.consultarLimite = async (correo) => {
     });
 
     const resultadoJson = await resultado.json();
-    
+
     if (resultadoJson.estado) {
         limite = resultadoJson.alerta.limite;
         tipoLimite = resultadoJson.alerta.tipoLimite;
@@ -137,7 +137,7 @@ Api.actualizarLimite = async (correo, limite, tipoLimite, primeraVez) => {
     } else {
         respuesta = await fetch(URLSERVER + '/alerta/' + correo, {
             method: 'PUT',
-            body: JSON.stringify({  limite, tipoLimite }),
+            body: JSON.stringify({ limite, tipoLimite }),
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json; charset=UTF-8',
@@ -148,7 +148,7 @@ Api.actualizarLimite = async (correo, limite, tipoLimite, primeraVez) => {
 
     let resultadoJson = await respuesta.json();
 
-    if(resultadoJson.estado){
+    if (resultadoJson.estado) {
         resultadoJson = {
             ...resultadoJson,
             limite,
@@ -178,6 +178,39 @@ Api.consultarHistorial = async (correo) => {
     }
 
     return historial;
+}
+
+
+Api.actualizarDatos = async (correo, sesionP, cambiarContrasena, contrasena, contrasenaNueva, telefono, usuario) => {
+
+    let mensaje = null;
+    let variante = null;
+
+    const resultado = await fetch(URLSERVER + '/cliente/' + usuario.correo, {
+        method: 'PUT',
+        credentials: 'include',
+        body: JSON.stringify({ sesionP, cambiarContrasena, contrasena, contrasenaNueva, correo, telefono }),
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    if (resultadoJson.estado) {
+        console.log("Actualizacion con exito");
+        mensaje = "Actualización realizada con exito.";
+        variante = "success";
+        usuario.telefono = +telefono;
+    } else {
+        mensaje = "No se logró realizar la actualización";
+        variante = "danger";
+        console.log(resultadoJson);
+    }
+
+    return {usuario, mensaje, variante};
+
 }
 
 export default Api;
