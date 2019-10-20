@@ -69,25 +69,25 @@ export class Menu extends Component {
                                     <li className="nav-item">
                                         <NavLink to="/App/consumoReal" className="nav-link" exact={true} target="">
                                             <span className="pcoded-micon">
-                                                <i className="icon feather icon-home"></i>
+                                                <i className="feather icon-zap"></i>
                                             </span>
-                                            <span className="pcoded-mtext">Mi consumo Real</span>
+                                            <span className="pcoded-mtext ">Mi consumo real</span>
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
                                         <NavLink to="/App/historial" className="nav-link" exact={true} target="">
                                             <span className="pcoded-micon">
-                                                <i className="icon feather icon-home"></i>
+                                            <i className="icon feather icon-calendar"></i>
                                             </span>
-                                            <span className="pcoded-mtext">Mi historial de consumo</span>
+                                            <span className="pcoded-mtext ">Mi historial</span>
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
                                         <NavLink to="/App/ajustes" className="nav-link" exact={true} target="">
                                             <span className="pcoded-micon">
-                                                <i className="icon feather icon-home"></i>
+                                                <i className="icon feather icon-settings"></i>
                                             </span>
-                                            <span className="pcoded-mtext">Mis ajustes</span>
+                                            <span className="pcoded-mtext">Configuración</span>
                                         </NavLink>
                                     </li>
                                 </ul>

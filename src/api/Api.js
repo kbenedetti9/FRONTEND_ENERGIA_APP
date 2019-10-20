@@ -1,5 +1,4 @@
 import { URLSERVER } from '../configuracion/configuracion';
-import { async } from 'q';
 
 const Api = {};
 
@@ -112,13 +111,73 @@ Api.consultarLimite = async (correo) => {
     });
 
     const resultadoJson = await resultado.json();
-
-    if(resultadoJson.estado){
-        limite = resultadoJson.limite;
-        tipoLimite = resultadoJson.tipoLimite;
+    
+    if (resultadoJson.estado) {
+        limite = resultadoJson.alerta.limite;
+        tipoLimite = resultadoJson.alerta.tipoLimite;
     }
 
-    return {limite, tipoLimite};
+    return { limite, tipoLimite };
+}
+
+Api.actualizarLimite = async (correo, limite, tipoLimite, primeraVez) => {
+
+    let respuesta;
+
+    if (primeraVez) {
+        respuesta = await fetch(URLSERVER + '/alerta/', {
+            method: 'POST',
+            credentials: 'include',
+            body: JSON.stringify({ correoCliente: correo, limite, tipoLimite }),
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json'
+            }
+        });
+    } else {
+        respuesta = await fetch(URLSERVER + '/alerta/' + correo, {
+            method: 'PUT',
+            body: JSON.stringify({  limite, tipoLimite }),
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Accept': 'application/json'
+            }
+        });
+    }
+
+    let resultadoJson = await respuesta.json();
+
+    if(resultadoJson.estado){
+        resultadoJson = {
+            ...resultadoJson,
+            limite,
+            tipoLimite
+        }
+    }
+
+    return resultadoJson;
+}
+
+Api.consultarHistorial = async (correo) => {
+
+    let historial = null;
+
+    const resultado = await fetch(URLSERVER + '/historial/' + correo, {
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    if (resultadoJson.estado) {
+        historial = resultadoJson.historial;
+    }
+
+    return historial;
 }
 
 export default Api;

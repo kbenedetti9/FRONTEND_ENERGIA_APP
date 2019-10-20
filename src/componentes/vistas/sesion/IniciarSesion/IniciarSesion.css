@@ -3,3 +3,8 @@
     border: none;
 }
 
+.texto{
+    font-family: 'Poppins', sans-serif; 
+    color:black;
+    font-size: 30px;
+}

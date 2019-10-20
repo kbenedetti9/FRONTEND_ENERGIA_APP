@@ -1,0 +1,43 @@
+#contrasena{
+    background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+}
+
+#lockIcon{
+    margin-left:280px;
+    font-size: 40px;
+    color:white;
+}
+
+.texto{
+    font-size: 15px;
+    color:white;
+    font-family: 'Poppins', sans-serif; 
+}
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-style: dashed;
+}
+
+#nueva{
+    font-size:20px;
+}
+
+#configuracion{
+    color: #1DE9DB;
+    font-size: 30px;
+    font-family: 'Poppins', sans-serif; 
+}
+
+#configIcon{
+    margin-left:10px;
+    font-size: 60px;
+    color:#1DE9DB;
+}
+
+.etiqueta{
+    color:#1dc4e9;
+    font-family: 'Poppins', sans-serif; 
+}

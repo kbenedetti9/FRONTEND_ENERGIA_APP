@@ -32,6 +32,7 @@ const Home = Loadable({ loader: () => import('./vistas/administrador/home'), loa
 const ConsumoReal = Loadable({ loader: () => import('./vistas/cliente/consumoReal'), loading: Cargando });
 const CambiarContraseña = Loadable({ loader: () => import('./vistas/cliente/CambiarContraseña'), loading: Cargando });
 const Historial = Loadable({ loader: () => import('./vistas/cliente/Historial'), loading: Cargando });
+const Ajustes = Loadable({ loader: () => import('./vistas/cliente/Ajustes'), loading: Cargando });
 
 export class App extends Component {
 
@@ -78,7 +79,7 @@ export class App extends Component {
               :
               <Aux>
                 <Menu admin={admin} usuario={usuario} />
-                <Navbar cerrarSesion={this.props.cerrarSesion} admin={admin} correo={usuario.correo} />
+                <Navbar cerrarSesion={this.props.cerrarSesion} admin={admin} correo={usuario.correo}  ocultarMenu={this.ocultarMenu} />
                 <div className="pcoded-main-container" onClick={this.ocultarMenu}>
                   <div className="pcoded-wrapper">
                     <div className="pcoded-content">
@@ -92,9 +93,9 @@ export class App extends Component {
                             :
                             <Switch>
                               <Route exact path="/App/consumoReal" component={ConsumoReal} />
-                              <Route exact path="/App/historial" component={Historial} />
+                              <Route exact path="/App/historial" render={() => <Historial usuario={usuario} />} />
+                              <Route exact path="/App/ajustes" component={Ajustes} />{/*KAREN*/}
                               <Route path="/" render={() => <Redirect to='/App/consumoReal' />} />
-
                             </Switch>
                           }
                         </div>

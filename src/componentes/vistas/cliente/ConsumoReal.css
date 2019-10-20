@@ -1,0 +1,105 @@
+#prueba{
+    border-right:solid 0.5px #1DE9DB ;
+}
+
+#boltIcon{
+    font-size:40px;
+    color:#1de9b6;
+}
+
+.consumoTitle{
+    font-family: 'Poppins', sans-serif; 
+}
+
+.numero{
+    font-family: 'Poppins', sans-serif; 
+}
+
+#moneyIcon{
+    font-size:40px;
+    color:#1de9b6;
+}
+
+
+#dollarIcon{
+    font-size:60px;
+    color:#1de9b6;
+  margin-top:10px;
+}
+
+#costo{
+    font-size:70px;
+}
+
+#unitario{
+    color:gray;
+}
+
+/*CARD LIMITE STYLES*/
+.limite{/*Card para limite*/
+    background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+}
+
+#limiteTitle{/*Titulo de card de limite*/
+    margin-top:40px;
+    font-size:20px;
+    /* float:left; */
+}
+
+.texto{/*Texto en card de limite*/
+    color:white;
+    font-family: 'Poppins', sans-serif; 
+}
+
+
+.custom-control-input:checked ~ .custom-control-label::before {/*Switches de tipo de limite*/
+    color: #fff;
+    border-color:#1de9b6;
+    background-color: #1de9b6;
+}
+
+.custom-control-label::before {/*Switches de tipo de limite*/
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: white;
+    border: white solid 1px;
+    color:white;
+}
+
+.fondo{
+    border-radius: 1em 3em 2em;
+}
+
+.editar{/*Boton editar*/
+    /* margin-left: 170px; */
+    border-radius: 1.5em 1.5em 1.5em 1.5em;
+    color:black;
+    border:none;
+    background-color: white;
+}
+
+#noLimite{/*Texto cuando no existe limite*/
+    font-size: bold;
+    color: #161B19;
+    /* margin-left:25px; */
+    
+}
+
+.icon-alert-circle{/*Icono cuando no existe limite*/
+    /* float:left; */
+    font-size:18px;
+    color:white;
+
+}
+
+.icon-flag{/*Icono de card de limite*/
+/* margin-left:65px; */
+  font-size:50px;
+  color: white;
+}

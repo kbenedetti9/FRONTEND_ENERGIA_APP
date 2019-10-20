@@ -20,7 +20,7 @@ export class Navbar extends Component {
         const { className_icon, correo, admin } = this.props;
 
         return (
-            <header className="navbar pcoded-header navbar-expand-lg header-default">
+            <header className="navbar pcoded-header navbar-expand-lg header-default" onClick={this.props.ocultarMenu} >
                 <div className="m-header">
                     <a href="#!" className={className_icon} id="mobile-collapse1" onClick={this.mostrarMenu}><span /></a>
                     <a href="#!" className="b-brand">

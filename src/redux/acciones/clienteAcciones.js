@@ -1,7 +1,7 @@
 export const consultarConsumoReal = (correo) => {
     return (dispatch, getState, Api) => {
         Api.consultarConsumoReal(correo).then((respuesta) => {
-            dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
+            dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes.consumoMes });
             dispatch({ type: 'COSTO_U', costoU: respuesta.costoU });
         }).catch((error) => {
             console.log(error);
@@ -28,6 +28,16 @@ export const actualizarContraseña = (correo, contraseña, usuario) => {
                 console.log("Error")
                 console.log(resultado)
             }
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+}
+
+export const actualizarLimite = (correo, limite, tipoLimite, primeraVez) => {
+    return (dispatch, getState, Api) => {
+        Api.actualizarLimite(correo, limite, tipoLimite, primeraVez).then((resultado) => {
+            dispatch({ type: 'LIMITE', limite: resultado.limite, tipoLimite: resultado.tipoLimite });
         }).catch((error) => {
             console.log(error);
         });

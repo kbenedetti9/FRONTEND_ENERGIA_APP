@@ -10,12 +10,15 @@ import { connect } from 'react-redux';
 
 import { iniciarSesion, cerrarAlerta } from '../../../../redux/acciones/autenticacionAcciones';
 
+import '../../../../../node_modules/font-awesome/css/font-awesome.min.css';
 
 class IniciarSesion extends React.Component {
 
     state = {
         correo: '',
-        contraseña: ''
+        contraseña: '',
+        sTypeContraseña: "password",
+        sIconContraseña: "feather icon-eye-off"
     }
 
     _iniciarSesion = (evento) => {
@@ -32,9 +35,19 @@ class IniciarSesion extends React.Component {
         });
     }
 
+    _cambiarTypeContraseña =()=>{
+        const {sTypeContraseña}=this.state;
+        if(sTypeContraseña ==="password"){
+            this.setState({sTypeContraseña:"text", sIconContraseña: "feather icon-eye"});
+        }else if(sTypeContraseña === "text"){
+            this.setState({sTypeContraseña:"password", sIconContraseña:"feather icon-eye-off"});
+        }
+
+    }
+
     render() {
 
-        const { correo, contraseña } = this.state;
+        const { correo, contraseña,sTypeContraseña,sIconContraseña } = this.state;
         const { mensaje } = this.props;
 
 
@@ -54,8 +67,7 @@ class IniciarSesion extends React.Component {
                                 <div className="mb-4">
                                     <i className="feather icon-unlock auth-icon" />
                                 </div>
-
-                                <h3 className="mb-4">EnergiaApp</h3>
+                                <h3 className="mb-4 texto">EnergiaApp</h3>
                                 {mensaje
                                     ?
                                     <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={() => this.props.cerrarAlerta()} dismissible>
@@ -67,15 +79,18 @@ class IniciarSesion extends React.Component {
                                     <div className="input-group mb-3 ">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text" ><i className="feather icon-user"></i></span>
+
                                         </div>
                                         <input type="email" className="form-control" name='correo' value={correo} placeholder="Correo" onChange={this._teclearFormulario} required />
                                     </div>
-
                                     <div className="input-group mb-4">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text" ><i className="feather icon-lock"></i></span>
                                         </div>
-                                        <input type="password" className="form-control" name='contraseña' value={contraseña} placeholder="Contraseña" onChange={this._teclearFormulario} required />
+                                        <input type={sTypeContraseña} className="form-control" name='contraseña' value={contraseña} placeholder="Contraseña" onChange={this._teclearFormulario} required />
+                                        <div className="input-group-append"> 
+                                    <span className="input-group-text" id="basic-addon2" onClick={this._cambiarTypeContraseña}><i className={sIconContraseña}></i></span>
+                                        </div>
                                     </div>
                                     <button className="btn btn-primary shadow-2 mb-4" type="submit">Ingresar</button>
 
