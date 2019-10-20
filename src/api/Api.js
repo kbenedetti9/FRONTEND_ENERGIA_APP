@@ -180,7 +180,6 @@ Api.consultarHistorial = async (correo) => {
     return historial;
 }
 
-
 Api.actualizarDatos = async (correo, sesionP, cambiarContrasena, contrasena, contrasenaNueva, telefono, usuario) => {
 
     let mensaje = null;
@@ -209,8 +208,54 @@ Api.actualizarDatos = async (correo, sesionP, cambiarContrasena, contrasena, con
         console.log(resultadoJson);
     }
 
-    return {usuario, mensaje, variante};
+    return { usuario, mensaje, variante };
 
+}
+
+Api.obtenerListaClientes = async () => {
+
+    let listaCliente = [];
+
+    const resultado = await fetch(URLSERVER + "/clientes", {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+    const resultadoJson = await resultado.json();
+
+    if (resultadoJson.estado) {
+        listaCliente = resultadoJson.clientes
+    }
+
+    return listaCliente;
+}
+
+Api.recuperarContrasena = async (correo, contraseña) => {
+
+    let mensaje = null;
+    let variante = null;
+
+    const resultado = await fetch(URLSERVER + "/cliente/" + correo, {
+        method: 'PUT',
+        body: JSON.stringify({ mod: "modA1", contraseña }),
+        credentials: "include",
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    if (resultadoJson.estado) {
+        mensaje = "Contraseña reestablecida con exito.";
+        variante = "success";
+    }
+
+    return {mensaje, variante};
 }
 
 export default Api;

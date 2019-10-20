@@ -3,26 +3,34 @@ import { Card, Row, Col, Button } from 'react-bootstrap';
 import Api from '../../../api/Api';
 import Cargando from '../../cargando/cargando';
 import Chart from 'chart.js';
+import Pdf from '../../pdf/PDFService';
 
 let obj = [];
 let grafica = null;
+const bodyRef = React.createRef();
+
 class Historial extends Component {
 
     state = {
         datosTabla: [],
         arrayNMes: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
         historial: [],
-        mostrarGrafica: false
+        mostrarGrafica: false,
+        mostratDatosReporte: false
+    }
+
+    _generarReporte = () => {
+        Pdf.createPdf(bodyRef.current);
     }
 
     _atras = () => {
-        this.setState({ mostrarGrafica: false });
+        this.setState({ mostrarGrafica: false, mostratDatosReporte: false });
         console.log(grafica)
         grafica.destroy();
     }
 
-    _graficar = (data) => {
-        this.setState({ mostrarGrafica: true });
+    _graficar = (data, reporte) => {
+        this.setState({ mostrarGrafica: true, mostratDatosReporte: reporte });
         console.log(this.state.mostrarGrafica)
         var ctx = document.getElementById('myChart');
         grafica = new Chart(ctx, {
@@ -79,7 +87,7 @@ class Historial extends Component {
         });
     }
 
-    _obtenerHistorialMes = (evento) => {
+    _obtenerHistorialMes = (evento, reporte) => {
         evento.preventDefault();
         const mes = evento.target.value;
         const { historial } = this.state;
@@ -178,7 +186,7 @@ class Historial extends Component {
         }
         console.log(data);
 
-        this._graficar(data);
+        this._graficar(data, reporte);
     }
 
     _obtenerDatosTabla = (historial) => {
@@ -225,7 +233,7 @@ class Historial extends Component {
     }
 
     render() {
-        const { datosTabla, arrayNMes, mostrarGrafica } = this.state;
+        const { datosTabla, arrayNMes, mostrarGrafica, mostratDatosReporte } = this.state;
 
         if (datosTabla.length === 0) {
             return <Cargando />
@@ -262,8 +270,9 @@ class Historial extends Component {
                                                 <td>{arrayNMes[(+mes.mes) - 1]}</td>
                                                 <td>{mes.consumoTotal}</td>
                                                 <td>{mes.consumoCosto}</td>
-                                                <td style={{width: '10px'}} >
-                                                    <Button size='sm' value={+mes.mes} onClick={this._obtenerHistorialMes}> mostrar </Button>
+                                                <td style={{ width: '10px' }} >
+                                                    <Button size='sm' value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, false)}> mostrar </Button>
+                                                    <Button size='sm' value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, true)}> reporte </Button>
                                                 </td>
                                             </tr>
                                         )}
@@ -272,9 +281,22 @@ class Historial extends Component {
                                 : null}
 
                             <div className="grafica">
-                                <canvas id="myChart"></canvas>
+                                <div ref={bodyRef}>
+                                    {mostratDatosReporte ?
+                                        <div>
+                                            datos de reporte
+                                        </div>
+                                        : null
+                                    }
+                                    <canvas id="myChart"></canvas>
+                                </div>
+
                                 {mostrarGrafica ?
                                     <Button size="sm" onClick={this._atras} > Atras </Button>
+                                    : null
+                                }
+                                {mostratDatosReporte ?
+                                    <Button size="sm" onClick={this._generarReporte} > Descargar </Button>
                                     : null
                                 }
                             </div>

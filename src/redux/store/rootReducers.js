@@ -4,6 +4,7 @@ import menuReducer from './menuReducer';
 import appReducer from './appReducer';
 import autenticacionReducer from './autenticacionReducer';
 import consumoReducer from './consumoReducer';
+import sistemaReducer from './sistemaReducer';
 
 //Para combinar los reducer
 import { combineReducers } from 'redux';
@@ -14,7 +15,8 @@ const rootReducers = combineReducers({
     menu: menuReducer,
     app: appReducer,
     autenticacion: autenticacionReducer,
-    consumo: consumoReducer
+    consumo: consumoReducer,
+    sistema: sistemaReducer
 });
 
 export default rootReducers;

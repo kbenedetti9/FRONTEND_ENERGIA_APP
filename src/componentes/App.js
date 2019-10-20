@@ -6,6 +6,7 @@ import Loadable from 'react-loadable';
 import { connect } from 'react-redux';
 import { autenticacionLista, cerrarSesion } from '../redux/acciones/autenticacionAcciones';
 import { consultarConsumoReal, consultarLimite } from '../redux/acciones/clienteAcciones';
+import {obtenerListaClientes} from '../redux/acciones/administradorAcciones';
 
 import Aux from './_Aux/_Aux';
 import Cargando from './cargando/cargando';
@@ -48,6 +49,8 @@ export class App extends Component {
       if (!respuesta.admin) {
         this.props.consultarConsumoReal(respuesta.usuario.correo);
         this.props.consultarLimite(respuesta.usuario.correo);
+      }else{
+        this.props.obtenerListaClientes();
       }
       this.props.autenticacionLista(respuesta.usuario, respuesta.admin);
     } else {
@@ -79,7 +82,7 @@ export class App extends Component {
               :
               <Aux>
                 <Menu admin={admin} usuario={usuario} />
-                <Navbar cerrarSesion={this.props.cerrarSesion} admin={admin} correo={usuario.correo}  ocultarMenu={this.ocultarMenu} />
+                <Navbar cerrarSesion={this.props.cerrarSesion} admin={admin} correo={usuario.correo} nombre={usuario.nombre} ocultarMenu={this.ocultarMenu} />
                 <div className="pcoded-main-container" onClick={this.ocultarMenu}>
                   <div className="pcoded-wrapper">
                     <div className="pcoded-content">
@@ -133,7 +136,8 @@ const mapDispatchToProps = (dispatch) => {
     autenticacionLista: (usuario, admin) => { dispatch(autenticacionLista(usuario, admin)) },
     cerrarSesion: (correo, admin) => { dispatch(cerrarSesion(correo, admin)) },
     consultarConsumoReal: (correo) => { dispatch(consultarConsumoReal(correo)) },
-    consultarLimite: (correo) => {dispatch(consultarLimite(correo))}
+    consultarLimite: (correo) => {dispatch(consultarLimite(correo))},
+    obtenerListaClientes: () => dispatch(obtenerListaClientes())
   }
 }
 

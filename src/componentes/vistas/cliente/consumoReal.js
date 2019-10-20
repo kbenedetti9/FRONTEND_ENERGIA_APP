@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 //Redux
 import { connect } from 'react-redux';
-import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Card, Row, Col, Button, Alert } from 'react-bootstrap';
 import '../cliente/ConsumoReal.css';
 import { actualizarLimite } from "../../../redux/acciones/clienteAcciones";
 
@@ -11,8 +11,8 @@ class consumoReal extends Component {
 
     state = {
         selectKw: true,
-        miNuevoLimite: 0
-
+        miNuevoLimite: 0,
+        mensaje: false
     }
 
     _cambiarLimite = (evento) => {
@@ -27,12 +27,19 @@ class consumoReal extends Component {
         if (this.props.tipoLimite === null) {
             primeraVez = true;
         }
-        if (miNuevoLimite === 0) {
-            console.log("esta en cero")
+        if (!miNuevoLimite || miNuevoLimite < 0) {
+            this.setState({ mensaje: "Error debe definir un valor correcto." });
         } else {
             this.props.actualizarLimite(usuario.correo, miNuevoLimite, tipoLimite, primeraVez);
-            this.setState({miNuevoLimite:0});
+            this.setState({ miNuevoLimite: 0 });
         }
+    }
+
+    _cancelarLimite = (evento) => {
+        evento.preventDefault();
+        const { usuario } = this.props;
+        this.props.actualizarLimite(usuario.correo, 0, 0, false);
+        this.setState({ miNuevoLimite: 0 });
     }
 
     _teclearFormulario = (evento) => {
@@ -52,10 +59,14 @@ class consumoReal extends Component {
 
     }
 
+    _cerrarAlerta = () => {
+        this.setState({ mensaje: null });
+    }
+
     render() {
 
         const { consumoMes, costoU, limite, tipoLimite } = this.props;//tipolimite 1 = peso, 0 = kw
-        const { selectKw, miNuevoLimite } = this.state;
+        const { selectKw, miNuevoLimite, mensaje } = this.state;
         const fechaActual = new Date();
 
         let porcentajeLimite = 0;
@@ -100,7 +111,7 @@ class consumoReal extends Component {
                             <Row className="container">
                                 <Col lg={12}>
                                     <div className="progress m-t-30" style={{ height: '10px' }}>
-                                        <div className="progress-bar progress-c-theme" role="progressbar" style={{ width: porcentajeLimite+ "%"}} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" />
+                                        <div className="progress-bar progress-c-theme" role="progressbar" style={{ width: porcentajeLimite + "%" }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" />
                                     </div>
                                 </Col>
                             </Row>
@@ -110,6 +121,12 @@ class consumoReal extends Component {
                 <Col lg={4} md={12}>
                     <Card style={{ minHeight: '400px' }}>
                         <Card.Body className="limite">
+                            {mensaje ?
+                                <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={this._cerrarAlerta} dismissible>
+                                    <h6 style={{ color: 'white', fontSize: '11px' }}>{mensaje}</h6>
+                                </Alert>
+                                : null
+                            }
                             <div className="mb-4">
                                 <Row>
                                     <Col lg={8}>
@@ -120,7 +137,7 @@ class consumoReal extends Component {
                                     </Col>
                                 </Row>
                             </div>
-                            {tipoLimite !== null && limite
+                            {tipoLimite !== null && limite > 0
                                 ?
                                 <h2>{tipoLimite === 0 ? limite + " kwh" : "$ " + limite}</h2>
                                 :
@@ -143,6 +160,9 @@ class consumoReal extends Component {
                             </div>
                             <Button className="mt-1 editar shadow-2" onClick={this._cambiarLimite} variant="primary" size="sm">
                                 Editar
+                            </Button>
+                            <Button className="mt-1 editar shadow-2" onClick={this._cancelarLimite} variant="primary" size="sm">
+                                Eliminar limite
                             </Button>
                         </Card.Body>
                     </Card>

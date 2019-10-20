@@ -7,6 +7,11 @@ export const iniciarSesion = (credenciales) => {
             if (resultado.usuario) {
                 if (resultado.admin) {
                     dispatch({ type: 'INICIAR_SESION', resultado });
+                    Api.obtenerListaClientes().then((respuesta)=>{
+                        dispatch({type: "CLIENTES", clientes: respuesta})
+                    }).catch((error)=>{
+                        console.log(error);
+                    });
                 } else {
                     const socket = socketIOClient(URLSERVER);
                     socket.on('connect', () => {
