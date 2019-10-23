@@ -97,7 +97,7 @@ export class App extends Component {
                             <Switch>
                               <Route exact path="/App/consumoReal" component={ConsumoReal} />
                               <Route exact path="/App/historial" render={() => <Historial usuario={usuario} />} />
-                              <Route exact path="/App/ajustes" component={Ajustes} />{/*KAREN*/}
+                              <Route exact path="/App/ajustes" component={Ajustes} />
                               <Route path="/" render={() => <Redirect to='/App/consumoReal' />} />
                             </Switch>
                           }

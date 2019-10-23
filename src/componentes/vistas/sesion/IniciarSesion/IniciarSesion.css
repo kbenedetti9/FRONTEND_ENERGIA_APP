@@ -1,9 +1,9 @@
-.btn-primary{
+#ingresar{
     background:linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
     border: none;
 }
 
-.texto{
+.textoSesison{
     font-family: 'Poppins', sans-serif; 
     color:black;
     font-size: 30px;

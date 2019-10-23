@@ -50,7 +50,6 @@ class IniciarSesion extends React.Component {
         const { correo, contraseña,sTypeContraseña,sIconContraseña } = this.state;
         const { mensaje } = this.props;
 
-
         return (
             <Aux>
                 <div className="auth-wrapper">
@@ -67,12 +66,13 @@ class IniciarSesion extends React.Component {
                                 <div className="mb-4">
                                     <i className="feather icon-unlock auth-icon" />
                                 </div>
-                                <h3 className="mb-4 texto">EnergiaApp</h3>
+                                <h3 className="mb-4 textoSesion">EnergiaApp</h3>
                                 {mensaje
                                     ?
                                     <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={() => this.props.cerrarAlerta()} dismissible>
                                         <h6 style={{ color: 'white', fontSize: '11px' }}>{mensaje}</h6>
                                     </Alert>
+                                    
                                     :
                                     null}
                                 <form onSubmit={this._iniciarSesion}>
@@ -92,7 +92,7 @@ class IniciarSesion extends React.Component {
                                     <span className="input-group-text" id="basic-addon2" onClick={this._cambiarTypeContraseña}><i className={sIconContraseña}></i></span>
                                         </div>
                                     </div>
-                                    <button className="btn btn-primary shadow-2 mb-4" type="submit">Ingresar</button>
+                                    <button id="ingresar" className="btn btn-primary shadow-2 mb-4" type="submit">Ingresar</button>
 
                                 </form>
                             </div>

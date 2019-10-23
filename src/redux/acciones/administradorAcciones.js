@@ -17,3 +17,14 @@ export const recuperarContrasena = (correo, contraseña) => {
         });
     }
 }
+
+// export const actualizarUsuario = (usuario, correo, id_medidor)=>{
+//     return(dispatch,getState,Api)=>{
+//         Api.actualizarUsuario(usuario,correo, id_medidor).then((respuesta)=>{
+//             dispatch({type: "ACTUALIZAR_USUARIO",mensaje: respuesta.mensaje,variante: respuesta.variante});
+
+//         }).catch((error =>{
+//             console.log(error);
+//         } ));
+//     }
+// }

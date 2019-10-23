@@ -6,7 +6,6 @@ import '../cliente/ConsumoReal.css';
 import { actualizarLimite } from "../../../redux/acciones/clienteAcciones";
 
 
-
 class consumoReal extends Component {
 
     state = {
@@ -89,20 +88,22 @@ class consumoReal extends Component {
                     <Card style={{ minHeight: '400px' }}>
                         <Card.Body>
                             <Row className="container">
-                                <Col id="prueba" style={{ textAlign: 'center' }}>
-                                    <i id="boltIcon" className="fas fa-bolt"></i>
-                                    <h3 className="consumoTitle mt-3">Consumo actual</h3>
-                                    <p id="fecha">{fechaActual.toDateString()}</p>
-                                    <h2 id="consumo" className="numero">{consumoMes + " kw/h"}</h2>
+                                <Col id="linea" style={{ textAlign: 'center' }}>
+                                    <i id="boltIcono" className="fas fa-bolt"></i>
+                                    <h3 className="textoConsumo mt-3">Consumo actual</h3>
+                                    <p className="textoConsumo info">{fechaActual.toDateString()}</p>
+                                    <h2 className="valor">{consumoMes }<span id="unidad" className="textoConsumo">Kw/h</span> </h2>
+                                    
+                                    
                                 </Col>
 
                                 <Col style={{ textAlign: 'center' }}>
-                                    <i id="moneyIcon" className="fas fa-coins"></i>
-                                    <h3 className="consumoTitle costoTitle mt-3">Costo</h3>
-                                    <p id="unitario" className="numero">Costo unitario: ${costoU}</p>
+                                    <i id="moneyIcono" className="fas fa-coins"></i>
+                                    <h3 className="textoConsumo mt-3">Costo</h3>
+                                    <p className="textoConsumo info">Costo unitario: ${costoU}</p>
 
-                                    <h2 id="costo" className="numero">
-                                        <i id="dollarIcon" className="fas fa-dollar-sign"></i>
+                                    <h2 className="valor">
+                                        <i id="dollarIcono" className="fas fa-dollar-sign"></i>
                                         {consumoMes * costoU}
                                     </h2>
                                 </Col>
@@ -114,57 +115,62 @@ class consumoReal extends Component {
                                         <div className="progress-bar progress-c-theme" role="progressbar" style={{ width: porcentajeLimite + "%" }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" />
                                     </div>
                                 </Col>
+                               
                             </Row>
+                            <div className="circulo textoConsumo shadow-2 mx-auto mt-3" style={{ textAlign: 'center' }}>{porcentajeLimite+"%"}</div>
                         </Card.Body>
+                        
                     </Card>
+                    
                 </Col>
                 <Col lg={4} md={12}>
                     <Card style={{ minHeight: '400px' }}>
-                        <Card.Body className="limite">
+                        <Card.Body id="limite">
                             {mensaje ?
                                 <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={this._cerrarAlerta} dismissible>
                                     <h6 style={{ color: 'white', fontSize: '11px' }}>{mensaje}</h6>
                                 </Alert>
                                 : null
                             }
-                            <div className="mb-4">
+                            <div>
                                 <Row>
-                                    <Col lg={8}>
-                                        <h3 id="limiteTitle" className="texto">Limite actual</h3>
+                                    <Col lg={9} id="limiteCol" >
+                                        <h3 id="limiteTitulo" className="textoLimite mt-4">Limite actual</h3>
                                     </Col>
-                                    <Col lg={4}>
-                                        <i className="feather icon-flag" />
+                                    <Col lg={3}>
+                                        <i id="flagIcono" className="feather icon-flag" />
                                     </Col>
                                 </Row>
                             </div>
                             {tipoLimite !== null && limite > 0
                                 ?
-                                <h2>{tipoLimite === 0 ? limite + " kwh" : "$ " + limite}</h2>
+                                <h2 id="hayLimite" className="textoConsumo">{tipoLimite === 0 ? limite + " kwh" : "$ " + limite}</h2>
                                 :
                                 <div className="mb-4">
-                                    <h6 id="noLimite" className="texto"><i className="feather icon-alert-circle mr-1" /> No has definido un limite</h6>
+                                    <h6 id="noLimite" className="textoConsumo"><i id="alertIcono" className="feather icon-alert-circle mr-1" /> No has definido un limite</h6>
                                 </div>
 
                             }
-                            <h6 className="texto">Determina tu nuevo limite:</h6>
+                            <h6 className="textoLimite">Determina tu nuevo limite:</h6>
                             <div className="custom-control custom-switch mt-3">
                                 <input type="checkbox" className="custom-control-input switch" id="customSwitch1" checked={selectKw} onChange={this._selectKw} />
-                                <label className="custom-control-label texto" htmlFor="customSwitch1">Kilowatts por hora</label>
+                                <label className="custom-control-label textoLimite" htmlFor="customSwitch1">Kilowatts por hora</label>
                             </div>
                             <div className="custom-control custom-switch">
                                 <input type="checkbox" className="custom-control-input switch" id="customSwitch2" checked={!selectKw} onChange={this._selectKw} />
-                                <label className="custom-control-label texto" htmlFor="customSwitch2">Pesos colombianos</label>
+                                <label className="custom-control-label textoLimite" htmlFor="customSwitch2">Pesos colombianos</label>
                             </div>
                             <div className="input-group mb-3 fondo mt-2">
                                 <input type="number" className="form-control" value={miNuevoLimite} name='miNuevoLimite' placeholder="Cantidad" onChange={this._teclearFormulario} />
                             </div>
-                            <Button className="mt-1 editar shadow-2" onClick={this._cambiarLimite} variant="primary" size="sm">
-                                Editar
+                            <Button className="mt-1 shadow-2 boton" onClick={this._cambiarLimite} variant="primary" size="sm">
+                               Guardar
                             </Button>
-                            <Button className="mt-1 editar shadow-2" onClick={this._cancelarLimite} variant="primary" size="sm">
+                            <Button className="mt-1 shadow-2 boton" onClick={this._cancelarLimite} variant="primary" size="sm">
                                 Eliminar limite
                             </Button>
                         </Card.Body>
+                        
                     </Card>
                 </Col>
             </Row>

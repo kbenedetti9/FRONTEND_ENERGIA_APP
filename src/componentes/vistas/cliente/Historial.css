@@ -1,0 +1,46 @@
+#historialTitulo{
+color:#1DE9DB;
+font-size:30px;
+
+}
+
+.textoHistorial{
+    font-family: 'Poppins', sans-serif; 
+}
+
+#calendarIcono{
+    font-size:50px;
+}
+
+#encabezadoTabla{
+    /* background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%); */
+    border-bottom: dashed  2px #1DE9DB;
+}
+
+.encabezado{
+    /* color:white; */
+    font-size:15px;
+}
+
+.btn > i {
+  margin:0;
+}
+
+.botonFondo{
+     border-radius: 4em 4em 4em 4em;
+    width:30px;
+    height:30px;
+    padding:0;  
+    background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+    border:none;
+}
+
+.botonFondo2{
+    border-radius: 4em 4em 4em 4em;
+   width:40px;
+   height:40px;
+   padding:0;  
+   background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+   border:none;
+   font-size:20px;
+}

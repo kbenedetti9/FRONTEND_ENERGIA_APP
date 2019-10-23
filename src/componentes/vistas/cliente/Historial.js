@@ -4,7 +4,7 @@ import Api from '../../../api/Api';
 import Cargando from '../../cargando/cargando';
 import Chart from 'chart.js';
 import Pdf from '../../pdf/PDFService';
-
+import '../cliente/Historial.css';
 let obj = [];
 let grafica = null;
 const bodyRef = React.createRef();
@@ -40,28 +40,28 @@ class Historial extends Component {
                 datasets: [{
                     label: 'Madrugada',
                     data: data.consumoMadrugada,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(29, 233, 176, 0.2)',
+                    borderColor: 'rgba(29, 233, 176, 1)',
                     borderWidth: 1
                 }, {
                     label: 'Mañana',
                     data: data.consumoManana,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(163, 137, 212, 0.2)',
+                    borderColor: 'rgba(163, 137, 212, 1)',
                     borderWidth: 1
 
                 }, {
                     label: 'Tarde',
                     data: data.consumoTarde,
-                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                    borderColor: 'rgba(255, 206, 86, 1)',
+                    backgroundColor: 'rgba(29, 228, 233,  0.2)',
+                    borderColor: 'rgba(29, 228, 233, 1)',
                     borderWidth: 1
 
                 }, {
                     label: 'Noche',
                     data: data.consumoNoche,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(233, 29, 211 ,0.2)',
+                    borderColor: 'rgba(233, 29, 211 , 1)',
                     borderWidth: 1
 
                 }]
@@ -248,31 +248,36 @@ class Historial extends Component {
             <Row>
                 <Col lg={10}>
                     <Card>
-                        <Card.Header>
-                            <Card.Title>
-                                <h5>Mi Historial</h5>
-                            </Card.Title>
+                        <Card.Header id="historialTitulo" className="textoHistorial">
+
+                            Mi historial
+                          <i id="calendarIcono" className="feather icon-calendar ml-1" />
+
                         </Card.Header>
                         <Card.Body>
                             {!mostrarGrafica ?
                                 <table className="table">
-                                    <thead>
+                                    <thead id="encabezadoTabla" style={{ textAlign: 'center' }}>
                                         <tr>
-                                            <th scope="col">Mes</th>
-                                            <th scope="col">Kwh</th>
-                                            <th scope="col">$</th>
-                                            <th scope="col">Acciones</th>
+                                            <th scope="col" className="textoHistorial encabezado">Mes</th>
+                                            <th scope="col" className="textoHistorial encabezado">Kwh</th>
+                                            <th scope="col" className="textoHistorial encabezado">$</th>
+                                            <th scope="col" className="textoHistorial encabezado">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {datosTabla.map((mes, id) =>
-                                            <tr key={id}>
-                                                <td>{arrayNMes[(+mes.mes) - 1]}</td>
-                                                <td>{mes.consumoTotal}</td>
-                                                <td>{mes.consumoCosto}</td>
-                                                <td style={{ width: '10px' }} >
-                                                    <Button size='sm' value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, false)}> mostrar </Button>
-                                                    <Button size='sm' value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, true)}> reporte </Button>
+                                            <tr key={id} id="contenidoTabla" style={{ textAlign: 'center' }} >
+                                                <td className="textoHistorial">{arrayNMes[(+mes.mes) - 1]}</td>
+                                                <td className="textoHistorial">{mes.consumoTotal}</td>
+                                                <td className="textoHistorial">{mes.consumoCosto}</td>
+                                                <td>
+                                                    <Button size='sm' className="botonFondo shadow-1" value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, false)}>
+                                                        <i className="feather icon-eye" />
+                                                    </Button>
+                                                    <Button size='sm' className="botonFondo shadow-1" value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, true)}>
+                                                        <i className="feather icon-file" />
+                                                    </Button>
                                                 </td>
                                             </tr>
                                         )}
@@ -284,7 +289,7 @@ class Historial extends Component {
                                 <div ref={bodyRef}>
                                     {mostratDatosReporte ?
                                         <div>
-                                            datos de reporte
+                                            Datos de reporte
                                         </div>
                                         : null
                                     }
@@ -292,11 +297,15 @@ class Historial extends Component {
                                 </div>
 
                                 {mostrarGrafica ?
-                                    <Button size="sm" onClick={this._atras} > Atras </Button>
+                                    <Button size="sm" onClick={this._atras} className="botonFondo2 mt-3 shadow-2">
+                                        <i className="feather icon-arrow-left" />
+                                    </Button>
                                     : null
                                 }
                                 {mostratDatosReporte ?
-                                    <Button size="sm" onClick={this._generarReporte} > Descargar </Button>
+                                    <Button size="sm" onClick={this._generarReporte} className="botonFondo2 mt-3 shadow-2" >
+                                        <i className="feather icon-download" />
+                                    </Button>
                                     : null
                                 }
                             </div>

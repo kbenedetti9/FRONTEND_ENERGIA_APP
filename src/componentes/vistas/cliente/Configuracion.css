@@ -1,7 +1,27 @@
-#contrasena{
-    background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+.row{
+    margin:0;
+    padding:0;
 }
 
+.card{
+    margin-bottom: 0;
+}
+#contrasena{
+    background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+    border-left: dashed 2px gray;
+}
+
+#principal{
+    padding:0;
+}
+
+#datosCard, #contrasenaCard{
+   padding:0;
+}
+
+#contenidoContrasena{
+    margin-top:55px;
+}
 #lockIcon{
     margin-left:280px;
     font-size: 40px;
@@ -40,4 +60,9 @@ hr {
 .etiqueta{
     color:#1dc4e9;
     font-family: 'Poppins', sans-serif; 
+}
+
+#actualizar{
+    background:linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
+    border: none;
 }

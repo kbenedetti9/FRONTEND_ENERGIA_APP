@@ -1,56 +1,65 @@
-#prueba{
+.row{
+    margin-left:0;
+    margin-right: 0;
+}
+
+#linea{
     border-right:solid 0.5px #1DE9DB ;
 }
 
-#boltIcon{
+#boltIcono, #moneyIcono{
     font-size:40px;
     color:#1de9b6;
 }
 
-.consumoTitle{
+.textoConsumo{
     font-family: 'Poppins', sans-serif; 
 }
 
-.numero{
-    font-family: 'Poppins', sans-serif; 
-}
-
-#moneyIcon{
-    font-size:40px;
-    color:#1de9b6;
-}
-
-
-#dollarIcon{
+#dollarIcono{
     font-size:60px;
     color:#1de9b6;
-  margin-top:10px;
 }
 
-#costo{
-    font-size:70px;
+.valor{
+    font-size:60px;
+    font-family: 'Poppins', sans-serif; 
+
 }
 
-#unitario{
+#unidad{
+color:#1de9b6 ;
+font-size:30px;
+}
+.info{
     color:gray;
 }
 
+
+
 /*CARD LIMITE STYLES*/
-.limite{/*Card para limite*/
+#limite{/*Card para limite*/
     background: linear-gradient(-135deg, #1de9b6 0%, #1dc4e9 100%);
 }
 
-#limiteTitle{/*Titulo de card de limite*/
-    margin-top:40px;
-    font-size:20px;
-    /* float:left; */
-}
-
-.texto{/*Texto en card de limite*/
-    color:white;
+.textoLimite{
     font-family: 'Poppins', sans-serif; 
+    color:white;
 }
 
+#limiteCol{
+    padding: 0;
+}
+
+#limiteTitulo{/*Titulo de card de limite*/
+    font-size:20px;
+    color:white;
+}
+
+#flagIcono{/*Icono de card de limite*/
+    font-size:50px;
+    color: white;
+  }
 
 .custom-control-input:checked ~ .custom-control-label::before {/*Switches de tipo de limite*/
     color: #fff;
@@ -72,34 +81,41 @@
     color:white;
 }
 
+#hayLimite{
+    color:black;
+    font-size: 40px;
+}
 .fondo{
     border-radius: 1em 3em 2em;
 }
 
-.editar{/*Boton editar*/
-    /* margin-left: 170px; */
+.boton{/*Boton editar*/
     border-radius: 1.5em 1.5em 1.5em 1.5em;
     color:black;
     border:none;
     background-color: white;
+    font-family: 'Poppins', sans-serif; 
 }
 
 #noLimite{/*Texto cuando no existe limite*/
     font-size: bold;
-    color: #161B19;
-    /* margin-left:25px; */
-    
+    color: #161B19;    
 }
 
-.icon-alert-circle{/*Icono cuando no existe limite*/
-    /* float:left; */
+#alertIcono{/*Icono cuando no existe limite*/
     font-size:18px;
     color:white;
-
 }
 
-.icon-flag{/*Icono de card de limite*/
-/* margin-left:65px; */
-  font-size:50px;
-  color: white;
+.circulo{
+    
+        width: 60px;
+        height: 60px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%;
+        border: solid 3px #1de9b6;
+        font-size:16px;
+        padding:12px;
+        color:black;
 }

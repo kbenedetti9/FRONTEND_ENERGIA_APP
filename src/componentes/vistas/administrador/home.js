@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Button, Alert } from 'react-bootstrap';
 import Cargando from '../../cargando/cargando';
-import { recuperarContrasena } from '../../../redux/acciones/administradorAcciones';
+import { recuperarContrasena, actualizarUsuario } from '../../../redux/acciones/administradorAcciones';
 
 export class Home extends Component {
 
@@ -51,12 +51,22 @@ export class Home extends Component {
     }
 
     _eliminarCliente = (evento) => {
+        
 
     }
 
-    _actualizarCliente = () => {
+    // _actualizarCliente = () => { /*KAREEEEEEEEEEEEEEEEEEEEN*/
+    //     const {nombre,apellidos,correo,id_medidor,cedula}= this.state;
 
-    }
+    //     if(!id_medidor || !cedula){
+    //         console.log("No deben haber campos vacios");
+
+    //     }else{
+    //         this.props.actualizarUsuario(usuario,correo,id_medidor);
+
+    //     }
+
+    // }
 
     _nuevoCliente = () => {
 
@@ -210,6 +220,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         recuperarContrasena: (correo, contrasena) => dispatch(recuperarContrasena(correo, contrasena))
+        // actualizarUsuario: (usuario, correo, id_medidor) => dispatch(actualizarUsuario(usuario,correo, id_medidor))
     }
 }
 

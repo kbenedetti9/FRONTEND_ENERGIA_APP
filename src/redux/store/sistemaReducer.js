@@ -19,6 +19,13 @@ const sistemaReducer = (state = initState, action) => {
                 mensaje: action.mensaje,
                 variante: action.variante
             };
+            // case 'ACTUALIZAR_USUARIO':
+            //     return {
+            //         ...state,
+            //         usuario: action.usuario,
+            //         mensaje: action.mensaje ? action.mensaje : null,
+            //         variante: action.variante ? action.variante : null
+            //     };
         default:
             break;
     }
