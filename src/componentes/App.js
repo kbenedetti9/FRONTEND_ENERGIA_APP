@@ -90,11 +90,7 @@ export class App extends Component {
                         <div className="main-body">
                           {admin ?
                             <Switch>
-<<<<<<< HEAD
-                              <Route exact path="/administrar" component={Home} />
-=======
                               <Route exact path="/administrar" render={() => <Home usuario={usuario} />} />
->>>>>>> trabajando en el administrador
                               <Route path="/" render={() => <Redirect to='/administrar' />} />
                             </Switch>
                             :

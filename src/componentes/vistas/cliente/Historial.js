@@ -218,7 +218,7 @@ class Historial extends Component {
     render() {
         const { datosTabla, arrayNMes, mostrarGrafica, mostratDatosReporte } = this.state;
 
-        if (datosTabla.length === 0) {
+        if (datosTabla && datosTabla.length === 0) {
             return <Cargando />
         }
 
