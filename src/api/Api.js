@@ -255,41 +255,6 @@ Api.recuperarContrasena = async (correo, contraseña) => {
         variante = "success";
     }
 
-<<<<<<< HEAD
-    return {mensaje, variante};
-}
-
-// Api.actualizarUsuario =async (usuario, correo, id_medidor) =>{
-
-//     let mensaje = null;
-//     let variante = null;
-
-//     const resultado = await fetch(URLSERVER + "/cliente/" + correo, {
-//         method: 'PUT',
-//         body: JSON.stringify({ id_medidor, mod: "modA2" }),
-//         credentials: "include",
-//         headers: {
-//             'Content-Type': 'application/json; charset=UTF-8',
-//             'Accept': 'application/json'
-//         }
-//     });
-
-//     const resultadoJson = await resultado.json();
-
-//     if (resultadoJson.estado) {
-//         console.log("Actualizacion con exito");
-//         mensaje = "Actualización realizada con exito.";
-//         variante = "success";
-//     } else {
-//         mensaje = "No se logró realizar la actualización";
-//         variante = "danger";
-//         console.log(resultadoJson);
-//     }
-
-//     return { usuario, mensaje, variante };
-
-// }
-=======
     return { mensaje, variante };
 }
 
@@ -409,6 +374,5 @@ Api.actualizarCostoUnitario = async (costoUnitario) => {
 
     return { mensaje, variante, estado: resultadoJson.estado };
 }
->>>>>>> trabajando en el administrador
 
 export default Api;
