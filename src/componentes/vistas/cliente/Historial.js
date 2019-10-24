@@ -25,13 +25,11 @@ class Historial extends Component {
 
     _atras = () => {
         this.setState({ mostrarGrafica: false, mostratDatosReporte: false });
-        console.log(grafica)
         grafica.destroy();
     }
 
     _graficar = (data, reporte) => {
         this.setState({ mostrarGrafica: true, mostratDatosReporte: reporte });
-        console.log(this.state.mostrarGrafica)
         var ctx = document.getElementById('myChart');
         grafica = new Chart(ctx, {
             type: 'bar',
@@ -87,9 +85,9 @@ class Historial extends Component {
         });
     }
 
-    _obtenerHistorialMes = (evento, reporte) => {
+    _obtenerHistorialMes = (evento, reporte, mes) => {
         evento.preventDefault();
-        const mes = evento.target.value;
+
         const { historial } = this.state;
 
         //Objeto a devolver
@@ -125,13 +123,9 @@ class Historial extends Component {
             var fecha = historial[i].fecha;
             const arrayFecha = fecha.split("/");
             let diaConsumido = +arrayFecha[1];
-            console.log(mes);
-            if (arrayFecha[0] === mes) {
-
-                console.log(mes);
+            if (+arrayFecha[0] === mes) {
 
                 if (historial[i].consumoTarde !== undefined) {
-                    console.log("tiene consumoTarde");
                     for (var h = 0; h < labels.length; h++) {
                         if (labels[h] === diaConsumido) {
                             arrayconsumoTarde[h] = historial[i].consumoTarde;
@@ -139,12 +133,10 @@ class Historial extends Component {
                     }
                     data.consumoTarde = arrayconsumoTarde;
                 } else {
-                    console.log("No tiene consumoTarde");
                     data.consumoTarde = arrayconsumoTarde;
                 }
 
                 if (historial[i].consumoMañana !== undefined) {
-                    console.log("tiene consumoMañana");
                     for (h = 0; h < labels.length; h++) {
                         if (labels[h] === diaConsumido) {
                             arrayConsumoManana[h] = historial[i].consumoMañana;
@@ -152,12 +144,10 @@ class Historial extends Component {
                     }
                     data.consumoManana = arrayConsumoManana;
                 } else {
-                    console.log("No tiene consumoMañana");
                     data.consumoManana = arrayConsumoManana;
                 }
 
                 if (historial[i].consumoMadrugada !== undefined) {
-                    console.log("tiene consumoMadrugada");
                     for (h = 0; h < labels.length; h++) {
                         if (labels[h] === diaConsumido) {
                             arrayConsumoMadrugada[h] = historial[i].consumoMadrugada;
@@ -165,12 +155,10 @@ class Historial extends Component {
                     }
                     data.consumoMadrugada = arrayConsumoMadrugada;
                 } else {
-                    console.log("No tiene consumoMadrugada");
                     data.consumoMadrugada = arrayConsumoMadrugada;
                 }
 
                 if (historial[i].consumoNoche !== undefined) {
-                    console.log("tiene consumoNoche");
                     for (h = 0; h < labels.length; h++) {
                         if (labels[h] === diaConsumido) {
                             arrayconsumoNoche[h] = historial[i].consumoNoche;
@@ -178,14 +166,11 @@ class Historial extends Component {
                     }
                     data.consumoNoche = arrayconsumoNoche;
                 } else {
-                    console.log("No tiene consumoNoche");
                     data.consumoNoche = arrayconsumoNoche;
                 }
 
             }
         }
-        console.log(data);
-
         this._graficar(data, reporte);
     }
 
@@ -213,7 +198,6 @@ class Historial extends Component {
                 }
             }
             obj.push({ mes: objMes[index], consumoTotal: consumoTotal, consumoCosto: (consumoTotal * costoU) });
-            console.log(obj)
         }
 
         if (obj.length > 0) {
@@ -226,7 +210,6 @@ class Historial extends Component {
     componentDidMount = async () => {
         const { usuario } = this.props;
         const historial = await Api.consultarHistorial(usuario.correo);
-        console.log(historial);
         if (historial) {
             this._obtenerDatosTabla(historial);
         }
@@ -272,10 +255,10 @@ class Historial extends Component {
                                                 <td className="textoHistorial">{mes.consumoTotal}</td>
                                                 <td className="textoHistorial">{mes.consumoCosto}</td>
                                                 <td>
-                                                    <Button size='sm' className="botonFondo shadow-1" value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, false)}>
+                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, +mes.mes)}>
                                                         <i className="feather icon-eye" />
                                                     </Button>
-                                                    <Button size='sm' className="botonFondo shadow-1" value={+mes.mes} onClick={(e) => this._obtenerHistorialMes(e, true)}>
+                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, true, +mes.mes)}>
                                                         <i className="feather icon-file" />
                                                     </Button>
                                                 </td>

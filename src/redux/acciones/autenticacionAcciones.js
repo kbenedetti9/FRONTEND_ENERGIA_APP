@@ -22,8 +22,8 @@ export const iniciarSesion = (credenciales) => {
                             dispatch({ type: 'INICIAR_SESION', resultado });
                             socket.on('consumoReal', (objeto) => {
                                 console.log(objeto);
-                                // dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
-                                // dispatch({type:'COSTO_U', costoU: respuesta.costoU});
+                                dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.consumoMes });
+                                dispatch({type:'COSTO_U', costoU: objeto.costoU});
                             });
                             Api.consultarConsumoReal(resultado.usuario.correo).then((respuesta) => {
                                 dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes.consumoMes });

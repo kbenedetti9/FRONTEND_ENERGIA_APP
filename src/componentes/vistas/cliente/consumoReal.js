@@ -69,7 +69,7 @@ class consumoReal extends Component {
         const fechaActual = new Date();
 
         let porcentajeLimite = 0;
-        if (tipoLimite !== null) {
+        if (tipoLimite !== null && limite>0) {//Tiene un limite definido
 
             if (tipoLimite === 0) {
                 porcentajeLimite = Math.round((consumoMes * 100) / limite);
@@ -93,8 +93,6 @@ class consumoReal extends Component {
                                     <h3 className="textoConsumo mt-3">Consumo actual</h3>
                                     <p className="textoConsumo info">{fechaActual.toDateString()}</p>
                                     <h2 className="valor">{consumoMes }<span id="unidad" className="textoConsumo">Kw/h</span> </h2>
-                                    
-                                    
                                 </Col>
 
                                 <Col style={{ textAlign: 'center' }}>

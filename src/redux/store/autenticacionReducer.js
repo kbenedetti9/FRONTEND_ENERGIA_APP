@@ -48,6 +48,12 @@ const autenticacionReducer = (state = initState, action) => {
                 mensaje: action.mensaje ? action.mensaje : null,
                 variante: action.variante ? action.variante : null
             };
+        case 'ACTUALIZAR_USUARIO_ERROR':
+            return {
+                ...state,
+                mensaje: action.mensaje ? action.mensaje : null,
+                variante: action.variante ? action.variante : null
+            };
         default:
             break;
     }

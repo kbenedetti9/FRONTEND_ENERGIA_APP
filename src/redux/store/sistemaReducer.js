@@ -19,15 +19,20 @@ const sistemaReducer = (state = initState, action) => {
                 mensaje: action.mensaje,
                 variante: action.variante
             };
-            // case 'ACTUALIZAR_USUARIO':
-            //     return {
-            //         ...state,
-            //         usuario: action.usuario,
-            //         mensaje: action.mensaje ? action.mensaje : null,
-            //         variante: action.variante ? action.variante : null
-            //     };
+        case 'ADMINISTRADOR_ACCION_ERROR':
+            return {
+                ...state,
+                mensaje: action.mensaje ? action.mensaje : null,
+                variante: action.variante ? action.variante : null
+            };
+        case 'ADMINISTRADOR_ACCION':
+            return {
+                ...state,
+                mensaje: action.mensaje ? action.mensaje : null,
+                variante: action.variante ? action.variante : null
+            };
         default:
-            break;
+            break; 
     }
     return state;
 }

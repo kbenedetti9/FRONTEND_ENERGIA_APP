@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Button, Alert } from 'react-bootstrap';
 import Cargando from '../../cargando/cargando';
-import { recuperarContrasena, actualizarUsuario } from '../../../redux/acciones/administradorAcciones';
+import { recuperarContrasena, actualizarUsuario, crearUsuario, eliminarUsuario, actualizarCostoUnitario } from '../../../redux/acciones/administradorAcciones';
+
+let listaClientes = [];
 
 export class Home extends Component {
 
@@ -14,7 +16,10 @@ export class Home extends Component {
         correo: "",
         cedula: "",
         id_medidor: "",
-        btnEditarCliente: false
+        btnEditarCliente: false,
+        mensajeInterno: null,
+        varianteInterna: "",
+        listaClientesLocal: null
     }
 
     _teclearFormulario = (evento) => {
@@ -26,7 +31,36 @@ export class Home extends Component {
         });
     }
 
+    _validaCorreo(correo) {
+        var re = /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@]+)*)|(.+))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(correo);
+    }
+
     _filtrarCliente = (evento) => {
+
+        const value = evento.target.value;
+        console.log()
+        var filtro = listaClientes.filter((str) => {
+            if (str.correo && str.nombre && str.apellidos && str.id_medidor && str.cedula) {
+                return str.nombre.toLowerCase().includes(value.toLowerCase()) ||
+                    str.correo.toLowerCase().includes(value.toLowerCase()) ||
+                    str.apellidos.toLowerCase().includes(value.toLowerCase()) ||
+                    str.id_medidor === +value ||
+                    str.cedula === +value;
+            } else {
+                return null;
+            }
+        });
+
+        if (value) {
+            this.setState({
+                listaClientesLocal: filtro
+            });
+        } else {
+            this.setState({
+                listaClientesLocal: null
+            });
+        }
 
     }
 
@@ -46,57 +80,95 @@ export class Home extends Component {
     _recuperarContraseña = (evento) => {
 
         const correo = evento.target.value;
-        this.props.recuperarContrasena(correo, correo);
+        this.props.recuperarContrasena(correo, correo);//correo y nueva clave
 
     }
 
-    _eliminarCliente = (evento) => {
-        
-
+    _eliminarCliente = (evento, correo) => {
+        evento.preventDefault();
+        this.props.eliminarUsuario(correo);
     }
 
-    // _actualizarCliente = () => { /*KAREEEEEEEEEEEEEEEEEEEEN*/
-    //     const {nombre,apellidos,correo,id_medidor,cedula}= this.state;
+    _actualizarCliente = (evento) => { /*KAREEEEEEEEEEEEEEEEEEEEN*/
+        evento.preventDefault();
+        const { id_medidor, correo } = this.state;
 
-    //     if(!id_medidor || !cedula){
-    //         console.log("No deben haber campos vacios");
+        if (!id_medidor) {
+            this.setState({ mensajeInterno: "No deben haber campos vacios", varianteInterna: "danger" });
+        } else {
+            this.props.actualizarUsuario(correo, id_medidor);
+        }
 
-    //     }else{
-    //         this.props.actualizarUsuario(usuario,correo,id_medidor);
-
-    //     }
-
-    // }
+    }
 
     _nuevoCliente = () => {
 
+        const { correo, nombre, apellidos, id_medidor, cedula } = this.state;
+
+        if (correo === "" || nombre === "" || id_medidor === "" || apellidos === "" || cedula === "" || !this._validaCorreo(correo)) {
+            this.setState({ mensajeInterno: "No debe haber campos vacios y el correo debe ser valido", varianteInterna: "danger" });
+        } else {
+            this.props.crearUsuario(correo, nombre, apellidos, id_medidor, cedula);
+        }
+    }
+
+    _actualizarCostoUnitario = (evento) => {
+        evento.preventDefault();
+        if (this.state.costoUnitario > 0) {
+            this.props.actualizarCostoUnitario(this.state.costoUnitario);
+        } else {
+            this.setState({ mensajeInterno: "Debe diligenciar un costo unitario valido", varianteInterna: "danger" });
+        }
     }
 
     _limpiarInputs = () => {
-
+        this.setState({
+            costoUnitario: 0,
+            nombre: "",
+            apellidos: "",
+            correo: "",
+            cedula: "",
+            id_medidor: "",
+            btnEditarCliente: false,
+            mensajeInterno: null,
+            varianteInterna: "",
+        });
     }
 
     _cerrarAlerta = () => {
-        
+        this.setState({
+            mensajeInterno: null,
+            varianteInterna: ""
+        });
     }
 
     render() {
 
-        const { nombre, apellidos, correo, cedula, id_medidor, btnEditarCliente } = this.state;
+        const { nombre, apellidos, correo, cedula, id_medidor, btnEditarCliente, mensajeInterno, varianteInterna, listaClientesLocal } = this.state;
         const { clientes, consultaLista, mensajeStore, varianteStore } = this.props;
 
         if (!consultaLista) {
             return <Cargando />
         }
 
+        let listaTabla = [];//Lista final que usa la tabla
+
+        listaClientes = clientes;//Usada solo para el filtro
+
+        if(listaClientesLocal){//Lista que esta llena si solo si se esta filtrando
+            listaTabla = listaClientesLocal;
+        }else{
+            listaTabla = clientes;
+        }
+
         return (
             <div className="container">
                 <div className="">
-                    <input name="costoUnitario" className="form-control form-control-sm inputUser" placeholder="costo unitario" type="Number" onChange={this._teclearFormulario} />
+                    <input name="costoUnitario" className="form-control form-control-sm inputUser" placeholder="costo unitario sin puntos" type="Number" onChange={this._teclearFormulario} />
                 </div>
-                <Button type="button" className="mr-3 mb-4" size="sm"> Actualizar </Button>
+                <Button type="button" className="mr-3 mb-4" size="sm" onClick={this._actualizarCostoUnitario}> Actualizar </Button>
                 <Row>
-                    <Col lg={4}>
+                    <Col lg={3}>
                         <div className="tituloNuevoCliente">
                             <h6>Formulario de cliente</h6>
                         </div>
@@ -104,11 +176,17 @@ export class Home extends Component {
                         <div className="card mx-auto cardComponent">
                             {mensajeStore
                                 ?
-                                <Alert variant={varianteStore} style={{ backgroundColor: 'green' }} onClose={this._cerrarAlerta} dismissible>
-                                    <h6 style={{ color: 'white', fontSize: '11px' }}>{mensajeStore}</h6>
+                                <Alert variant={varianteStore} onClose={this._cerrarAlerta} dismissible>
+                                    <h6 style={{ color: 'black', fontSize: '11px' }}>{mensajeStore}</h6>
                                 </Alert>
                                 :
-                                null}
+                                mensajeInterno
+                                    ?
+                                    <Alert variant={varianteInterna} onClose={this._cerrarAlerta} dismissible>
+                                        <h6 style={{ color: 'black', fontSize: '11px' }}>{mensajeInterno}</h6>
+                                    </Alert>
+                                    :
+                                    null}
                             <div className="card-header" style={{ textAlign: 'left', fontSize: '12px' }}>
                                 <div className="form-group">
                                     <label forhtml="nombre">Nombre(s) del cliente</label>
@@ -154,15 +232,15 @@ export class Home extends Component {
                         </div>
 
                     </Col>
-                    <Col lg={8}>
+                    <Col lg={9}>
                         {/* Alerta de algun error */}
 
                         <div className="filtroCliente">
-                            <input className="form-control" type="text" placeholder="Search a user by name or email" aria-label="Search" onChange={this._filtrarCliente} />
+                            <input className="form-control" type="text" placeholder="Buscra a un cliente" aria-label="Search" onChange={this._filtrarCliente} />
                         </div>
 
-                        {clientes.length > 0 ?
-                            <div className="table-responsive-lg">
+                        {listaTabla.length > 0 ?
+                            <div className="table-responsive">
                                 <table className="table table-striped " style={{ fontSize: '13px' }}>
                                     <thead className="thead-dark">
                                         <tr>
@@ -187,7 +265,7 @@ export class Home extends Component {
 
                                                         <button className="btn btn-secondary btn-sm" onClick={() => this._editarCliente(cliente)}>Editar</button>
                                                         <button className="btn btn-secondary btn-sm" value={cliente.correo} onClick={this._recuperarContraseña}>Recuperar</button>
-                                                        <button className="btn btn-danger btn-sm" value={cliente.correo} onClick={this._eliminarCliente}>Eliminar</button>
+                                                        <button className="btn btn-danger btn-sm" value={cliente.correo} onClick={(evento) => this._eliminarCliente(evento, cliente.correo)}>Eliminar</button>
 
                                                     </div>
                                                 </td>
@@ -219,8 +297,11 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        recuperarContrasena: (correo, contrasena) => dispatch(recuperarContrasena(correo, contrasena))
-        // actualizarUsuario: (usuario, correo, id_medidor) => dispatch(actualizarUsuario(usuario,correo, id_medidor))
+        recuperarContrasena: (correo, contrasena) => dispatch(recuperarContrasena(correo, contrasena)),
+        actualizarUsuario: (correo, id_medidor) => dispatch(actualizarUsuario(correo, id_medidor)),
+        crearUsuario: (correo, nombre, apellidos, id_medidor, cedula) => dispatch(crearUsuario(correo, nombre, apellidos, id_medidor, cedula)),
+        eliminarUsuario: (correo) => dispatch(eliminarUsuario(correo)),
+        actualizarCostoUnitario: (costoUnitario) => dispatch(actualizarCostoUnitario(costoUnitario))
     }
 }
 
