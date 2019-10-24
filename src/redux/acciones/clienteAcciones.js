@@ -1,7 +1,7 @@
 export const consultarConsumoReal = (correo) => {
     return (dispatch, getState, Api) => {
         Api.consultarConsumoReal(correo).then((respuesta) => {
-            dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes.consumoMes });
+            dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
             dispatch({ type: 'COSTO_U', costoU: respuesta.costoU });
         }).catch((error) => {
             console.log(error);

@@ -88,9 +88,8 @@ Api.consultarConsumoReal = async (correo) => {
     });
 
     const resultadoJson = await resultado.json();
-
     if (resultadoJson.estado) {
-        consumoMes = resultadoJson.consumoMes;
+        consumoMes = resultadoJson.consumoMes.consumoMes;
         costoU = resultadoJson.costoU;
     }
 
