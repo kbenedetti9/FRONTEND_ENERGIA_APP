@@ -1,5 +1,6 @@
 import socketIOClient from "socket.io-client";
-import {URLSERVER} from '../../configuracion/configuracion'
+import { URLSERVER } from '../../configuracion/configuracion';
+import Push from 'push.js';
 
 export const iniciarSesion = (credenciales) => {
     return (dispatch, getState, Api) => {
@@ -7,9 +8,14 @@ export const iniciarSesion = (credenciales) => {
             if (resultado.usuario) {
                 if (resultado.admin) {
                     dispatch({ type: 'INICIAR_SESION', resultado });
-                    Api.obtenerListaClientes().then((respuesta)=>{
-                        dispatch({type: "CLIENTES", clientes: respuesta})
-                    }).catch((error)=>{
+                    Api.obtenerListaClientes().then((respuesta) => {
+                        dispatch({ type: "CLIENTES", clientes: respuesta })
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                    Api.consultarCostoUnitario().then((costoUnitario)=>{
+                        dispatch({ type: "COSTO_UNITARIO", costoUnitario })
+                    }).catch((error) => {
                         console.log(error);
                     });
                 } else {
@@ -23,20 +29,39 @@ export const iniciarSesion = (credenciales) => {
                             socket.on('consumoReal', (objeto) => {
                                 console.log(objeto);
                                 dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.consumoMes });
-                                dispatch({type:'COSTO_U', costoU: objeto.costoU});
+                                dispatch({ type: 'COSTO_U', costoU: objeto.costoU });
+                            });
+                            socket.on('limiteKwh', (notificacion) => {
+                                console.log("Alerta: has superado el 50% de tu limite" + notificacion);
+                                Push.create(notificacion.mensaje, {
+                                    body: "Limite: " + notificacion.limite + "/nConsumo: " + notificacion.consumo + "/nCosto: " + notificacion.costo,
+                                    timeout: 5000,
+                                    onClick: function () {
+                                        console.log(this);
+                                    }
+                                });
+                            });
+                            socket.on('limiteCosto', (notificacion) => {
+                                console.log("Alerta: has superado el 50% de tu limite" + notificacion);
+                                Push.create(notificacion.mensaje, {
+                                    body: "Limite: " + notificacion.limite + "/nConsumo: " + notificacion.consumo + "/nCosto: " + notificacion.costo,
+                                    timeout: 5000,
+                                    onClick: function () {
+                                        console.log(this);
+                                    }
+                                });
                             });
                             Api.consultarConsumoReal(resultado.usuario.correo).then((respuesta) => {
                                 dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
-                                dispatch({type:'COSTO_U', costoU: respuesta.costoU});
+                                dispatch({ type: 'COSTO_U', costoU: respuesta.costoU });
                             }).catch((error) => {
                                 console.log(error);
                             });
-                            Api.consultarLimite(resultado.usuario.correo).then((respuesta)=>{
+                            Api.consultarLimite(resultado.usuario.correo).then((respuesta) => {
                                 dispatch({ type: 'LIMITE', limite: respuesta.limite, tipoLimite: respuesta.tipoLimite });
-                            }).catch((error)=>{
+                            }).catch((error) => {
                                 console.log(error);
                             });
-                            
                         }
                     });
                 }

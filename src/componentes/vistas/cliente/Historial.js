@@ -7,6 +7,7 @@ import Pdf from '../../pdf/PDFService';
 import '../cliente/Historial.css';
 let obj = [];
 let grafica = null;
+let mesSeleccionado = null;
 const bodyRef = React.createRef();
 
 class Historial extends Component {
@@ -25,6 +26,7 @@ class Historial extends Component {
 
     _atras = () => {
         this.setState({ mostrarGrafica: false, mostratDatosReporte: false });
+        mesSeleccionado = null;
         grafica.destroy();
     }
 
@@ -65,6 +67,7 @@ class Historial extends Component {
                 }]
             },
             options: {
+                maintainAspectRatio: false,
                 scales: {
                     yAxes: [{
 
@@ -80,14 +83,15 @@ class Historial extends Component {
                             beginAtZero: true
                         }
                     }]
-                }
+                },
+                responsive: true
             }
         });
     }
 
-    _obtenerHistorialMes = (evento, reporte, mes) => {
+    _obtenerHistorialMes = (evento, reporte, mes, objMes) => {
         evento.preventDefault();
-
+        mesSeleccionado = objMes;
         const { historial } = this.state;
 
         //Objeto a devolver
@@ -171,6 +175,7 @@ class Historial extends Component {
 
             }
         }
+        console.log(data)
         this._graficar(data, reporte);
     }
 
@@ -217,6 +222,7 @@ class Historial extends Component {
 
     render() {
         const { datosTabla, arrayNMes, mostrarGrafica, mostratDatosReporte } = this.state;
+        const { usuario } = this.props;
 
         if (datosTabla && datosTabla.length === 0) {
             return <Cargando />
@@ -229,7 +235,7 @@ class Historial extends Component {
         return (
 
             <Row>
-                <Col lg={10}>
+                <Col>
                     <Card>
                         <Card.Header id="historialTitulo" className="textoHistorial">
 
@@ -255,10 +261,10 @@ class Historial extends Component {
                                                 <td className="textoHistorial">{mes.consumoTotal}</td>
                                                 <td className="textoHistorial">{mes.consumoCosto}</td>
                                                 <td>
-                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, +mes.mes)}>
+                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, +mes.mes, mes)}>
                                                         <i className="feather icon-eye" />
                                                     </Button>
-                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, true, +mes.mes)}>
+                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, true, +mes.mes, mes)}>
                                                         <i className="feather icon-file" />
                                                     </Button>
                                                 </td>
@@ -272,11 +278,42 @@ class Historial extends Component {
                                 <div ref={bodyRef}>
                                     {mostratDatosReporte ?
                                         <div>
-                                            Datos de reporte
+                                            <div style={{ marginBottom: '70px' }}>
+                                                <Row>
+                                                    <Col >
+                                                        <div>Energia App </div>
+                                                    </Col>
+                                                    <Col className="ml-auto text-right">
+                                                        {new Date().toLocaleDateString()}
+                                                    </Col>
+                                                </Row>
+                                                <hr />
+                                            </div>
+                                            <div style={{ marginBottom: '50px' }}>
+                                                Datos personales del usuario
+                                                <hr />
+                                                <div><strong>Nombre: </strong>{usuario.apellidos + " " + usuario.nombre}</div>
+                                                <div><strong>Cedula: </strong>{usuario.cedula}</div>
+                                                <div><strong>Correo: </strong>{usuario.correo}</div>
+                                                <div><strong>Id del medidor: </strong>{usuario.id_medidor}</div>
+                                            </div>
+                                        </div>
+
+                                        : null
+                                    }
+                                    <div className="chart-container" >
+                                        <canvas id="myChart"></canvas>
+                                    </div>
+                                    {mostratDatosReporte ?
+                                        <div style={{ marginTop: '50px', marginBottom: '50px' }}>
+                                            Datos del mes
+                                            <hr />
+                                            <div><strong>Nombre: </strong>{arrayNMes[(+mesSeleccionado.mes) - 1]}</div>
+                                            <div><strong>Consumo total: </strong>{mesSeleccionado.consumoTotal + 'kwh'}</div>
+                                            <div><strong>Costo Total: </strong>{'$' + mesSeleccionado.consumoCosto}</div>
                                         </div>
                                         : null
                                     }
-                                    <canvas id="myChart"></canvas>
                                 </div>
 
                                 {mostrarGrafica ?
@@ -296,8 +333,6 @@ class Historial extends Component {
                         </Card.Body>
 
                     </Card>
-                </Col>
-                <Col lg={2}>
                 </Col>
             </Row>
 

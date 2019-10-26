@@ -374,4 +374,53 @@ Api.actualizarCostoUnitario = async (costoUnitario) => {
     return { mensaje, variante, estado: resultadoJson.estado };
 }
 
+Api.consultarCostoUnitario = async () => {
+
+    let costoUnitario = 0;
+
+    const resultado = await fetch(URLSERVER + "/sistema", {
+        method: 'GET',
+        credentials: "include",
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    if(resultadoJson.estado){
+        costoUnitario = resultadoJson.sistema.costoUnitario;
+    }
+    
+    return costoUnitario;
+}
+
+Api.cerrarSesionUsuario = async (correo) => {
+
+    let mensaje = null;
+    let variante = null;
+
+    const resultado = await fetch(URLSERVER + "/administrador/" + correo , {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    if(resultadoJson.estado){
+        mensaje = resultadoJson.mensaje;
+        variante = "success";
+    }else{
+        mensaje = resultadoJson.mensaje;
+        variante = "warnin";
+    }
+    
+    return {mensaje, variante};
+}
+
 export default Api;

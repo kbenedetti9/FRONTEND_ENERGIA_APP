@@ -2,7 +2,8 @@ const initState = {
     listaClientes: [],
     consultaLista: false,
     mensaje: null,
-    variante: null
+    variante: null,
+    costoUnitario: 0
 }
 
 const sistemaReducer = (state = initState, action) => {
@@ -31,8 +32,19 @@ const sistemaReducer = (state = initState, action) => {
                 mensaje: action.mensaje ? action.mensaje : null,
                 variante: action.variante ? action.variante : null
             };
+        case 'COSTO_UNITARIO':
+            return {
+                ...state,
+                costoUnitario: action.costoUnitario
+            };
+        case 'CERRAR_SESION_USUARIO':
+            return {
+                ...state,
+                mensaje: action.mensaje ? action.mensaje : null,
+                variante: action.variante ? action.variante : null
+            };
         default:
-            break; 
+            break;
     }
     return state;
 }

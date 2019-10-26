@@ -18,6 +18,26 @@ export const recuperarContrasena = (correo, contraseña) => {
     }
 }
 
+export const consultarCostoUnitario = () => {
+    return (dispatch, getState, Api) => {
+        Api.consultarCostoUnitario().then((costoUnitario)=>{
+            dispatch({ type: "COSTO_UNITARIO", costoUnitario })
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+}
+
+export const cerrarSesionUsuario = (correo) => {
+    return (dispatch, getState, Api) => {
+        Api.cerrarSesionUsuario(correo).then((respuesta)=>{
+            dispatch({ type: "CERRAR_SESION_USUARIO", mensaje: respuesta.mensaje, variante: respuesta.variante })
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+}
+
 export const actualizarUsuario = (correo, id_medidor) => {
     return (dispatch, getState, Api) => {
         Api.actualizarUsuario(correo, id_medidor).then((respuesta) => {

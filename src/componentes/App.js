@@ -6,7 +6,7 @@ import Loadable from 'react-loadable';
 import { connect } from 'react-redux';
 import { autenticacionLista, cerrarSesion } from '../redux/acciones/autenticacionAcciones';
 import { consultarConsumoReal, consultarLimite } from '../redux/acciones/clienteAcciones';
-import {obtenerListaClientes} from '../redux/acciones/administradorAcciones';
+import {obtenerListaClientes, consultarCostoUnitario} from '../redux/acciones/administradorAcciones';
 
 import Aux from './_Aux/_Aux';
 import Cargando from './cargando/cargando';
@@ -45,12 +45,14 @@ export class App extends Component {
 
   componentDidMount = async () => {
     const respuesta = await Api.estoyAutenticado();
+    console.log(respuesta)
     if (respuesta.estado) {
       if (!respuesta.admin) {
         this.props.consultarConsumoReal(respuesta.usuario.correo);
         this.props.consultarLimite(respuesta.usuario.correo);
       }else{
         this.props.obtenerListaClientes();
+        this.props.consultarCostoUnitario();
       }
       this.props.autenticacionLista(respuesta.usuario, respuesta.admin);
     } else {
@@ -137,7 +139,8 @@ const mapDispatchToProps = (dispatch) => {
     cerrarSesion: (correo, admin) => { dispatch(cerrarSesion(correo, admin)) },
     consultarConsumoReal: (correo) => { dispatch(consultarConsumoReal(correo)) },
     consultarLimite: (correo) => {dispatch(consultarLimite(correo))},
-    obtenerListaClientes: () => dispatch(obtenerListaClientes())
+    obtenerListaClientes: () => dispatch(obtenerListaClientes()),
+    consultarCostoUnitario: () => dispatch(consultarCostoUnitario())
   }
 }
 

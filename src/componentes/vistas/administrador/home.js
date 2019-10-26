@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row, Col, Button, Alert } from 'react-bootstrap';
 import Cargando from '../../cargando/cargando';
-import { recuperarContrasena, actualizarUsuario, crearUsuario, eliminarUsuario, actualizarCostoUnitario } from '../../../redux/acciones/administradorAcciones';
+import '../administrador/Administrador.css';
+import { recuperarContrasena, actualizarUsuario, crearUsuario, eliminarUsuario, actualizarCostoUnitario, cerrarSesionUsuario } from '../../../redux/acciones/administradorAcciones';
 
 let listaClientes = [];
 
@@ -121,6 +122,11 @@ export class Home extends Component {
         }
     }
 
+    _cerrarSesionUsuario = (evento, correo) => {
+        evento.preventDefault();
+        this.props.cerrarSesionUsuario(correo);
+    }
+
     _limpiarInputs = () => {
         this.setState({
             costoUnitario: 0,
@@ -145,7 +151,7 @@ export class Home extends Component {
     render() {
 
         const { nombre, apellidos, correo, cedula, id_medidor, btnEditarCliente, mensajeInterno, varianteInterna, listaClientesLocal } = this.state;
-        const { clientes, consultaLista, mensajeStore, varianteStore } = this.props;
+        const { clientes, consultaLista, mensajeStore, varianteStore, costoUnitario } = this.props;
 
         if (!consultaLista) {
             return <Cargando />
@@ -161,6 +167,8 @@ export class Home extends Component {
             listaTabla = clientes;
         }
 
+        console.log(costoUnitario)
+
         return (
             <div className="container">
                 <div className="">
@@ -169,9 +177,9 @@ export class Home extends Component {
                 <Button type="button" className="mr-3 mb-4" size="sm" onClick={this._actualizarCostoUnitario}> Actualizar </Button>
                 <Row>
                     <Col lg={3}>
-                        <div className="tituloNuevoCliente">
+                        {/* <div className="tituloNuevoCliente">
                             <h6>Formulario de cliente</h6>
-                        </div>
+                        </div> */}
 
                         <div className="card mx-auto cardComponent">
                             {mensajeStore
@@ -187,6 +195,9 @@ export class Home extends Component {
                                     </Alert>
                                     :
                                     null}
+                                      <div className="tituloNuevoCliente">
+                            <h6 id="tituloAdmin" className="mt-3 ml-4">Formulario de cliente</h6>
+                        </div>
                             <div className="card-header" style={{ textAlign: 'left', fontSize: '12px' }}>
                                 <div className="form-group">
                                     <label forhtml="nombre">Nombre(s) del cliente</label>
@@ -236,37 +247,39 @@ export class Home extends Component {
                         {/* Alerta de algun error */}
 
                         <div className="filtroCliente">
-                            <input className="form-control" type="text" placeholder="Buscra a un cliente" aria-label="Search" onChange={this._filtrarCliente} />
+                            <input className="form-control" type="text" placeholder="Buscar cliente..." aria-label="Search" onChange={this._filtrarCliente} />
                         </div>
 
                         {listaTabla.length > 0 ?
                             <div className="table-responsive">
-                                <table className="table table-striped " style={{ fontSize: '13px' }}>
+                                <table className="table table-striped " style={{ fontSize: '13px', textAlign: 'center' }}>
                                     <thead className="thead-dark">
                                         <tr>
-                                            <th scope="col">#</th>
                                             <th scope="col">Nombre</th>
                                             <th scope="col">Correo</th>
                                             <th scope="col">CC</th>
-                                            <th scope="col">ID del medidor</th>
+                                            <th scope="col">ID</th>
                                             <th scope="col">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {clientes.map((cliente, index) =>
                                             <tr key={index}>
-                                                <th scope="row">{index + 1}</th>
-                                                <td>{cliente.nombre + " " + cliente.apellidos}</td>
+                                                <td>{cliente.nombre}</td>
                                                 <td>{cliente.correo}</td>
                                                 <td>{cliente.cedula}</td>
                                                 <td>{cliente.id_medidor}</td>
                                                 <td>
                                                     <div className="btn-group btn-group-sm" role="group">
 
-                                                        <button className="btn btn-secondary btn-sm" onClick={() => this._editarCliente(cliente)}>Editar</button>
-                                                        <button className="btn btn-secondary btn-sm" value={cliente.correo} onClick={this._recuperarContraseña}>Recuperar</button>
-                                                        <button className="btn btn-danger btn-sm" value={cliente.correo} onClick={(evento) => this._eliminarCliente(evento, cliente.correo)}>Eliminar</button>
-
+                                                        <button className="btn btn-secondary btn-sm botonAdmin" style={{padding: '0.5', fontSize: '12px'}} onClick={() => this._editarCliente(cliente)}>
+                                                            <i className="feather icon-edit"></i>
+                                                        </button>
+                                                        <button className="btn btn-secondary btn-sm botonAdmin" style={{padding: '0.5', fontSize: '12px'}}value={cliente.correo} onClick={this._recuperarContraseña}>
+                                                        <i className="feather icon-refresh-ccw"></i>
+                                                        </button>
+                                                        <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{padding: '0.5', fontSize: '12px'}} value={cliente.correo} onClick={(evento) => this._eliminarCliente(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
+                                                        {/* <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{padding: '0.5', fontSize: '12px'}} value={cliente.correo} onClick={(evento) => this._cerrarSesionUsuario(evento, cliente.correo)}><i className="feather icon-trash"></i></button> */}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -291,7 +304,8 @@ const mapStateToProps = (state) => {
         clientes: state.sistema.listaClientes,
         consultaLista: state.sistema.consultaLista,
         mensajeStore: state.sistema.mensaje,
-        varianteStore: state.sistema.variante
+        varianteStore: state.sistema.variante,
+        costoUnitario: state.sistema.costoUnitario
     }
 }
 
@@ -301,7 +315,8 @@ const mapDispatchToProps = (dispatch) => {
         actualizarUsuario: (correo, id_medidor) => dispatch(actualizarUsuario(correo, id_medidor)),
         crearUsuario: (correo, nombre, apellidos, id_medidor, cedula) => dispatch(crearUsuario(correo, nombre, apellidos, id_medidor, cedula)),
         eliminarUsuario: (correo) => dispatch(eliminarUsuario(correo)),
-        actualizarCostoUnitario: (costoUnitario) => dispatch(actualizarCostoUnitario(costoUnitario))
+        actualizarCostoUnitario: (costoUnitario) => dispatch(actualizarCostoUnitario(costoUnitario)),
+        cerrarSesionUsuario: (correo) => dispatch(cerrarSesionUsuario(correo))
     }
 }
 
