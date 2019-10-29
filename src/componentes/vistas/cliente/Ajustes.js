@@ -194,7 +194,7 @@ class Ajustes extends Component {
                                             <label id="label-input" className="etiqueta" htmlFor="inputCorreo"> Correo</label>
                                             <input type="email" name="correo" className="form-control" value={correo} id="inputCorreo" onChange={this._teclearFormulario} placeholder="correo@correo.com" />
                                         </div>
-                                        <Button  id="actualizar" className="mt-1 shadow-2 texto" variant="primary" size="sm" onClick={this._actualizar}>
+                                        <Button id="actualizar" className="mt-1 shadow-2 texto" variant="primary" size="sm" onClick={this._actualizar}>
                                             Actualizar
                                     </Button>
                                     </Card.Body>
@@ -203,7 +203,9 @@ class Ajustes extends Component {
                             <Col lg={5} id="contrasenaCard" >
                                 <Card id="contrasena" style={{ minHeight: '560px' }}>
                                     <Card.Body id="contenidoContrasena">
+                                    <div class="row justify-content-end">
                                         <i id="lockIcon" className="fas fa-key"></i>
+</div>
                                         <div className="form-group">
                                             <label id="label-input" className="texto" htmlFor="inputContrasena"> Contraseña actual</label>
                                             <input type="password" className="form-control" value={contraseñaActual} id="inputContrasena" onChange={this._teclearFormulario} name="contraseñaActual" placeholder="" />
@@ -219,6 +221,7 @@ class Ajustes extends Component {
                                             <label id="label-input" className="texto" htmlFor="inputContrasenaN2"> Repetir nueva contraseña </label>
                                             <input type="password" className="form-control" value={contraseñaNueva2} id="inputContrasenaN2" onChange={this._teclearFormulario} name="contraseñaNueva2" placeholder="" />
                                         </div>
+
 
                                     </Card.Body>
                                 </Card>

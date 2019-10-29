@@ -5,6 +5,7 @@ import { Row, Col, Button, Alert } from 'react-bootstrap';
 import Cargando from '../../cargando/cargando';
 import '../administrador/Administrador.css';
 import { recuperarContrasena, actualizarUsuario, crearUsuario, eliminarUsuario, actualizarCostoUnitario, cerrarSesionUsuario } from '../../../redux/acciones/administradorAcciones';
+import { Card } from 'react-bootstrap';
 
 let listaClientes = [];
 
@@ -161,137 +162,168 @@ export class Home extends Component {
 
         listaClientes = clientes;//Usada solo para el filtro
 
-        if(listaClientesLocal){//Lista que esta llena si solo si se esta filtrando
+        if (listaClientesLocal) {//Lista que esta llena si solo si se esta filtrando
             listaTabla = listaClientesLocal;
-        }else{
+        } else {
             listaTabla = clientes;
         }
 
         console.log(costoUnitario)
 
         return (
+
             <div className="container">
-                <div className="">
-                    <input name="costoUnitario" className="form-control form-control-sm inputUser" placeholder="costo unitario sin puntos" type="Number" onChange={this._teclearFormulario} />
-                </div>
-                <Button type="button" className="mr-3 mb-4" size="sm" onClick={this._actualizarCostoUnitario}> Actualizar </Button>
-                <Row>
-                    <Col lg={3}>
-                        {/* <div className="tituloNuevoCliente">
-                            <h6>Formulario de cliente</h6>
-                        </div> */}
+                <Col lg={12}>
+                    <Card className="mb-4">
+                        <Card.Body >
+                            <Row>
+                                <Col lg={12}>
+                                <h5 className="textoAdmin">Determina costo unitario</h5>
+                                </Col>
+                            </Row>
+                            <Row>
+                            <Col lg={3}>
+                            <div className="">
+                                <input name="costoUnitario" className="form-control form-control-sm inputUser textoAdmin" placeholder="Costo unitario" type="Number" onChange={this._teclearFormulario} />
+                            </div>
+                            </Col>
+                            <Col lg={5}>
+                            <Button type="button" className="mr-3 mb-4 textoAdmin botonCu" size="sm" onClick={this._actualizarCostoUnitario}> Actualizar </Button>
+                            </Col>
+                            <Col lg={4}>
 
-                        <div className="card mx-auto cardComponent">
-                            {mensajeStore
-                                ?
-                                <Alert variant={varianteStore} onClose={this._cerrarAlerta} dismissible>
-                                    <h6 style={{ color: 'black', fontSize: '11px' }}>{mensajeStore}</h6>
-                                </Alert>
-                                :
-                                mensajeInterno
-                                    ?
-                                    <Alert variant={varianteInterna} onClose={this._cerrarAlerta} dismissible>
-                                        <h6 style={{ color: 'black', fontSize: '11px' }}>{mensajeInterno}</h6>
-                                    </Alert>
-                                    :
-                                    null}
-                                      <div className="tituloNuevoCliente">
-                            <h6 id="tituloAdmin" className="mt-3 ml-4">Formulario de cliente</h6>
-                        </div>
-                            <div className="card-header" style={{ textAlign: 'left', fontSize: '12px' }}>
-                                <div className="form-group">
-                                    <label forhtml="nombre">Nombre(s) del cliente</label>
-                                    <input className="form-control form-control-sm inputUser" id="nombre" type="text" name="nombre" placeholder="Nombre(s) del cliente" value={nombre} onChange={this._teclearFormulario} disabled={btnEditarCliente} required></input>
-                                </div>
+                                <p className="textoAdmin">Costo unitario actual: ${costoUnitario}</p>
+                            
+                            
+                            </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Col>
 
-                                <div className="form-group">
-                                    <label forhtml="apellidos">Apellido(s) del cliente</label>
-                                    <input id="apellidos" className="form-control form-control-sm inputUser" type="text" name="apellidos" placeholder="Apellido(s) del cliente" value={apellidos} onChange={this._teclearFormulario} disabled={btnEditarCliente} required></input>
-                                </div>
+                <Row className='container'>
+                    <Col lg={12} Style={{ padding: '0px' }}>
+                        <Card>
+                            <Card.Body Style={{ margin: '0px' }}>
+                                <Row className='container'>
+                                    <Col lg={3}>
 
-                                <div className="form-group">
-                                    <label forhtml="correo">Correo del cliente</label>
-                                    <input id="correo" className="form-control form-control-sm inputUser" type="text" name="correo" placeholder="cliente@servicio.dominio" value={correo} onChange={this._teclearFormulario} disabled={btnEditarCliente} required />
-                                </div>
+                                        <div className="card mx-auto cardComponent">
+                                            {mensajeStore
+                                                ?
+                                                <Alert variant={varianteStore} onClose={this._cerrarAlerta} dismissible>
+                                                    <h6 style={{ color: 'black', fontSize: '11px' }}>{mensajeStore}</h6>
+                                                </Alert>
+                                                :
+                                                mensajeInterno
+                                                    ?
+                                                    <Alert variant={varianteInterna} onClose={this._cerrarAlerta} dismissible>
+                                                        <h6 style={{ color: 'black', fontSize: '11px' }}>{mensajeInterno}</h6>
+                                                    </Alert>
+                                                    :
+                                                    null}
+                                            <div className="tituloNuevoCliente">
+                                                <h6 id="tituloAdmin" className="mt-3 ml-4">Formulario de cliente</h6>
+                                            </div>
+                                            <div className="card-header" style={{ textAlign: 'left', fontSize: '12px' }}>
+                                                <div className="form-group">
+                                                    <label forhtml="nombre">Nombre(s) del cliente</label>
+                                                    <input className="form-control form-control-sm inputUser" id="nombre" type="text" name="nombre" placeholder="Nombre(s) del cliente" value={nombre} onChange={this._teclearFormulario} disabled={btnEditarCliente} required></input>
+                                                </div>
 
-                                <div className="form-group">
-                                    <label forhtml="cedula">Cedula del cliente</label>
-                                    <input id="cedula" className="form-control form-control-sm inputUser" type="Number" name="cedula" value={+cedula} onChange={this._teclearFormulario} disabled={btnEditarCliente} required />
-                                </div>
+                                                <div className="form-group">
+                                                    <label forhtml="apellidos">Apellido(s) del cliente</label>
+                                                    <input id="apellidos" className="form-control form-control-sm inputUser" type="text" name="apellidos" placeholder="Apellido(s) del cliente" value={apellidos} onChange={this._teclearFormulario} disabled={btnEditarCliente} required></input>
+                                                </div>
 
-                                <div className="form-group">
-                                    <label forhtml="id_medidor">ID del medidor a usar</label>
-                                    <input name="id_medidor" className="form-control form-control-sm inputUser" type="Number" value={+id_medidor} onChange={this._teclearFormulario} required />
-                                </div>
+                                                <div className="form-group">
+                                                    <label forhtml="correo">Correo del cliente</label>
+                                                    <input id="correo" className="form-control form-control-sm inputUser" type="text" name="correo" placeholder="cliente@servicio.dominio" value={correo} onChange={this._teclearFormulario} disabled={btnEditarCliente} required />
+                                                </div>
 
-                                <div className="btn-group-md">
-                                    {btnEditarCliente ?
-                                        <button type="submit" className="btn btn-primary btn-sm mr-3 btn-newUser inputUser" onClick={this._actualizarCliente}>
-                                            Actualizar
+                                                <div className="form-group">
+                                                    <label forhtml="cedula">Cedula del cliente</label>
+                                                    <input id="cedula" className="form-control form-control-sm inputUser" type="Number" name="cedula" value={+cedula} onChange={this._teclearFormulario} disabled={btnEditarCliente} required />
+                                                </div>
+
+                                                <div className="form-group">
+                                                    <label forhtml="id_medidor">ID del medidor a usar</label>
+                                                    <input name="id_medidor" className="form-control form-control-sm inputUser" type="Number" value={+id_medidor} onChange={this._teclearFormulario} required />
+                                                </div>
+
+                                                <div className="btn-group-md">
+                                                    {btnEditarCliente ?
+                                                        <button type="submit" className="btn btn-primary btn-sm mr-3 btn-newUser inputUser" onClick={this._actualizarCliente}>
+                                                            Actualizar
                                         </button>
-                                        :
-                                        <button type="submit" className="btn btn-primary btn-sm mr-3 btn-newUser inputUser" onClick={this._nuevoCliente}>
-                                            Crear
+                                                        :
+                                                        <button type="submit" className="btn btn-primary btn-sm mr-3 btn-newUser inputUser" onClick={this._nuevoCliente}>
+                                                            Crear
                                         </button>
-                                    }
-                                    <button type="submit" className="btn btn-danger btn-sm btn-newUser inputUser" onClick={this._limpiarInputs}>
-                                        Cancelar
+                                                    }
+                                                    <button type="submit" className="btn btn-danger btn-sm btn-newUser inputUser" onClick={this._limpiarInputs}>
+                                                        Cancelar
                                     </button>
-                                </div>
+                                                </div>
 
-                            </div>
-                        </div>
+                                            </div>
+                                        </div>
 
-                    </Col>
-                    <Col lg={9}>
-                        {/* Alerta de algun error */}
+                                    </Col>
+                                    <Col lg={9}>
+                                        {/* Alerta de algun error */}
 
-                        <div className="filtroCliente">
-                            <input className="form-control" type="text" placeholder="Buscar cliente..." aria-label="Search" onChange={this._filtrarCliente} />
-                        </div>
+                                        <div className="filtroCliente">
+                                            <input className="form-control" type="text" placeholder="Buscar cliente..." aria-label="Search" onChange={this._filtrarCliente} />
+                                        </div>
 
-                        {listaTabla.length > 0 ?
-                            <div className="table-responsive">
-                                <table className="table table-striped " style={{ fontSize: '13px', textAlign: 'center' }}>
-                                    <thead className="thead-dark">
-                                        <tr>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Correo</th>
-                                            <th scope="col">CC</th>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {clientes.map((cliente, index) =>
-                                            <tr key={index}>
-                                                <td>{cliente.nombre}</td>
-                                                <td>{cliente.correo}</td>
-                                                <td>{cliente.cedula}</td>
-                                                <td>{cliente.id_medidor}</td>
-                                                <td>
-                                                    <div className="btn-group btn-group-sm" role="group">
+                                        {listaTabla.length > 0 ?
+                                            <div className="table-responsive">
+                                                <table className="table table-striped " style={{ fontSize: '13px', textAlign: 'center' }}>
+                                                    <thead className="thead-dark">
+                                                        <tr>
+                                                            <th scope="col">Nombre</th>
+                                                            <th scope="col">Correo</th>
+                                                            <th scope="col">CC</th>
+                                                            <th scope="col">ID</th>
+                                                            <th scope="col">Acciones</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {clientes.map((cliente, index) =>
+                                                            <tr key={index}>
+                                                                <td>{cliente.nombre}</td>
+                                                                <td>{cliente.correo}</td>
+                                                                <td>{cliente.cedula}</td>
+                                                                <td>{cliente.id_medidor}</td>
+                                                                <td>
+                                                                    <div className="btn-group btn-group-sm" role="group">
 
-                                                        <button className="btn btn-secondary btn-sm botonAdmin" style={{padding: '0.5', fontSize: '12px'}} onClick={() => this._editarCliente(cliente)}>
-                                                            <i className="feather icon-edit"></i>
-                                                        </button>
-                                                        <button className="btn btn-secondary btn-sm botonAdmin" style={{padding: '0.5', fontSize: '12px'}}value={cliente.correo} onClick={this._recuperarContraseña}>
-                                                        <i className="feather icon-refresh-ccw"></i>
-                                                        </button>
-                                                        <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{padding: '0.5', fontSize: '12px'}} value={cliente.correo} onClick={(evento) => this._eliminarCliente(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
-                                                        {/* <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{padding: '0.5', fontSize: '12px'}} value={cliente.correo} onClick={(evento) => this._cerrarSesionUsuario(evento, cliente.correo)}><i className="feather icon-trash"></i></button> */}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )}
+                                                                        <button className="btn btn-secondary btn-sm botonAdmin" style={{ padding: '0.5', fontSize: '12px' }} onClick={() => this._editarCliente(cliente)}>
+                                                                            <i className="feather icon-edit"></i>
+                                                                        </button>
+                                                                        <button className="btn btn-secondary btn-sm botonAdmin" style={{ padding: '0.5', fontSize: '12px' }} value={cliente.correo} onClick={this._recuperarContraseña}>
+                                                                            <i className="feather icon-refresh-ccw"></i>
+                                                                        </button>
+                                                                        <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{ padding: '0.5', fontSize: '12px' }} value={cliente.correo} onClick={(evento) => this._eliminarCliente(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
+                                                                        {/* <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{padding: '0.5', fontSize: '12px'}} value={cliente.correo} onClick={(evento) => this._cerrarSesionUsuario(evento, cliente.correo)}><i className="feather icon-trash"></i></button> */}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        )}
 
-                                    </tbody>
-                                </table>
-                            </div>
-                            :
-                            <div>No hay clientes.</div>
-                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            :
+                                            <div>No hay clientes.</div>
+                                        }
 
+
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                        </Card>
                     </Col>
                 </Row>
             </div>
