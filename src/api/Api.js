@@ -378,11 +378,12 @@ Api.consultarCostoUnitario = async () => {
     });
 
     const resultadoJson = await resultado.json();
-
     if(resultadoJson.estado){
-        costoUnitario = resultadoJson.sistema.costoUnitario;
+        if(resultadoJson.sistema){
+            costoUnitario = resultadoJson.sistema.costoUnitario;
+        }
     }
-    
+   
     return costoUnitario;
 }
 
