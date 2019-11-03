@@ -43,6 +43,25 @@ const sistemaReducer = (state = initState, action) => {
                 mensaje: action.mensaje ? action.mensaje : null,
                 variante: action.variante ? action.variante : null
             };
+        case 'OCULTAR_MENSAJE':
+            return {
+                ...state,
+                mensaje: null,
+                variante: null
+            };
+        case 'COSTO_U':
+            return {
+                ...state,
+                costoUnitario: action.costoU
+            };
+        case 'REINICIAR_ESTADOS':
+            return {
+                listaClientes: [],
+                consultaLista: false,
+                mensaje: null,
+                variante: null,
+                costoUnitario: 0
+            };
         default:
             break;
     }

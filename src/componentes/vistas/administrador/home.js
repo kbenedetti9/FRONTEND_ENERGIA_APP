@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Row, Col, Button, Alert } from 'react-bootstrap';
 import Cargando from '../../cargando/cargando';
 import '../administrador/Administrador.css';
-import { recuperarContrasena, actualizarUsuario, crearUsuario, eliminarUsuario, actualizarCostoUnitario, cerrarSesionUsuario } from '../../../redux/acciones/administradorAcciones';
+import { recuperarContrasena, actualizarUsuario, crearUsuario, eliminarUsuario, actualizarCostoUnitario, cerrarSesionUsuario, ocultarAlerta } from '../../../redux/acciones/administradorAcciones';
 import { Card } from 'react-bootstrap';
 
 let listaClientes = [];
@@ -147,6 +147,7 @@ export class Home extends Component {
             mensajeInterno: null,
             varianteInterna: ""
         });
+        this.props.ocultarAlerta();
     }
 
     render() {
@@ -168,20 +169,18 @@ export class Home extends Component {
             listaTabla = clientes;
         }
 
-        console.log(costoUnitario)
-
         return (
 
             <div className="container">
                 <Col lg={12}>
                     <Card className="mb-4">
-                        <Card.Body >
-                            <Row>
+                        <Card.Body className="cuerpo" >
+                            <Row className="fila">
                                 <Col lg={12}>
                                 <h5 className="textoAdmin">Determina costo unitario</h5>
                                 </Col>
                             </Row>
-                            <Row>
+                            <Row className="fila">
                             <Col lg={3}>
                             <div className="">
                                 <input name="costoUnitario" className="form-control form-control-sm inputUser textoAdmin" placeholder="Costo unitario" type="Number" onChange={this._teclearFormulario} />
@@ -201,11 +200,11 @@ export class Home extends Component {
                     </Card>
                 </Col>
 
-                <Row className='container'>
-                    <Col lg={12} Style={{ padding: '0px' }}>
+                <Row className='container fila'>
+                    <Col lg={12} >
                         <Card>
-                            <Card.Body Style={{ margin: '0px' }}>
-                                <Row className='container'>
+                            <Card.Body className="cuerpo" >
+                                <Row className='container fila'>
                                     <Col lg={3}>
 
                                         <div className="card mx-auto cardComponent">
@@ -348,7 +347,8 @@ const mapDispatchToProps = (dispatch) => {
         crearUsuario: (correo, nombre, apellidos, id_medidor, cedula) => dispatch(crearUsuario(correo, nombre, apellidos, id_medidor, cedula)),
         eliminarUsuario: (correo) => dispatch(eliminarUsuario(correo)),
         actualizarCostoUnitario: (costoUnitario) => dispatch(actualizarCostoUnitario(costoUnitario)),
-        cerrarSesionUsuario: (correo) => dispatch(cerrarSesionUsuario(correo))
+        cerrarSesionUsuario: (correo) => dispatch(cerrarSesionUsuario(correo)),
+        ocultarAlerta: () => dispatch(ocultarAlerta())
     }
 }
 

@@ -28,7 +28,7 @@ const menuReducer = (state = initState, action) => {
                     className_menu_icon: "mobile-menu on"
                 }
             }
-            
+
         case 'ACCIONAR_MENU_APP':
             return {
                 ...state,
@@ -41,6 +41,14 @@ const menuReducer = (state = initState, action) => {
                 ...state,
                 className_dropdown: action.action
             }
+
+        case 'REINICIAR_ESTADOS':
+            return {
+                className_menu_defecto: "pcoded-navbar menu-light navbar-default brand-default drp-icon-style1 menu-item-icon-style1 active-default title-default",
+                className_menu_añadido: "",
+                className_menu_icon: "mobile-menu",
+                className_dropdown: "nav-item pcoded-hasmenu"
+            };
 
         default:
             return state;

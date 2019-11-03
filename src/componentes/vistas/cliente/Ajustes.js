@@ -23,7 +23,8 @@ class Ajustes extends Component {
         habilitarModal: false,
         cambiarContrasena: false,
         mensaje: null,
-        mensajeModal: "Esta accion realizará una modificacion en su perfi, ¿Esta seguro de continuar?"
+        mensajeModal: "Esta accion realizará una modificacion en su perfi, ¿Esta seguro de continuar?",
+        datosCargados: false
 
     }
 
@@ -141,121 +142,94 @@ class Ajustes extends Component {
             apellidos: usuario.apellidos,
             identificacion: usuario.cedula,
             telefono: usuario.telefono ? usuario.telefono : 0,
-            correo: usuario.correo
+            correo: usuario.correo,
+            datosCargados: true
         });
     }
 
     render() {
-        const { nombre, apellidos, identificacion, telefono, correo, contraseñaActual, contraseñaNueva1, contraseñaNueva2, habilitarModal, mensaje, mensajeModal } = this.state;
+        const { nombre, apellidos, identificacion, telefono, correo, contraseñaActual, contraseñaNueva1, contraseñaNueva2, habilitarModal, mensaje, mensajeModal, datosCargados } = this.state;
         const { mensajeStore, varianteStore } = this.props;
 
-        if (!correo) {
+        if (!datosCargados) {
             return <Cargando />;
         }
+
         return (
-            <Row className="container">
-                <Col lg={12} id="principal">
-                    <Card >
-                        <Row className="container">
-                            <Col lg={7} id="datosCard">
+            <Card >
+                {mensaje
+                    ?
+                    <Alert variant="danger" style={{ backgroundColor: 'rgba(233, 29, 57,1)' }} onClose={this._cerrarAlerta} dismissible>
+                        <h6 style={{ color: 'white', fontSize: '11px' }}>{mensaje}</h6>
+                    </Alert>
+                    :
+                    mensajeStore
+                        ?
+                        <Alert variant={varianteStore} style={{ backgroundColor: 'green' }} onClose={this._cerrarAlerta} dismissible>
+                            <h6 style={{ color: 'white', fontSize: '11px' }}>{mensajeStore}</h6>
+                        </Alert>
+                        :
+                        null}
+                <Row>
+                    <Col lg={7} md={7} sm={12} xl={7} id="datosCard">
 
-                                <Card style={{ minHeight: '500px' }} id="datos">
-                                    <Card.Header id="configuracion">
-                                        Configuración
-                            <i id="configIcon" className="fas fa-cogs"></i>
-                                    </Card.Header>
-                                    <Card.Body>
-                                        {mensaje
-                                            ?
-                                            <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={this._cerrarAlerta} dismissible>
-                                                <h6 style={{ color: 'white', fontSize: '11px' }}>{mensaje}</h6>
-                                            </Alert>
-                                            :
-                                            mensajeStore
-                                                ?
-                                                <Alert variant={varianteStore} style={{ backgroundColor: 'green' }} onClose={this._cerrarAlerta} dismissible>
-                                                    <h6 style={{ color: 'white', fontSize: '11px' }}>{mensajeStore}</h6>
-                                                </Alert>
-                                                :
-                                                null}
-                                        <div className="form-group">
-                                            <label id="label-input" className="etiqueta" htmlFor="inputNombre"> Nombre </label>
-                                            <input type="text" className="form-control" value={nombre + " " + apellidos} name={nombre} id="inputNombre" placeholder="" readOnly onChange={this._teclearFormulario} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label id="label-input" className="etiqueta" htmlFor="inputCC"> Identificación </label>
-                                            <input type="text" className="form-control" value={identificacion} name={identificacion} id="inputCC" readOnly onChange={this._teclearFormulario} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label id="label-input" className="etiqueta" htmlFor="inputTelefono"> Telefono</label>
-                                            <input type="number" name="telefono" className="form-control" value={telefono} id="inputTelefono" onChange={this._teclearTelefono} placeholder="Telefono" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label id="label-input" className="etiqueta" htmlFor="inputCorreo"> Correo</label>
-                                            <input type="email" name="correo" className="form-control" value={correo} id="inputCorreo" onChange={this._teclearFormulario} placeholder="correo@correo.com" />
-                                        </div>
-                                        <Button id="actualizar" className="mt-1 shadow-2 texto" variant="primary" size="sm" onClick={this._actualizar}>
-                                            Actualizar
+                        <Card style={{ minHeight: '500px' }} id="datos">
+                            <Card.Header id="configuracion">
+                                Configuración
+                                        <i id="configIcon" className="fas fa-cogs"></i>
+                            </Card.Header>
+                            <Card.Body>
+                                <div className="form-group">
+                                    <label id="label-input" className="etiqueta" htmlFor="inputNombre"> Nombre </label>
+                                    <input type="text" className="form-control" value={nombre + " " + apellidos} name={nombre} id="inputNombre" placeholder="" readOnly onChange={this._teclearFormulario} />
+                                </div>
+                                <div className="form-group">
+                                    <label id="label-input" className="etiqueta" htmlFor="inputCC"> Identificación </label>
+                                    <input type="text" className="form-control" value={identificacion} name={identificacion} id="inputCC" readOnly onChange={this._teclearFormulario} />
+                                </div>
+                                <div className="form-group">
+                                    <label id="label-input" className="etiqueta" htmlFor="inputTelefono"> Telefono</label>
+                                    <input type="number" name="telefono" className="form-control" value={telefono} id="inputTelefono" onChange={this._teclearTelefono} placeholder="Telefono" />
+                                </div>
+                                <div className="form-group">
+                                    <label id="label-input" className="etiqueta" htmlFor="inputCorreo"> Correo</label>
+                                    <input type="email" name="correo" className="form-control" value={correo} id="inputCorreo" onChange={this._teclearFormulario} placeholder="correo@correo.com" />
+                                </div>
+                                <Button id="actualizar" className="mt-1 shadow-2 texto" variant="primary" size="sm" onClick={this._actualizar}>
+                                    Actualizar
                                     </Button>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col lg={5} id="contrasenaCard" >
-                                <Card id="contrasena" style={{ minHeight: '560px' }}>
-                                    <Card.Body id="contenidoContrasena">
-                                    <div class="row justify-content-end">
-                                        <i id="lockIcon" className="fas fa-key"></i>
-</div>
-                                        <div className="form-group">
-                                            <label id="label-input" className="texto" htmlFor="inputContrasena"> Contraseña actual</label>
-                                            <input type="password" className="form-control" value={contraseñaActual} id="inputContrasena" onChange={this._teclearFormulario} name="contraseñaActual" placeholder="" />
-                                            <hr />
-                                        </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col lg={5} md={5} sm={12} xl={5} id="contrasenaCard" >
+                        <Card id="contrasena" style={{ minHeight: '560px' }}>
+                            <Card.Body id="contenidoContrasena">
+                                <div className="row justify-content-end">
+                                    <i id="lockIcon" className="fas fa-key"></i>
+                                </div>
+                                <div className="form-group">
+                                    <label id="label-input" className="texto" htmlFor="inputContrasena"> Contraseña actual</label>
+                                    <input type="password" className="form-control" value={contraseñaActual} id="inputContrasena" onChange={this._teclearFormulario} name="contraseñaActual" placeholder="" />
+                                    <hr />
+                                </div>
 
-                                        <h5 id="nueva" className="texto mt-2" >Determinar nueva contraseña</h5>
-                                        <div className="form-group">
-                                            <label id="label-input" className="texto mt-2" htmlFor="inputContrasenaN"> Nueva contraseña </label>
-                                            <input type="password" className="form-control" value={contraseñaNueva1} id="inputContrasenaN" onChange={this._teclearFormulario} name="contraseñaNueva1" placeholder="" />
-                                        </div>
-                                        <div className="form-group">
-                                            <label id="label-input" className="texto" htmlFor="inputContrasenaN2"> Repetir nueva contraseña </label>
-                                            <input type="password" className="form-control" value={contraseñaNueva2} id="inputContrasenaN2" onChange={this._teclearFormulario} name="contraseñaNueva2" placeholder="" />
-                                        </div>
+                                <h5 id="nueva" className="texto mt-2" >Determinar nueva contraseña</h5>
+                                <div className="form-group">
+                                    <label id="label-input" className="texto mt-2" htmlFor="inputContrasenaN"> Nueva contraseña </label>
+                                    <input type="password" className="form-control" value={contraseñaNueva1} id="inputContrasenaN" onChange={this._teclearFormulario} name="contraseñaNueva1" placeholder="" />
+                                </div>
+                                <div className="form-group">
+                                    <label id="label-input" className="texto" htmlFor="inputContrasenaN2"> Repetir nueva contraseña </label>
+                                    <input type="password" className="form-control" value={contraseñaNueva2} id="inputContrasenaN2" onChange={this._teclearFormulario} name="contraseñaNueva2" placeholder="" />
+                                </div>
 
 
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-
-                    </Card>
-                </Col>
-                {/* <Col lg={5}>
-                    <Card id="contrasena" style={{ minHeight: '600px' }}>
-                        <Card.Body id="contenidoContrasena">
-                            <i id="lockIcon" className="fas fa-key"></i>
-                            <div className="form-group">
-                                <label id="label-input" className="texto" htmlFor="inputContrasena"> Contraseña actual</label>
-                                <input type="password" className="form-control" value={contraseñaActual} id="inputContrasena" onChange={this._teclearFormulario} name="contraseñaActual" placeholder="" />
-                                <hr />
-                            </div>
-
-                            <h5 id="nueva" className="texto mt-2" >Determinar nueva contraseña</h5>
-                            <div className="form-group">
-                                <label id="label-input" className="texto mt-2" htmlFor="inputContrasenaN"> Nueva contraseña </label>
-                                <input type="password" className="form-control" value={contraseñaNueva1} id="inputContrasenaN" onChange={this._teclearFormulario} name="contraseñaNueva1" placeholder="" />
-                            </div>
-                            <div className="form-group">
-                                <label id="label-input" className="texto" htmlFor="inputContrasenaN2"> Repetir nueva contraseña </label>
-                                <input type="password" className="form-control" value={contraseñaNueva2} id="inputContrasenaN2" onChange={this._teclearFormulario} name="contraseñaNueva2" placeholder="" />
-                            </div>
-
-                        </Card.Body>
-                    </Card>
-                </Col> */}
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                </Row>
                 <Confirmacion titulo="Confirmar cambios" mensaje={mensajeModal} estado={habilitarModal} ocultarVentana={this._cerrarVentana} metodoAceptar={this._confirmarCambios} />
-            </Row>
-
+            </Card>
 
         )
     }

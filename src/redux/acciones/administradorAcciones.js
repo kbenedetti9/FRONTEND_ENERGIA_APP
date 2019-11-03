@@ -31,7 +31,7 @@ export const consultarCostoUnitario = () => {
 export const cerrarSesionUsuario = (correo) => {
     return (dispatch, getState, Api) => {
         Api.cerrarSesionUsuario(correo).then((respuesta)=>{
-            dispatch({ type: "CERRAR_SESION_USUARIO", mensaje: respuesta.mensaje, variante: respuesta.variante })
+            dispatch({ type: "CERRAR_SESION_USUARIO", mensaje: respuesta.mensaje, variante: respuesta.variante });
         }).catch((error) => {
             console.log(error);
         });
@@ -111,5 +111,11 @@ export const actualizarCostoUnitario = (costoUnitario) => {
             dispatch({type: "ADMINISTRADOR_ACCION_ERROR", variante: "danger", mensaje: error});
             console.log(error);
         }));
+    }
+}
+
+export const ocultarAlerta = () =>{
+    return (dispatch) =>{
+        dispatch({type: 'OCULTAR_MENSAJE'});
     }
 }

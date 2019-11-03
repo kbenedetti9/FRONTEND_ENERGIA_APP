@@ -45,7 +45,6 @@ export class App extends Component {
 
   componentDidMount = async () => {
     const respuesta = await Api.estoyAutenticado();
-    console.log(respuesta)
     if (respuesta.estado) {
       if (!respuesta.admin) {
         this.props.consultarConsumoReal(respuesta.usuario.correo);
@@ -67,8 +66,6 @@ export class App extends Component {
     if (!autenticacion) {
       return <Cargando />
     }
-
-    console.log(usuario)
 
     return (
 

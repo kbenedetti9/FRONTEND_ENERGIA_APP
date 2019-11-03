@@ -54,6 +54,14 @@ const autenticacionReducer = (state = initState, action) => {
                 mensaje: action.mensaje ? action.mensaje : null,
                 variante: action.variante ? action.variante : null
             };
+        case 'REINICIAR_ESTADOS':
+            return {
+                usuario: null,
+                mensaje: null,
+                variante: null,
+                admin: false,
+                autenticacionLista: true
+            };
         default:
             break;
     }

@@ -175,7 +175,6 @@ class Historial extends Component {
 
             }
         }
-        console.log(data)
         this._graficar(data, reporte);
     }
 

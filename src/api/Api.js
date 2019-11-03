@@ -197,14 +197,12 @@ Api.actualizarDatos = async (correo, sesionP, cambiarContrasena, contrasena, con
     const resultadoJson = await resultado.json();
 
     if (resultadoJson.estado) {
-        console.log("Actualizacion con exito");
         mensaje = "Actualización realizada con exito.";
         variante = "success";
         usuario.telefono = +telefono;
     } else {
         mensaje = "No se logró realizar la actualización";
         variante = "danger";
-        console.log(resultadoJson);
     }
 
     return { usuario, mensaje, variante };
@@ -275,13 +273,11 @@ Api.actualizarUsuario = async (correo, id_medidor) => {
     const resultadoJson = await resultado.json();
 
     if (resultadoJson.estado) {
-        console.log("Actualizacion con exito");
         mensaje = "Actualización realizada con exito.";
         variante = "success";
     } else {
         mensaje = "No se logró realizar la actualización";
         variante = "danger";
-        console.log(resultadoJson);
     }
 
     return {mensaje, variante, estado: resultadoJson.estado };
@@ -305,13 +301,11 @@ Api.crearUsuario = async (correo, nombre, apellidos, id_medidor, cedula) => {
     const resultadoJson = await resultado.json();
 
     if (resultadoJson.estado) {
-        console.log("usuario creado con exito");
         mensaje = "Nuevo usuario creado con exito.";
         variante = "success";
     } else {
         mensaje = "No se logró realizar el registro del usuario";
         variante = "danger";
-        console.log(resultadoJson);
     }
 
     return { mensaje, variante, estado: resultadoJson.estado };
@@ -333,13 +327,11 @@ Api.eliminarUsuario = async (correo) => {
     const resultadoJson = await resultado.json();
 
     if (resultadoJson.estado) {
-        console.log("usuario eliminado con exito");
         mensaje = "Usuario eliminado con exito.";
         variante = "success";
     } else {
         mensaje = "No se logró realizar la eliminación del usuario";
         variante = "danger";
-        console.log(resultadoJson);
     }
 
     return { mensaje, variante, estado: resultadoJson.estado };
@@ -362,13 +354,11 @@ Api.actualizarCostoUnitario = async (costoUnitario) => {
     const resultadoJson = await resultado.json();
 
     if (resultadoJson.estado) {
-        console.log("costo unitario actualizado con exito");
         mensaje = "Costo unitario actualizado con exito.";
         variante = "success";
     } else {
         mensaje = "No se logró realizar la actualizacion del costo unitario";
         variante = "danger";
-        console.log(resultadoJson);
     }
 
     return { mensaje, variante, estado: resultadoJson.estado };

@@ -23,6 +23,14 @@ const consumoReducer = (state = initState, action) => {
                 limite: action.limite,
                 tipoLimite: action.tipoLimite
             };
+        case 'REINICIAR_ESTADOS':
+            return {
+                consumoMes: 0,
+                costoU: 0,
+                limite: 0,
+                tipoLimite: null
+            };
+
         default:
             break;
     }
