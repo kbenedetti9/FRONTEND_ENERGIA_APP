@@ -32,7 +32,8 @@ export const iniciarSesion = (credenciales) => {
                                 dispatch({ type: 'COSTO_U', costoU: objeto.costoU });
                             });
                             socket.on('limiteKwh', (notificacion) => {
-                                console.log("Alerta: has superado el 50% de tu limite" + notificacion);
+                                console.log("Alerta: has superado el 50% de tu limite" );
+                                console.log(notificacion);
                                 Push.create(notificacion.mensaje, {
                                     body: "Limite: " + notificacion.limite + "/nConsumo: " + notificacion.consumo + "/nCosto: " + notificacion.costo,
                                     timeout: 5000,
