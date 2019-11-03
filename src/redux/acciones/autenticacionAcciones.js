@@ -28,7 +28,7 @@ export const iniciarSesion = (credenciales) => {
                             dispatch({ type: 'INICIAR_SESION', resultado });
                             socket.on('consumoReal', (objeto) => {
                                 console.log(objeto);
-                                dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.consumoMes });
+                                dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.ultimoConsumo });
                                 dispatch({ type: 'COSTO_U', costoU: objeto.costoU });
                             });
                             socket.on('limiteKwh', (notificacion) => {

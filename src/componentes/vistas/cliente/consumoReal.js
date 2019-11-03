@@ -85,7 +85,7 @@ class consumoReal extends Component {
         return (
             <Row>
                 <Col lg={8} md={12}>
-                    <Card style={{ minHeight: '400px' }}>
+                    <Card  style={{ minHeight: '500px' }} >
                         <Card.Body>
                             <Row className="container">
                                 <Col id="linea" style={{ textAlign: 'center' }}>
@@ -121,8 +121,8 @@ class consumoReal extends Component {
                     </Card>
                     
                 </Col>
-                <Col lg={4} md={12}>
-                    <Card style={{ minHeight: '400px' }}>
+                <Col lg={4} md={12} >
+                    <Card style={{ minHeight: '500px' }}>
                         <Card.Body id="limite">
                             {mensaje ?
                                 <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={this._cerrarAlerta} dismissible>
