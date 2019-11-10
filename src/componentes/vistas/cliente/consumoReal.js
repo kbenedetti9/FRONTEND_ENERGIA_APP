@@ -14,7 +14,7 @@ class consumoReal extends Component {
         mensaje: false
     }
 
-    _cambiarLimite = (evento) => {
+    _cambiarLimite = (evento) => {//Cambiar nombre
         evento.preventDefault();
         const { miNuevoLimite } = this.state;
         const { usuario } = this.props;
@@ -49,7 +49,7 @@ class consumoReal extends Component {
         });
     }
 
-    _selectKw = () => {
+    _selectKw = () => {//Cambiar nombre
         if (this.state.selectKw) {
             this.setState({ selectKw: false });
         } else {
@@ -64,23 +64,28 @@ class consumoReal extends Component {
 
     render() {
 
-        const { consumoMes, costoU, limite, tipoLimite } = this.props;//tipolimite 1 = peso, 0 = kw
+        const { consumoMes, limite, tipoLimite } = this.props;//tipolimite 1 = peso, 0 = kw
         const { selectKw, miNuevoLimite, mensaje } = this.state;
         const fechaActual = new Date();
+        let {costoU} = this.props;
 
         let porcentajeLimite = 0;
         if (tipoLimite !== null && limite>0) {//Tiene un limite definido
 
             if (tipoLimite === 0) {
                 porcentajeLimite = Math.round((consumoMes * 100) / limite);
-
             } else {
                 let costo = costoU * consumoMes;
                 porcentajeLimite = Math.round((costo * 100) / limite);
-
             }
-
+            if(porcentajeLimite > 100){
+                porcentajeLimite = 100;
+            }
         }
+
+        let costoPesos = consumoMes * costoU;
+
+        costoPesos = costoPesos.toLocaleString('de-DE', {style: 'decimal'});
 
         return (
             <Row>
@@ -98,11 +103,11 @@ class consumoReal extends Component {
                                 <Col style={{ textAlign: 'center' }}>
                                     <i id="moneyIcono" className="fas fa-coins"></i>
                                     <h3 className="textoConsumo mt-3">Costo</h3>
-                                    <p className="textoConsumo info">Costo unitario: ${costoU}</p>
+                                    <p className="textoConsumo info" >Costo unitario: ${costoU}</p>
 
-                                    <h2 className="valor">
+                                    <h2 className="valor" id="costoKw">
                                         <i id="dollarIcono" className="fas fa-dollar-sign"></i>
-                                        {consumoMes * costoU}
+                                        {costoPesos}
                                     </h2>
                                 </Col>
 

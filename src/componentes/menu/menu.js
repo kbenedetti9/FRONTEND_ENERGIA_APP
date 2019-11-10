@@ -35,7 +35,7 @@ export class Menu extends Component {
                     <div className="navbar-brand header-logo">
                         <a href="index.html" className="b-brand">
                             <div className="b-bg">
-                                <i className="icon feather icon-paperclip"></i>
+                                <i className="icon fa fa-lightbulb-o"></i>
                             </div>
                             <span className="b-title">Energía App</span>
                         </a>

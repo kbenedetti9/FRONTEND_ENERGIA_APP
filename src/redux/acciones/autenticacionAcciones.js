@@ -2,6 +2,14 @@ import socketIOClient from "socket.io-client";
 import { URLSERVER } from '../../configuracion/configuracion';
 import Push from 'push.js';
 
+function onGranted(){
+    console.log("Aceptada")
+}
+
+function onDenied(){
+    console.log("Rechazada")
+}
+
 export const iniciarSesion = (credenciales) => {
     return (dispatch, getState, Api) => {
         Api.iniciarSesion(credenciales).then((resultado) => {
@@ -25,6 +33,9 @@ export const iniciarSesion = (credenciales) => {
                     });
                     socket.on('recibido', (dato) => {
                         if (dato) {
+
+                            Push.Permission.request(onGranted, onDenied);
+                                                     
                             dispatch({ type: 'INICIAR_SESION', resultado });
                             socket.on('consumoReal', (objeto) => {
                                 console.log(objeto);

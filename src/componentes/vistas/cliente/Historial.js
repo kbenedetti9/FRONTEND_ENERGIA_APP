@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Row, Col, Button } from 'react-bootstrap';
+import { Card, Row, Col, Button, Table } from 'react-bootstrap';
 import Api from '../../../api/Api';
 import Cargando from '../../cargando/cargando';
 import Chart from 'chart.js';
@@ -233,7 +233,7 @@ class Historial extends Component {
 
         return (
 
-            <Row>
+            <Row className="container">
                 <Col>
                     <Card>
                         <Card.Header id="historialTitulo" className="textoHistorial">
@@ -242,9 +242,9 @@ class Historial extends Component {
                           <i id="calendarIcono" className="feather icon-calendar ml-1" />
 
                         </Card.Header>
-                        <Card.Body>
+                        <Card.Body className="container">
                             {!mostrarGrafica ?
-                                <table className="table">
+                                <Table responsive hover width="100%">
                                     <thead id="encabezadoTabla" style={{ textAlign: 'center' }}>
                                         <tr>
                                             <th scope="col" className="textoHistorial encabezado">Mes</th>
@@ -258,7 +258,7 @@ class Historial extends Component {
                                             <tr key={id} id="contenidoTabla" style={{ textAlign: 'center' }} >
                                                 <td className="textoHistorial">{arrayNMes[(+mes.mes) - 1]}</td>
                                                 <td className="textoHistorial">{mes.consumoTotal}</td>
-                                                <td className="textoHistorial">{mes.consumoCosto}</td>
+                                                <td className="textoHistorial">{mes.consumoCosto.toLocaleString('de-DE', {style: 'decimal'})}</td>
                                                 <td>
                                                     <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, +mes.mes, mes)}>
                                                         <i className="feather icon-eye" />
@@ -270,7 +270,7 @@ class Historial extends Component {
                                             </tr>
                                         )}
                                     </tbody>
-                                </table>
+                                </Table>
                                 : null}
 
                             <div className="grafica">
@@ -309,7 +309,7 @@ class Historial extends Component {
                                             <hr />
                                             <div><strong>Nombre: </strong>{arrayNMes[(+mesSeleccionado.mes) - 1]}</div>
                                             <div><strong>Consumo total: </strong>{mesSeleccionado.consumoTotal + 'kwh'}</div>
-                                            <div><strong>Costo Total: </strong>{'$' + mesSeleccionado.consumoCosto}</div>
+                                            <div><strong>Costo Total: </strong>{'$' + mesSeleccionado.consumoCosto.toLocaleString('de-DE', {style: 'decimal'})}</div>
                                         </div>
                                         : null
                                     }

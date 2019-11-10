@@ -25,7 +25,7 @@ export class Navbar extends Component {
                     <a href="#!" className={className_icon} id="mobile-collapse1" onClick={this.mostrarMenu}><span /></a>
                     <a href="#!" className="b-brand">
                         <div className="b-bg">
-                            <i className="feather icon-trending-up" />
+                            <i className="icon fa fa-lightbulb-o" />
                         </div>
                         <span className="b-title">Menu</span>
                     </a>

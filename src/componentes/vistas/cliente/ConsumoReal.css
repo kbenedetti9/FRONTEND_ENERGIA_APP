@@ -4,7 +4,7 @@
 }
 
 #linea{
-    border-right:solid 0.5px #1DE9DB ;
+   border-right:solid 0.5px #1DE9DB ;
 }
 
 #boltIcono, #moneyIcono{
@@ -24,7 +24,6 @@
 .valor{
     font-size:60px;
     font-family: 'Poppins', sans-serif; 
-
 }
 
 #unidad{
@@ -109,13 +108,54 @@ font-size:30px;
 
 .circulo{
     
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
         -moz-border-radius: 50%;
         -webkit-border-radius: 50%;
         border-radius: 50%;
         border: solid 3px #1de9b6;
-        font-size:16px;
-        padding:12px;
+        font-size:14px;
+        padding:20px 12px 12px 12px;
         color:black;
+}
+
+#costoKw{
+    font-size: 50px;
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575.98px) { 
+    #linea{
+        border-right: none ;
+    }
+    #costoKw{
+        font-size:30px;
+    }    
+ }
+
+/* // Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) and (max-width: 767.98px) { 
+    #linea{
+        border-right: none ;
+    }
+    #costoKw{
+        font-size:30px;
+    } 
+ }
+
+/* // Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) { 
+    #linea{
+        border-right: none ;
+    }
+ }
+
+/* // Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) { 
+  
+ }
+
+/* // Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {  
+   
 }
