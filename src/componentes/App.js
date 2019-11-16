@@ -5,7 +5,7 @@ import Loadable from 'react-loadable';
 //Redux
 import { connect } from 'react-redux';
 import { autenticacionLista, cerrarSesion } from '../redux/acciones/autenticacionAcciones';
-import { consultarConsumoReal, consultarLimite } from '../redux/acciones/clienteAcciones';
+import { consultarConsumoReal, consultarLimite, consultarHistorial } from '../redux/acciones/clienteAcciones';
 import {obtenerListaClientes, consultarCostoUnitario} from '../redux/acciones/administradorAcciones';
 
 import Aux from './_Aux/_Aux';
@@ -49,6 +49,7 @@ export class App extends Component {
       if (!respuesta.admin) {
         this.props.consultarConsumoReal(respuesta.usuario.correo);
         this.props.consultarLimite(respuesta.usuario.correo);
+        this.props.consultarHistorial(respuesta.usuario.correo);
       }else{
         this.props.obtenerListaClientes();
         this.props.consultarCostoUnitario();
@@ -61,15 +62,16 @@ export class App extends Component {
 
   render() {
 
-    const { usuario, autenticacion, admin } = this.props;
+    const { usuario, autenticacion, admin, cerrandoSesion } = this.props;
 
-    if (!autenticacion) {
+    if (!autenticacion || cerrandoSesion === true) {
       return <Cargando />
     }
 
     return (
 
       < Aux >
+
         <Suspense fallback={<Cargando />}>
           {/* Suspense se utiliza para mostrar "algo" miestras se carga el/los import necesarios */}
           {usuario ?
@@ -125,6 +127,7 @@ const mapStateToProps = (state) => {
     menu_añadido: state.menu.className_menu_añadido,
     usuario: state.autenticacion.usuario,
     autenticacion: state.autenticacion.autenticacionLista,
+    cerrandoSesion: state.autenticacion.cerrandoSesion,
     admin: state.autenticacion.admin
   }
 }
@@ -137,7 +140,8 @@ const mapDispatchToProps = (dispatch) => {
     consultarConsumoReal: (correo) => { dispatch(consultarConsumoReal(correo)) },
     consultarLimite: (correo) => {dispatch(consultarLimite(correo))},
     obtenerListaClientes: () => dispatch(obtenerListaClientes()),
-    consultarCostoUnitario: () => dispatch(consultarCostoUnitario())
+    consultarCostoUnitario: () => dispatch(consultarCostoUnitario()),
+    consultarHistorial: (correo) => dispatch(consultarHistorial(correo))
   }
 }
 

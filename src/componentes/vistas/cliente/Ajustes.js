@@ -165,8 +165,8 @@ class Ajustes extends Component {
                     :
                     mensajeStore
                         ?
-                        <Alert variant={varianteStore} style={{ backgroundColor: 'green' }} onClose={this._cerrarAlerta} dismissible>
-                            <h6 style={{ color: 'white', fontSize: '11px' }}>{mensajeStore}</h6>
+                        <Alert variant={varianteStore} onClose={this._cerrarAlerta} dismissible>
+                            <h6 style={{ color: 'black', fontSize: '11px' }}>{mensajeStore}</h6>
                         </Alert>
                         :
                         null}

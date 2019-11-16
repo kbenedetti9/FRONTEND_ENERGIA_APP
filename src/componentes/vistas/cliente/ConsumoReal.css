@@ -123,6 +123,27 @@ font-size:30px;
     font-size: 50px;
 }
 
+.cardParteDia{
+    margin-bottom: 5px;
+}
+
+.valorParteDia{
+    font-size:60px;
+    font-family: 'Poppins', sans-serif; 
+}
+
+.unidadParteDia{
+    font-size:30px;
+}
+
+.cardParteDia{
+    height: 200px;
+}
+
+.imgParteDia{
+    height: 100%;
+}
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) { 
     #linea{
@@ -131,6 +152,12 @@ font-size:30px;
     #costoKw{
         font-size:30px;
     }    
+    /* .valorParteDia{
+        font-size:60px;
+    }
+    .unidadParteDia{
+        font-size:30px;
+    } */
  }
 
 /* // Small devices (landscape phones, 576px and up) */
@@ -141,6 +168,12 @@ font-size:30px;
     #costoKw{
         font-size:30px;
     } 
+    /* .valorParteDia{
+        font-size:60px;
+    }
+    .unidadParteDia{
+        font-size:30px;
+    } */
  }
 
 /* // Medium devices (tablets, 768px and up) */
@@ -148,14 +181,38 @@ font-size:30px;
     #linea{
         border-right: none ;
     }
+    /* .valorParteDia{
+        font-size:60px;
+    }
+    .unidadParteDia{
+        font-size:30px;
+    } */
  }
 
 /* // Large devices (desktops, 992px and up) */
 @media (min-width: 992px) and (max-width: 1199.98px) { 
-  
+    #linea{
+        border-right: none ;
+    }
+    /* .valorParteDia{
+        font-size:60px;
+    }
+    .unidadParteDia{
+        font-size:30px;
+    }    */
  }
+
+ @media (min-width: 1200px) and (max-width: 1580px){
+    /* .valorParteDia{
+        font-size:30px;
+    }
+    .unidadParteDia{
+        font-size:15px;
+    }   */
+    
+}
 
 /* // Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {  
-   
+    
 }

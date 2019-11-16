@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { iniciarSesion, cerrarAlerta } from '../../../../redux/acciones/autenticacionAcciones';
 
 import '../../../../../node_modules/font-awesome/css/font-awesome.min.css';
+import Cargando from '../../../cargando/cargando';
 
 class IniciarSesion extends React.Component {
 
@@ -42,16 +43,17 @@ class IniciarSesion extends React.Component {
         }else if(sTypeContraseña === "text"){
             this.setState({sTypeContraseña:"password", sIconContraseña:"feather icon-eye-off"});
         }
-
     }
 
     render() {
 
         const { correo, contraseña,sTypeContraseña,sIconContraseña } = this.state;
-        const { mensaje } = this.props;
+        const { mensaje, cargando } = this.props;
 
         return (
             <Aux>
+                {cargando === true ? <Cargando /> : null }
+                
                 <div className="auth-wrapper">
                     <div className="auth-content">
                         <div className="auth-bg">
@@ -92,7 +94,7 @@ class IniciarSesion extends React.Component {
                                     <span className="input-group-text" id="basic-addon2" onClick={this._cambiarTypeContraseña}><i className={sIconContraseña}></i></span>
                                         </div>
                                     </div>
-                                    <button id="ingresar" className="btn btn-primary shadow-2 mb-4" type="submit">Ingresar</button>
+                                    <button id="ingresar" className="btn btn-primary shadow-2 mb-4" type="submit" disabled={cargando}>Ingresar</button>
 
                                 </form>
                             </div>
@@ -106,7 +108,8 @@ class IniciarSesion extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        mensaje: state.autenticacion.mensaje
+        mensaje: state.autenticacion.mensaje,
+        cargando: state.autenticacion.cargando
     }
 }
 

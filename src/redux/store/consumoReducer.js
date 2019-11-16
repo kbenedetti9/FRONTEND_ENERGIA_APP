@@ -2,7 +2,8 @@ const initState = {
     consumoMes: 0,
     costoU: 0,
     limite: 0,
-    tipoLimite: null
+    tipoLimite: null,
+    historial: null
 }
 
 const consumoReducer = (state = initState, action) => {
@@ -23,12 +24,23 @@ const consumoReducer = (state = initState, action) => {
                 limite: action.limite,
                 tipoLimite: action.tipoLimite
             };
+        case 'ULTIMO_HISTORIAL':
+            return {
+                ...state,
+                historial: action.historial
+            };
+        case 'ULTIMO_HISTORIAL_ERROR':
+            return {
+                ...state,
+                historial: "ERROR"
+            };
         case 'REINICIAR_ESTADOS':
             return {
                 consumoMes: 0,
                 costoU: 0,
                 limite: 0,
-                tipoLimite: null
+                tipoLimite: null,
+                historial: null
             };
 
         default:

@@ -233,108 +233,103 @@ class Historial extends Component {
 
         return (
 
-            <Row className="container">
-                <Col>
-                    <Card>
-                        <Card.Header id="historialTitulo" className="textoHistorial">
+            <Card>
+                <Card.Header id="historialTitulo" className="textoHistorial">
 
-                            Mi historial
+                    Mi historial
                           <i id="calendarIcono" className="feather icon-calendar ml-1" />
 
-                        </Card.Header>
-                        <Card.Body className="container">
-                            {!mostrarGrafica ?
-                                <Table responsive hover width="100%">
-                                    <thead id="encabezadoTabla" style={{ textAlign: 'center' }}>
-                                        <tr>
-                                            <th scope="col" className="textoHistorial encabezado">Mes</th>
-                                            <th scope="col" className="textoHistorial encabezado">Kwh</th>
-                                            <th scope="col" className="textoHistorial encabezado">$</th>
-                                            <th scope="col" className="textoHistorial encabezado">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {datosTabla.map((mes, id) =>
-                                            <tr key={id} id="contenidoTabla" style={{ textAlign: 'center' }} >
-                                                <td className="textoHistorial">{arrayNMes[(+mes.mes) - 1]}</td>
-                                                <td className="textoHistorial">{mes.consumoTotal}</td>
-                                                <td className="textoHistorial">{mes.consumoCosto.toLocaleString('de-DE', {style: 'decimal'})}</td>
-                                                <td>
-                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, +mes.mes, mes)}>
-                                                        <i className="feather icon-eye" />
-                                                    </Button>
-                                                    <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, true, +mes.mes, mes)}>
-                                                        <i className="feather icon-file" />
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </Table>
-                                : null}
+                </Card.Header>
+                <Card.Body className="container">
+                    {!mostrarGrafica ?
+                        <Table responsive hover width="100%">
+                            <thead id="encabezadoTabla" style={{ textAlign: 'center' }}>
+                                <tr>
+                                    <th scope="col" className="textoHistorial encabezado">Mes</th>
+                                    <th scope="col" className="textoHistorial encabezado">Kwh</th>
+                                    <th scope="col" className="textoHistorial encabezado">$</th>
+                                    <th scope="col" className="textoHistorial encabezado">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {datosTabla.map((mes, id) =>
+                                    <tr key={id} id="contenidoTabla" style={{ textAlign: 'center' }} >
+                                        <td className="textoHistorial">{arrayNMes[(+mes.mes) - 1]}</td>
+                                        <td className="textoHistorial">{mes.consumoTotal}</td>
+                                        <td className="textoHistorial">{mes.consumoCosto.toLocaleString('de-DE', { style: 'decimal' })}</td>
+                                        <td>
+                                            <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, +mes.mes, mes)}>
+                                                <i className="feather icon-eye" />
+                                            </Button>
+                                            <Button size='sm' className="botonFondo shadow-1 btnDescargar" onClick={(e) => this._obtenerHistorialMes(e, true, +mes.mes, mes)}>
+                                                <i className="feather icon-file" />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </Table>
+                        : null}
 
-                            <div className="grafica">
-                                <div ref={bodyRef}>
-                                    {mostratDatosReporte ?
-                                        <div>
-                                            <div style={{ marginBottom: '70px' }}>
-                                                <Row>
-                                                    <Col >
-                                                        <div>Energia App </div>
-                                                    </Col>
-                                                    <Col className="ml-auto text-right">
-                                                        {new Date().toLocaleDateString()}
-                                                    </Col>
-                                                </Row>
-                                                <hr />
-                                            </div>
-                                            <div style={{ marginBottom: '50px' }}>
-                                                Datos personales del usuario
-                                                <hr />
-                                                <div><strong>Nombre: </strong>{usuario.apellidos + " " + usuario.nombre}</div>
-                                                <div><strong>Cedula: </strong>{usuario.cedula}</div>
-                                                <div><strong>Correo: </strong>{usuario.correo}</div>
-                                                <div><strong>Id del medidor: </strong>{usuario.id_medidor}</div>
-                                            </div>
-                                        </div>
-
-                                        : null
-                                    }
-                                    <div className="chart-container" >
-                                        <canvas id="myChart"></canvas>
+                    <div className="grafica">
+                        <div ref={bodyRef}>
+                            {mostratDatosReporte ?
+                                <div>
+                                    <div style={{ marginBottom: '70px' }}>
+                                        <Row>
+                                            <Col >
+                                                <div>Energia App </div>
+                                            </Col>
+                                            <Col className="ml-auto text-right">
+                                                {new Date().toLocaleDateString()}
+                                            </Col>
+                                        </Row>
+                                        <hr />
                                     </div>
-                                    {mostratDatosReporte ?
-                                        <div style={{ marginTop: '50px', marginBottom: '50px' }}>
-                                            Datos del mes
-                                            <hr />
-                                            <div><strong>Nombre: </strong>{arrayNMes[(+mesSeleccionado.mes) - 1]}</div>
-                                            <div><strong>Consumo total: </strong>{mesSeleccionado.consumoTotal + 'kwh'}</div>
-                                            <div><strong>Costo Total: </strong>{'$' + mesSeleccionado.consumoCosto.toLocaleString('de-DE', {style: 'decimal'})}</div>
-                                        </div>
-                                        : null
-                                    }
+                                    <div style={{ marginBottom: '50px' }}>
+                                        Datos personales del usuario
+                                                <hr />
+                                        <div><strong>Nombre: </strong>{usuario.apellidos + " " + usuario.nombre}</div>
+                                        <div><strong>Cedula: </strong>{usuario.cedula}</div>
+                                        <div><strong>Correo: </strong>{usuario.correo}</div>
+                                        <div><strong>Id del medidor: </strong>{usuario.id_medidor}</div>
+                                    </div>
                                 </div>
 
-                                {mostrarGrafica ?
-                                    <Button size="sm" onClick={this._atras} className="botonFondo2 mt-3 shadow-2">
-                                        <i className="feather icon-arrow-left" />
-                                    </Button>
-                                    : null
-                                }
-                                {mostratDatosReporte ?
-                                    <Button size="sm" onClick={this._generarReporte} className="botonFondo2 mt-3 shadow-2" >
-                                        <i className="feather icon-download" />
-                                    </Button>
-                                    : null
-                                }
+                                : null
+                            }
+                            <div className="chart-container" >
+                                <canvas id="myChart"></canvas>
                             </div>
+                            {mostratDatosReporte ?
+                                <div style={{ marginTop: '50px', marginBottom: '50px' }}>
+                                    Datos del mes
+                                            <hr />
+                                    <div><strong>Nombre: </strong>{arrayNMes[(+mesSeleccionado.mes) - 1]}</div>
+                                    <div><strong>Consumo total: </strong>{mesSeleccionado.consumoTotal + 'kwh'}</div>
+                                    <div><strong>Costo Total: </strong>{'$' + mesSeleccionado.consumoCosto.toLocaleString('de-DE', { style: 'decimal' })}</div>
+                                </div>
+                                : null
+                            }
+                        </div>
 
-                        </Card.Body>
+                        {mostrarGrafica ?
+                            <Button size="sm" onClick={this._atras} className="botonFondo2 mt-3 shadow-2">
+                                <i className="feather icon-arrow-left" />
+                            </Button>
+                            : null
+                        }
+                        {mostratDatosReporte ?
+                            <Button size="sm" onClick={this._generarReporte} className="botonFondo2 mt-3 shadow-2 btnDescargar" >
+                                <i className="feather icon-download" />
+                            </Button>
+                            : null
+                        }
+                    </div>
 
-                    </Card>
-                </Col>
-            </Row>
+                </Card.Body>
 
+            </Card>
         )
     }
 }

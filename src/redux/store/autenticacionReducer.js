@@ -3,7 +3,9 @@ const initState = {
     mensaje: null,
     variante: null,
     admin: false,
-    autenticacionLista: false
+    autenticacionLista: false,
+    cargando: false,
+    cerrandoSesion: false
 }
 
 const autenticacionReducer = (state = initState, action) => {
@@ -54,13 +56,35 @@ const autenticacionReducer = (state = initState, action) => {
                 mensaje: action.mensaje ? action.mensaje : null,
                 variante: action.variante ? action.variante : null
             };
+        case 'INICIANDO_SESION':
+            return {
+                ...state,
+                cargando: true
+            };
+        case 'INICIANDO_SESION_FIN':
+            return {
+                ...state,
+                cargando: false
+            };
+        case 'CERRANDO_SESION':
+            return {
+                ...state,
+                cerrandoSesion: true
+            }
+        case 'CERRANDO_SESION_FIN':
+            return {
+                ...state,
+                cerrandoSesion: false
+            }
         case 'REINICIAR_ESTADOS':
             return {
                 usuario: null,
                 mensaje: null,
                 variante: null,
                 admin: false,
-                autenticacionLista: true
+                autenticacionLista: true,
+                cargando: false,
+                cerrandoSesion: false
             };
         default:
             break;
