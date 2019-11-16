@@ -43,6 +43,15 @@ export const iniciarSesion = (credenciales) => {
                                 console.log(objeto);
                                 dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.ultimoConsumo });
                                 dispatch({ type: 'COSTO_U', costoU: objeto.costoU });
+                                Api.consultarHistorial(resultado.usuario.correo).then((respuesta) => {
+                                    if (respuesta.length > 0) {
+                                        dispatch({ type: 'ULTIMO_HISTORIAL', historial: respuesta[respuesta.length - 1] });
+                                    } else {
+                                        dispatch({ type: 'ULTIMO_HISTORIAL', historial: null });
+                                    }
+                                }).catch((error)=>{
+                                    dispatch({ type: 'ULTIMO_HISTORIAL_ERROR', error: error });
+                                });
                             });
 
                             socket.on('limiteKwh', (notificacion) => {
