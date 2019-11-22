@@ -21,7 +21,8 @@ export class Home extends Component {
         btnEditarCliente: false,
         mensajeInterno: null,
         varianteInterna: "",
-        listaClientesLocal: null
+        listaClientesLocal: null,
+        tamañoListaCliente: 0
     }
 
     _teclearFormulario = (evento) => {
@@ -40,15 +41,17 @@ export class Home extends Component {
 
     _filtrarCliente = (evento) => {
 
-        const value = evento.target.value;
-        console.log()
+        const value = evento.target.value.trim();
+
         var filtro = listaClientes.filter((str) => {
+
             if (str.correo && str.nombre && str.apellidos && str.id_medidor && str.cedula) {
+                console.log()
                 return str.nombre.toLowerCase().includes(value.toLowerCase()) ||
                     str.correo.toLowerCase().includes(value.toLowerCase()) ||
                     str.apellidos.toLowerCase().includes(value.toLowerCase()) ||
-                    str.id_medidor === +value ||
-                    str.cedula === +value;
+                    str.id_medidor.toString().includes(value) ||
+                    str.cedula.toString().includes(value);
             } else {
                 return null;
             }
@@ -56,14 +59,13 @@ export class Home extends Component {
 
         if (value) {
             this.setState({
-                listaClientesLocal: filtro
+                listaClientesLocal: filtro, tamañoListaCliente: listaClientes.length
             });
         } else {
             this.setState({
-                listaClientesLocal: null
+                listaClientesLocal: null, tamañoListaCliente: 0
             });
         }
-
     }
 
     _editarCliente = (cliente) => {
@@ -110,8 +112,9 @@ export class Home extends Component {
         if (correo === "" || nombre === "" || id_medidor === "" || apellidos === "" || cedula === "" || !this._validaCorreo(correo)) {
             this.setState({ mensajeInterno: "No debe haber campos vacios y el correo debe ser valido", varianteInterna: "danger" });
         } else {
-            this.props.crearUsuario(correo, nombre, apellidos, id_medidor, cedula);
+            this.props.crearUsuario(correo.trim(), nombre.trim(), apellidos.trim(), id_medidor, cedula);
         }
+
     }
 
     _actualizarCostoUnitario = (evento) => {
@@ -150,10 +153,19 @@ export class Home extends Component {
         this.props.ocultarAlerta();
     }
 
+    componentDidUpdate = () => {
+        const {limpiarCampos} = this.props;
+
+        if(limpiarCampos){
+            this._limpiarInputs();
+            this.props.camposLimpios();
+        }
+    }
+
     render() {
 
-        const { nombre, apellidos, correo, cedula, id_medidor, btnEditarCliente, mensajeInterno, varianteInterna, listaClientesLocal } = this.state;
-        const { clientes, consultaLista, mensajeStore, varianteStore, costoUnitario } = this.props;
+        const { nombre, apellidos, correo, cedula, id_medidor, btnEditarCliente, mensajeInterno, varianteInterna, listaClientesLocal, tamañoListaCliente } = this.state;
+        const { clientes, consultaLista, mensajeStore, varianteStore, costoUnitario, creadoCliente } = this.props;
 
         if (!consultaLista) {
             return <Cargando />
@@ -163,7 +175,7 @@ export class Home extends Component {
 
         listaClientes = clientes;//Usada solo para el filtro
 
-        if (listaClientesLocal) {//Lista que esta llena si solo si se esta filtrando
+        if (listaClientesLocal && (clientes.length === tamañoListaCliente)) {//Lista que esta llena si solo si se esta filtrando
             listaTabla = listaClientesLocal;
         } else {
             listaTabla = clientes;
@@ -177,24 +189,24 @@ export class Home extends Component {
                         <Card.Body className="cuerpo" >
                             <Row className="fila">
                                 <Col lg={12}>
-                                <h5 className="textoAdmin">Determina costo unitario</h5>
+                                    <h5 className="textoAdmin">Determina costo unitario</h5>
                                 </Col>
                             </Row>
                             <Row className="fila">
-                            <Col lg={3}>
-                            <div className="">
-                                <input name="costoUnitario" className="form-control form-control-sm inputUser textoAdmin" placeholder="Costo unitario" type="Number" onChange={this._teclearFormulario} />
-                            </div>
-                            </Col>
-                            <Col lg={5}>
-                            <Button type="button" className="mr-3 mb-4 textoAdmin botonCu" size="sm" onClick={this._actualizarCostoUnitario}> Actualizar </Button>
-                            </Col>
-                            <Col lg={4}>
+                                <Col lg={3}>
+                                    <div className="">
+                                        <input name="costoUnitario" className="form-control form-control-sm inputUser textoAdmin" placeholder="Costo unitario" type="Number" onChange={this._teclearFormulario} />
+                                    </div>
+                                </Col>
+                                <Col lg={5}>
+                                    <Button type="button" className="mr-3 mb-4 textoAdmin botonCu" size="sm" onClick={this._actualizarCostoUnitario}> Actualizar </Button>
+                                </Col>
+                                <Col lg={4}>
 
-                                <p className="textoAdmin">Costo unitario actual: ${costoUnitario}</p>
-                            
-                            
-                            </Col>
+                                    <p className="textoAdmin">Costo unitario actual: ${costoUnitario}</p>
+
+
+                                </Col>
                             </Row>
                         </Card.Body>
                     </Card>
@@ -254,15 +266,15 @@ export class Home extends Component {
                                                     {btnEditarCliente ?
                                                         <button type="submit" className="btn btn-primary btn-sm mr-3 btn-newUser inputUser" onClick={this._actualizarCliente}>
                                                             Actualizar
-                                        </button>
+                                                        </button>
                                                         :
-                                                        <button type="submit" className="btn btn-primary btn-sm mr-3 btn-newUser inputUser" onClick={this._nuevoCliente}>
+                                                        <button type="submit" className="btn btn-primary btn-sm mr-3 btn-newUser inputUser" onClick={this._nuevoCliente} disabled={creadoCliente}>
                                                             Crear
-                                        </button>
+                                                        </button>
                                                     }
-                                                    <button type="submit" className="btn btn-danger btn-sm btn-newUser inputUser" onClick={this._limpiarInputs}>
+                                                    <button type="submit" className="btn btn-danger btn-sm btn-newUser inputUser" onClick={this._limpiarInputs} disabled={creadoCliente}>
                                                         Cancelar
-                                    </button>
+                                                    </button>
                                                 </div>
 
                                             </div>
@@ -272,7 +284,7 @@ export class Home extends Component {
                                     <Col lg={9}>
                                         {/* Alerta de algun error */}
 
-                                        <div className="filtroCliente">
+                                        <div className="filtroCliente mb-4">
                                             <input className="form-control" type="text" placeholder="Buscar cliente..." aria-label="Search" onChange={this._filtrarCliente} />
                                         </div>
 
@@ -289,7 +301,7 @@ export class Home extends Component {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {clientes.map((cliente, index) =>
+                                                        {listaTabla.map((cliente, index) =>
                                                             <tr key={index}>
                                                                 <td>{cliente.nombre}</td>
                                                                 <td>{cliente.correo}</td>
@@ -305,7 +317,7 @@ export class Home extends Component {
                                                                             <i className="feather icon-refresh-ccw"></i>
                                                                         </button>
                                                                         <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{ padding: '0.5', fontSize: '12px' }} value={cliente.correo} onClick={(evento) => this._eliminarCliente(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
-                                                                        <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{padding: '0.5', fontSize: '12px'}} value={cliente.correo} onClick={(evento) => this._cerrarSesionUsuario(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
+                                                                        <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{ padding: '0.5', fontSize: '12px' }} value={cliente.correo} onClick={(evento) => this._cerrarSesionUsuario(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -336,7 +348,9 @@ const mapStateToProps = (state) => {
         consultaLista: state.sistema.consultaLista,
         mensajeStore: state.sistema.mensaje,
         varianteStore: state.sistema.variante,
-        costoUnitario: state.sistema.costoUnitario
+        costoUnitario: state.sistema.costoUnitario,
+        creadoCliente: state.sistema.creadoCliente,
+        limpiarCampos: state.sistema.limpiarCampos
     }
 }
 
@@ -348,7 +362,8 @@ const mapDispatchToProps = (dispatch) => {
         eliminarUsuario: (correo) => dispatch(eliminarUsuario(correo)),
         actualizarCostoUnitario: (costoUnitario) => dispatch(actualizarCostoUnitario(costoUnitario)),
         cerrarSesionUsuario: (correo) => dispatch(cerrarSesionUsuario(correo)),
-        ocultarAlerta: () => dispatch(ocultarAlerta())
+        ocultarAlerta: () => dispatch(ocultarAlerta()),
+        camposLimpios: () => dispatch({ type: "CAMPOS_LIMPIOS"})
     }
 }
 

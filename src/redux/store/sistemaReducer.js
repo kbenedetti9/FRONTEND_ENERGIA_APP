@@ -3,7 +3,9 @@ const initState = {
     consultaLista: false,
     mensaje: null,
     variante: null,
-    costoUnitario: 0
+    costoUnitario: 0,
+    creadoCliente: false,
+    limpiarCampos: false
 }
 
 const sistemaReducer = (state = initState, action) => {
@@ -13,6 +15,22 @@ const sistemaReducer = (state = initState, action) => {
                 ...state,
                 listaClientes: action.clientes,
                 consultaLista: true
+            };
+        case 'CREANDO_CLIENTE':
+            return {
+                ...state,
+                creadoCliente: true
+            };
+        case 'CREANDO_CLIENTE_FIN':
+            return {
+                ...state,
+                creadoCliente: false,
+                limpiarCampos: true
+            };
+        case 'CAMPOS_LIMPIOS':
+            return {
+                ...state,
+                limpiarCampos: false
             };
         case 'RECUPERAR_CONTRASENA':
             return {

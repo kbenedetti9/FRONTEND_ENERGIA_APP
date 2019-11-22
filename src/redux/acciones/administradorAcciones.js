@@ -60,19 +60,23 @@ export const actualizarUsuario = (correo, id_medidor) => {
 
 export const crearUsuario = (correo, nombre, apellidos, id_medidor, cedula) => {
     return (dispatch, getState, Api) => {
+        dispatch({ type: "CREANDO_CLIENTE"});
         Api.crearUsuario(correo, nombre, apellidos, id_medidor, cedula).then((respuesta) => {
             if(respuesta.estado){//creacion con exito
                 dispatch({ type: "ADMINISTRADOR_ACCION", mensaje: respuesta.mensaje, variante: respuesta.variante });
+                dispatch({ type: "CREANDO_CLIENTE_FIN"});
                 Api.obtenerListaClientes().then((respuesta) => {
-                    dispatch({ type: "CLIENTES", clientes: respuesta })
+                    dispatch({ type: "CLIENTES", clientes: respuesta });
                 }).catch((error) => {
                     console.log(error);
                 });
             }else{//Error al crear un usuario
                 dispatch({ type: "ADMINISTRADOR_ACCION_ERROR", mensaje: respuesta.mensaje, variante: respuesta.variante });
+                dispatch({ type: "CREANDO_CLIENTE_FIN"});
             }
         }).catch((error => {
             dispatch({type: "ADMINISTRADOR_ACCION_ERROR", variante: "danger", mensaje: error});
+            dispatch({ type: "CREANDO_CLIENTE_FIN"});
             console.log(error);
         }));
     }
