@@ -123,13 +123,16 @@ export const cerrarSesion = (correo, admin) => {
         Api.cerrarSesion().then((resultado) => {
             if (resultado.estado) {
                 if (admin) {
+                    window.location.reload();
                     dispatch({ type: 'CERRAR_SESION' });
                     dispatch({ type: 'REINICIAR_ESTADOS' });
                     dispatch({ type: 'CERRANDO_SESION_FIN' });
+                    window.location.reload();
                 } else {
                     const socket = socketIOClient(URLSERVER);
                     socket.emit('salir', correo);
                     socket.on('recibido', () => {
+                        window.location.reload();
                         dispatch({ type: 'CERRAR_SESION' });
                         dispatch({ type: 'REINICIAR_ESTADOS' });
                         dispatch({ type: 'CERRANDO_SESION_FIN' });

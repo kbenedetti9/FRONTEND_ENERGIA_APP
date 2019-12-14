@@ -317,7 +317,7 @@ export class Home extends Component {
                                                                             <i className="feather icon-refresh-ccw"></i>
                                                                         </button>
                                                                         <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{ padding: '0.5', fontSize: '12px' }} value={cliente.correo} onClick={(evento) => this._eliminarCliente(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
-                                                                        <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{ padding: '0.5', fontSize: '12px' }} value={cliente.correo} onClick={(evento) => this._cerrarSesionUsuario(evento, cliente.correo)}><i className="feather icon-trash"></i></button>
+                                                                        {/* <button className="btn btn-danger btn-sm botonAdmin mx-auto" style={{ padding: '0.5', fontSize: '12px' }} value={cliente.correo} onClick={(evento) => this._cerrarSesionUsuario(evento, cliente.correo)}><i className="feather icon-trash"></i></button> */}
                                                                     </div>
                                                                 </td>
                                                             </tr>
