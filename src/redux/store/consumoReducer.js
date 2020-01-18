@@ -3,7 +3,15 @@ const initState = {
     costoU: 0,
     limite: 0,
     tipoLimite: null,
-    historial: null
+    historial: null,
+    fechaConsumoInicial: null,
+    fechaConsumoFinal: null,
+    alerta: null,
+    consultaAlerta: false,
+    consumoRealCargado: false,
+    limiteCargado: false,
+    historialCargado: false,
+    alertaCargada: false
 }
 
 const consumoReducer = (state = initState, action) => {
@@ -11,25 +19,37 @@ const consumoReducer = (state = initState, action) => {
         case 'CONSUMO_REAL':
             return {
                 ...state,
-                consumoMes: action.consumoMes
+                consumoMes: action.consumoMes,
+                fechaConsumoInicial: action.fechaConsumoInicial,
+                fechaConsumoFinal: action.fechaConsumoFinal,
+                consumoRealCargado: true
             };
         case 'COSTO_U':
             return {
                 ...state,
                 costoU: action.costoU
             };
+        case 'ALERTA':
+            return {
+                ...state,
+                alerta: action.Alerta,
+                consultaAlerta: action.consultaAlerta,
+                alertaCargada: true
+            };
         case 'LIMITE':
             return {
                 ...state,
                 limite: action.limite,
-                tipoLimite: action.tipoLimite
+                tipoLimite: action.tipoLimite,
+                limiteCargado: true
             };
-        case 'ULTIMO_HISTORIAL':
+        case 'HISTORIAL':
             return {
                 ...state,
-                historial: action.historial
+                historial: action.historial,
+                historialCargado: true
             };
-        case 'ULTIMO_HISTORIAL_ERROR':
+        case 'HISTORIAL_ERROR':
             return {
                 ...state,
                 historial: "ERROR"
@@ -40,7 +60,15 @@ const consumoReducer = (state = initState, action) => {
                 costoU: 0,
                 limite: 0,
                 tipoLimite: null,
-                historial: null
+                historial: null,
+                fechaConsumoInicial: null,
+                fechaConsumoFinal: null,
+                alerta: null,
+                consultaAlerta: false,
+                consumoRealCargado: false,
+                limiteCargado: false,
+                historialCargado: false,
+                alertaCargada: false
             };
 
         default:

@@ -18,10 +18,10 @@ export const recuperarContrasena = (correo, contraseña) => {
     }
 }
 
-export const consultarCostoUnitario = () => {
+export const consultarCostoUnitario = () => {//Realmente es una consulta al sistema mas no al costo unitario
     return (dispatch, getState, Api) => {
-        Api.consultarCostoUnitario().then((costoUnitario)=>{
-            dispatch({ type: "COSTO_UNITARIO", costoUnitario })
+        Api.consultarCostoUnitario().then((respuestasistema)=>{
+            dispatch({ type: "COSTO_UNITARIO", costoUnitario: respuestasistema.costoUnitario, fechaIniCorte: respuestasistema.fechaIniCorte, fechaFinCorte: respuestasistema.fechaFinCorte })
         }).catch((error) => {
             console.log(error);
         });

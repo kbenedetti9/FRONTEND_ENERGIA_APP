@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PerfectScrollabar from 'react-perfect-scrollbar';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 export class Menu extends Component {
@@ -24,9 +24,8 @@ export class Menu extends Component {
 
     render() {
 
-        const { className, accion, className_icon, admin, usuario } = this.props;
-        const nuevoClassName = className + " " + accion;
-
+        const { className, accion, className_icon, admin, usuario, correo } = this.props;
+        const nuevoClassName = className + " " + accion; 
         return (
 
             <nav className={nuevoClassName}>
@@ -39,7 +38,7 @@ export class Menu extends Component {
                             </div>
                             <span className="b-title">Energía App</span>
                         </a>
-                        <a className={className_icon} id="mobile-collapse" onClick={this.cambiarEstadoMenu} href="#!"><span></span></a>
+                        <Link className={className_icon} id="mobile-collapse" onClick={this.cambiarEstadoMenu} to="#"><span></span></Link>
                     </div>
                     {/* Logo menu - Fin */}
 
@@ -57,6 +56,14 @@ export class Menu extends Component {
                                                 <i className="icon feather icon-home"></i>
                                             </span>
                                             <span className="pcoded-mtext">Administrar</span>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to='/salir' className="nav-link" exact={true} target="" onClick={()=> this.props.cerrarSesion(correo, admin)}>
+                                            <span className="pcoded-micon">
+                                                <i className="icon feather icon-log-out"></i>
+                                            </span>
+                                            <span className="pcoded-mtext">Cerrar sesion</span>
                                         </NavLink>
                                     </li>
                                 </ul>
@@ -77,9 +84,17 @@ export class Menu extends Component {
                                     <li className="nav-item">
                                         <NavLink to="/App/historial" className="nav-link" exact={true} target="">
                                             <span className="pcoded-micon">
-                                            <i className="icon feather icon-calendar"></i>
+                                                <i className="icon feather icon-calendar"></i>
                                             </span>
-                                            <span className="pcoded-mtext ">Mi historial</span>
+                                            <span className="pcoded-mtext ">Mi historial de consumo</span>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to="/App/alertas" className="nav-link" exact={true} target="">
+                                            <span className="pcoded-micon">
+                                                <i className="icon feather icon-alert-circle"></i>
+                                            </span>
+                                            <span className="pcoded-mtext ">Mi historial de alertas</span>
                                         </NavLink>
                                     </li>
                                     <li className="nav-item">
@@ -88,6 +103,14 @@ export class Menu extends Component {
                                                 <i className="icon feather icon-settings"></i>
                                             </span>
                                             <span className="pcoded-mtext">Configuración</span>
+                                        </NavLink>
+                                    </li>
+                                    <li className="nav-item">
+                                        <NavLink to='/salir' className="nav-link" exact={true} target="" onClick={()=> this.props.cerrarSesion(correo, admin)}>
+                                            <span className="pcoded-micon">
+                                                <i className="icon feather icon-log-out"></i>
+                                            </span>
+                                            <span className="pcoded-mtext">Cerrar sesion</span>
                                         </NavLink>
                                     </li>
                                 </ul>

@@ -18,17 +18,16 @@ export class Navbar extends Component {
     render() {
 
         const { className_icon, correo, admin, nombre } = this.props;
-
         return (
             <header className="navbar pcoded-header navbar-expand-lg header-default" onClick={this.props.ocultarMenu} >
                 <div className="m-header">
-                    <a href="#!" className={className_icon} id="mobile-collapse1" onClick={this.mostrarMenu}><span /></a>
-                    <a href="#!" className="b-brand">
+                    <Link to="#" className={className_icon} id="mobile-collapse1" onClick={this.mostrarMenu}><span /></Link>
+                    <Link to="#" className="b-brand">
                         <div className="b-bg">
                             <i className="icon fa fa-lightbulb-o" />
                         </div>
                         <span className="b-title">Menu</span>
-                    </a>
+                    </Link>
                 </div>
                 <div className="collapse navbar-collapse">
                     <ul className="navbar-nav ml-auto">

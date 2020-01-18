@@ -1,7 +1,7 @@
 export const consultarConsumoReal = (correo) => {
     return (dispatch, getState, Api) => {
         Api.consultarConsumoReal(correo).then((respuesta) => {
-            dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
+            dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes, fechaConsumoInicial: respuesta.fechaConsumoInicial, fechaConsumoFinal: respuesta.fechaConsumoFinal });
             dispatch({ type: 'COSTO_U', costoU: respuesta.costoU });
         }).catch((error) => {
             console.log(error);
@@ -16,6 +16,16 @@ export const consultarLimite = (correo) => {
         }).catch((error) => {
             console.log(error);
         })
+    }
+}
+
+export const consultarAlerta = (correo) => {
+    return (dispatch, getState, Api) => {
+        Api.consultarAlerta(correo).then((respuesta) => {
+            dispatch({ type: 'ALERTA', Alerta: respuesta, consultaAlerta: true });
+        }).catch((error) => {
+            dispatch({ type: 'ALERTA_ERROR', error: error, consultaAlerta: true });
+        });
     }
 }
 
@@ -58,12 +68,12 @@ export const consultarHistorial = (correo) => {
     return (dispatch, getState, Api) => {
         Api.consultarHistorial(correo).then((respuesta)=>{
             if(respuesta.length > 0){
-                dispatch({ type: 'ULTIMO_HISTORIAL', historial: respuesta[respuesta.length-1] });
+                dispatch({ type: 'HISTORIAL', historial: respuesta });
             }else{
-                dispatch({ type: 'ULTIMO_HISTORIAL', historial: null });
+                dispatch({ type: 'HISTORIAL', historial: null });
             }
         }).catch((error) => {
-            dispatch({ type: 'ULTIMO_HISTORIAL_ERROR', error: error });
+            dispatch({ type: 'HISTORIAL_ERROR', error: error });
         });
     }
 }

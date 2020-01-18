@@ -4,6 +4,7 @@ import Api from '../../../api/Api';
 import Cargando from '../../cargando/cargando';
 import Chart from 'chart.js';
 import Pdf from '../../pdf/PDFService';
+import Excel from '../../Excel/Excel';
 import '../cliente/Historial.css';
 let obj = [];
 let grafica = null;
@@ -14,10 +15,17 @@ class Historial extends Component {
 
     state = {
         datosTabla: [],
-        arrayNMes: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        arrayNMes: ['Enero - Febrero', 'Febrero - Marzo', 'Marzo - Abril', 'Abril - Mayo', 'Mayo - Junio', 'Junio - Julio', 'Julio - Agosto', 'Agosto - Septiembe', 'Septiembre - Octubre', 'Octubre - Noviembre', 'Noviembre - Diciembre', 'Diciembre - Enero'],
         historial: [],
         mostrarGrafica: false,
-        mostratDatosReporte: false
+        mostratDatosReporte: false,
+        dataGrafica: null
+    }
+
+    _obtenerNombrePeriodo = (mes, diaIni, diaFin) => {
+        let arrayNMes = [diaIni + ' Enero - ' + diaFin + ' Febrero', diaIni + ' Febrero - ' + diaFin + ' Marzo', diaIni + ' Marzo - ' + diaFin + ' Abril', diaIni + ' Abril - ' + diaFin + ' Mayo', diaIni + ' Mayo - ' + diaFin + ' Junio', diaIni + ' Junio - ' + diaFin + ' Julio', diaIni + ' Julio - ' + diaFin + ' Agosto', diaIni + ' Agosto - ' + diaFin + ' Septiembe', diaIni + ' Septiembre - ' + diaFin + ' Octubre', diaIni + ' Octubre - ' + diaFin + ' Noviembre', diaIni + ' Noviembre - ' + diaFin + ' Diciembre', diaIni + ' Diciembre - ' + diaFin + ' Enero'];
+
+        return arrayNMes[mes - 1];
     }
 
     _generarReporte = () => {
@@ -25,13 +33,13 @@ class Historial extends Component {
     }
 
     _atras = () => {
-        this.setState({ mostrarGrafica: false, mostratDatosReporte: false });
+        this.setState({ mostrarGrafica: false, mostratDatosReporte: false, dataGrafica: null });
         mesSeleccionado = null;
         grafica.destroy();
     }
 
-    _graficar = (data, reporte) => {
-        this.setState({ mostrarGrafica: true, mostratDatosReporte: reporte });
+    _graficar = (data, reporte, nombrePeriodo) => {
+        this.setState({ mostrarGrafica: true, mostratDatosReporte: reporte, dataGrafica: data });
         var ctx = document.getElementById('myChart');
         grafica = new Chart(ctx, {
             type: 'bar',
@@ -68,12 +76,20 @@ class Historial extends Component {
             },
             options: {
                 maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: nombrePeriodo
+                },
                 scales: {
                     yAxes: [{
 
                         stacked: true,
                         ticks: {
                             beginAtZero: true
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'CONSUMO EN KW/H'
                         }
                     }],
                     xAxes: [{
@@ -81,7 +97,12 @@ class Historial extends Component {
                         stacked: true,
                         ticks: {
                             beginAtZero: true
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'DÍAS DEL PERÍODO'
                         }
+                        
                     }]
                 },
                 responsive: true
@@ -89,7 +110,16 @@ class Historial extends Component {
         });
     }
 
-    _obtenerHistorialMes = (evento, reporte, mes, objMes) => {
+    _getDiferenciaFechas = (fecha_1, fecha_2) => {
+        let fechaInicio = new Date(fecha_1).getTime();
+        let fechaFin    = new Date(fecha_2).getTime();
+
+        let diff = fechaInicio - fechaFin;
+
+        return diff/(1000*60*60*24);
+    }
+
+    _obtenerHistorialMes = (evento, reporte, periodo, objMes) => {
         evento.preventDefault();
         mesSeleccionado = objMes;
         const { historial } = this.state;
@@ -100,16 +130,35 @@ class Historial extends Component {
             consumoManana: [],
             consumoTarde: [],
             consumoNoche: [],
-            labels: []
+            labels: [],
+            fechaInicio: objMes.fechaIni
         }
 
         let arrayConsumoManana = [];
         let arrayConsumoMadrugada = [];
         let arrayconsumoTarde = [];
         let arrayconsumoNoche = [];
+        let arrayModelo = [];
 
         let labels = [];
-
+        let contador = parseInt(objMes.diaIni);//objMes.diaIni  diaFin
+        let nombrePeriodo = this.state.arrayNMes[objMes.fechaIni.split("/")[0]-1];
+        nombrePeriodo = nombrePeriodo.toUpperCase();
+        let parar = false;
+        while (parar === false) {
+            if ((contador + 1) > 31) {
+                contador = contador - 31;
+                if (contador === 0) {
+                    contador = 1;
+                }
+            } else if (arrayModelo.length !== 0) {
+                contador++;
+            }
+            arrayModelo.push(contador);
+            if (arrayModelo.length === this._getDiferenciaFechas(objMes.fechaFin, objMes.fechaIni)) {
+                parar = true;
+            }
+        }
         //Llenar arrays
         for (var i = 0; i < 31; i++) {
             arrayConsumoManana.push(0);
@@ -117,17 +166,17 @@ class Historial extends Component {
             arrayconsumoTarde.push(0);
             arrayconsumoNoche.push(0);
         }
-        for (var t = 1; t <= 31; t++) {
-            labels.push(t);
-        }
 
-        data.labels = labels;
+        labels = arrayModelo;
+
+        data.labels = arrayModelo;
 
         for (i = 0; i < historial.length; i++) {
             var fecha = historial[i].fecha;
             const arrayFecha = fecha.split("/");
+            const arrayFechaIni = historial[i].fechaIniCorte.split(",");
             let diaConsumido = +arrayFecha[1];
-            if (+arrayFecha[0] === mes) {
+            if (arrayFechaIni[0] === periodo) {
 
                 if (historial[i].consumoTarde !== undefined) {
                     for (var h = 0; h < labels.length; h++) {
@@ -175,33 +224,34 @@ class Historial extends Component {
 
             }
         }
-        this._graficar(data, reporte);
+        this._graficar(data, reporte, nombrePeriodo);
     }
 
     _obtenerDatosTabla = (historial) => {
-        let mes = 0;
-        let objMes = [];
+        let objPeriodo = [];
+        let auxPeriodo = null;
         for (let index = 0; index < historial.length; index++) {
             const element = historial[index];
-            const arrayFecha = element.fecha.split("/");
-            if (mes.toString() !== arrayFecha[0]) {
-                objMes.push(arrayFecha[0]);
-                mes = arrayFecha[0];
+            const arrayFechaIni = element.fechaIniCorte.split(",");
+            const arrayFechaFin = element.fechaFinalCorte.split(",");
+            if (auxPeriodo !== arrayFechaIni[0]) {
+                objPeriodo.push({ fechaIni: arrayFechaIni[0], fechaFin: arrayFechaFin[0] });
+                auxPeriodo = arrayFechaIni[0];
             }
         }
         obj = [];
-        for (let index = 0; index < objMes.length; index++) {
+        for (let index = 0; index < objPeriodo.length; index++) {
             let consumoTotal = 0;
             let costoU = 0;
             for (let index2 = 0; index2 < historial.length; index2++) {
                 const element = historial[index2];
-                const arrayFecha = element.fecha.split("/");
-                if (objMes[index] === arrayFecha[0]) {
+                const arrayFecha = element.fechaIniCorte.split(",");
+                if (objPeriodo[index].fechaIni === arrayFecha[0]) {
                     costoU = element.costoUnitarioKwh;
                     consumoTotal = consumoTotal + element.totalConsumoDia;
                 }
             }
-            obj.push({ mes: objMes[index], consumoTotal: consumoTotal, consumoCosto: (consumoTotal * costoU) });
+            obj.push({ mes: objPeriodo[index].fechaIni.split("/")[0], consumoTotal: consumoTotal, consumoCosto: (consumoTotal * costoU), diaIni: objPeriodo[index].fechaIni.split("/")[1], diaFin: objPeriodo[index].fechaFin.split("/")[1], idPeriodo: objPeriodo[index].fechaIni, fechaIni: objPeriodo[index].fechaIni, fechaFin: objPeriodo[index].fechaFin, costoU });
         }
 
         if (obj.length > 0) {
@@ -214,13 +264,19 @@ class Historial extends Component {
     componentDidMount = async () => {
         const { usuario } = this.props;
         const historial = await Api.consultarHistorial(usuario.correo);
+
         if (historial) {
-            this._obtenerDatosTabla(historial);
+            let historialAux = [];
+            for (let index = 0; index < historial.length; index++) {
+                const element = historial[index];
+                historialAux.unshift(element);
+            }
+            this._obtenerDatosTabla(historialAux);
         }
     }
 
     render() {
-        const { datosTabla, arrayNMes, mostrarGrafica, mostratDatosReporte } = this.state;
+        const { datosTabla, arrayNMes, mostrarGrafica, mostratDatosReporte, dataGrafica } = this.state;
         const { usuario } = this.props;
 
         if (datosTabla && datosTabla.length === 0) {
@@ -241,27 +297,30 @@ class Historial extends Component {
 
                 </Card.Header>
                 <Card.Body className="container">
+                    
                     {!mostrarGrafica ?
                         <Table responsive hover width="100%">
                             <thead id="encabezadoTabla" style={{ textAlign: 'center' }}>
                                 <tr>
-                                    <th scope="col" className="textoHistorial encabezado">Mes</th>
+                                    <th scope="col" className="textoHistorial encabezado">Periodo</th>
                                     <th scope="col" className="textoHistorial encabezado">Kwh</th>
-                                    <th scope="col" className="textoHistorial encabezado">$</th>
+                                    <th scope="col" className="textoHistorial encabezado">Costo unitario (kw/h)</th>
+                                    <th scope="col" className="textoHistorial encabezado">Total ($)</th>
                                     <th scope="col" className="textoHistorial encabezado">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {datosTabla.map((mes, id) =>
                                     <tr key={id} id="contenidoTabla" style={{ textAlign: 'center' }} >
-                                        <td className="textoHistorial">{arrayNMes[(+mes.mes) - 1]}</td>
+                                        <td className="textoHistorial">{this._obtenerNombrePeriodo(mes.mes, mes.diaIni, mes.diaFin)}</td>
                                         <td className="textoHistorial">{mes.consumoTotal}</td>
+                                        <td className="textoHistorial">{mes.costoU}</td>
                                         <td className="textoHistorial">{mes.consumoCosto.toLocaleString('de-DE', { style: 'decimal' })}</td>
                                         <td>
-                                            <Button size='sm' className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, +mes.mes, mes)}>
+                                            <Button size='sm' title="Ver gráfica" className="botonFondo shadow-1" onClick={(e) => this._obtenerHistorialMes(e, false, mes.idPeriodo, mes)}>
                                                 <i className="feather icon-eye" />
                                             </Button>
-                                            <Button size='sm' className="botonFondo shadow-1 btnDescargar" onClick={(e) => this._obtenerHistorialMes(e, true, +mes.mes, mes)}>
+                                            <Button size='sm' title="Ver reporte" className="botonFondo shadow-1 btnDescargar" onClick={(e) => this._obtenerHistorialMes(e, true, mes.idPeriodo, mes)}>
                                                 <i className="feather icon-file" />
                                             </Button>
                                         </td>
@@ -314,15 +373,19 @@ class Historial extends Component {
                         </div>
 
                         {mostrarGrafica ?
-                            <Button size="sm" onClick={this._atras} className="botonFondo2 mt-3 shadow-2">
+                            <Button size="sm" onClick={this._atras} title="Volver" className="botonFondo2 mt-3 shadow-2">
                                 <i className="feather icon-arrow-left" />
                             </Button>
                             : null
                         }
                         {mostratDatosReporte ?
-                            <Button size="sm" onClick={this._generarReporte} className="botonFondo2 mt-3 shadow-2 btnDescargar" >
-                                <i className="feather icon-download" />
+                            <Button size="sm" onClick={this._generarReporte} title="Descargar reporte" className="botonFondo2 mt-3 shadow-2 btnDescargar" >
+                                <i className="fa fa-file-pdf-o" />
                             </Button>
+                            : null
+                        }
+                        {mostratDatosReporte ?
+                            <Excel data={dataGrafica} />
                             : null
                         }
                     </div>

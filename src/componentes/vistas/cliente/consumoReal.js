@@ -2,19 +2,39 @@ import React, { Component } from 'react';
 //Redux
 import { connect } from 'react-redux';
 import { Card, Row, Col, Button, Alert } from 'react-bootstrap';
-import '../cliente/ConsumoReal.css';
+import './ConsumoReal.css';
 import { actualizarLimite } from "../../../redux/acciones/clienteAcciones";
 import imgNoche from '../../../asset/images/Noche.png';
 import imgMadrugada from '../../../asset/images/Madrugada.png';
 import imgMañana from '../../../asset/images/Mañana.png';
 import imgTarde from '../../../asset/images/Tarde.png';
+import Cargando from '../../cargando/cargando';
+import BarraEstado from './BarraEstado'
 
 class consumoReal extends Component {
 
     state = {
         selectKw: true,
         miNuevoLimite: 0,
-        mensaje: false
+        mensaje: false,
+        fecha: ""
+    }
+
+    _castearFecha = (fecha) => {
+        let arrayFecha = fecha.split("/");
+        let dia = parseInt(arrayFecha[1]);
+        let mes = parseInt(arrayFecha[0]);
+        let año = arrayFecha[2];
+
+        if(dia < 10){
+            dia = "0"+dia;
+        }
+
+        if(mes < 10){
+            mes = "0"+mes;
+        }
+
+        return año+"-"+mes+"-"+dia;
     }
 
     _cambiarLimite = (evento) => {//Cambiar nombre
@@ -72,7 +92,7 @@ class consumoReal extends Component {
         let nombreDia = "--";
         switch (vectorFecha[0]) {
             case "Sat":
-                nombreDia =  "Sábado";
+                nombreDia = "Sábado";
                 break;
             case "Mon":
                 nombreDia = "Lunes";
@@ -93,54 +113,155 @@ class consumoReal extends Component {
                 break;
         }
         let nombreMes = "--";
-        
+
         nombreMes = this._obtenerNombreMesHistorial(vectorFecha[1]);
-        return nombreDia + " " + nombreMes[0]+nombreMes[1].toLowerCase()+nombreMes[2].toLowerCase() +" "+  vectorFecha[2] + " " + vectorFecha[3];
+        return nombreDia + " " + nombreMes[0] + nombreMes[1].toLowerCase() + nombreMes[2].toLowerCase() + " " + vectorFecha[2] + " " + vectorFecha[3];
     }
 
     _obtenerNombreMesHistorial = (numeroMes) => {
 
-        if(numeroMes === 11 || numeroMes === "Nov"){
+        if (numeroMes === 11 || numeroMes === "Nov") {
             return "NOVIEMBRE";
-        }else if(numeroMes === 1 || numeroMes === "Jan"){
+        } else if (numeroMes === 1 || numeroMes === "Jan") {
             return "ENERO";
-        }else if(numeroMes === 2 || numeroMes === "Feb"){
+        } else if (numeroMes === 2 || numeroMes === "Feb") {
             return "FEBRERO";
-        }else if(numeroMes === 3 || numeroMes === "Mar"){
+        } else if (numeroMes === 3 || numeroMes === "Mar") {
             return "MARZO";
-        }else if(numeroMes === 4 || numeroMes === "Apr"){
+        } else if (numeroMes === 4 || numeroMes === "Apr") {
             return "ABRIL";
-        }else if(numeroMes === 5 || numeroMes === "May"){
+        } else if (numeroMes === 5 || numeroMes === "May") {
             return "MAYO";
-        }else if(numeroMes === 6 || numeroMes === "Jun"){
+        } else if (numeroMes === 6 || numeroMes === "Jun") {
             return "JUNIO";
-        }else if(numeroMes === 7 || numeroMes === "Jul"){
+        } else if (numeroMes === 7 || numeroMes === "Jul") {
             return "JULIO";
-        }else if(numeroMes === 8 || numeroMes === "Aug"){
+        } else if (numeroMes === 8 || numeroMes === "Aug") {
             return "AGOSTO";
-        }else if(numeroMes === 9 || numeroMes === "Sep"){
+        } else if (numeroMes === 9 || numeroMes === "Sep") {
             return "SEPTIEMBRE";
-        }else if(numeroMes === 10 || numeroMes === "Oct"){
+        } else if (numeroMes === 10 || numeroMes === "Oct") {
             return "OCTUBRE";
-        }else if(numeroMes === 12 || numeroMes === "Dec"){
+        } else if (numeroMes === 12 || numeroMes === "Dec") {
             return "DICIEMBRE";
         }
     }
 
+    _obtenerNombrePeriodo = (fecha_1, fecha_2) => {
+        const arrayFecha_1 = fecha_1.split("/");
+        const mes_1 = parseInt(arrayFecha_1[0]);
+
+        const arrayFecha_2 = fecha_2.split("/");
+        const mes_2 = parseInt(arrayFecha_2[0]);
+
+        return this._obtenerNombreMesHistorial(mes_1) + " - " + this._obtenerNombreMesHistorial(mes_2);
+    }
+
+    _esMismaFecha = (fecha_1, fecha_2) => {
+        let resultado = false;
+
+        let mes_1 = fecha_1.split("/")[0];
+        let mes_2 = fecha_2.split("/")[0];
+
+        let dia_1 = fecha_1.split("/")[1];
+        let dia_2 = fecha_2.split("/")[1];
+
+        let año_1 = fecha_1.split("/")[2];
+        let año_2 = fecha_2.split("/")[2];
+
+        if (mes_1 === mes_2 && dia_1 === dia_2 && año_1 === año_2) {
+            resultado = true;
+        }
+
+        return resultado;
+    }
+
+    _getDiferenciaFechas = (fecha_1, fecha_2) => {
+        let fechaInicio = new Date(fecha_1).getTime();
+        let fechaFin = new Date(fecha_2).getTime();
+
+        let diff = fechaFin - fechaInicio;
+
+        return diff / (1000 * 60 * 60 * 24);
+    }
+
+    _getNombreFechaBarra = (fecha_1) => {
+
+        let mes_1 = parseInt(fecha_1.split("/")[0]);
+        let dia_1 = fecha_1.split("/")[1];
+        let año_1 = fecha_1.split("/")[2];
+
+        return dia_1 + "-" + this._obtenerNombreMesHistorial(mes_1) + "-" + año_1[2] + año_1[3];
+    }
+
+    _getFechaVistaToServidor = (fecha) => {
+        let arrayFecha = fecha.split("-");
+        let dia = parseInt(arrayFecha[2]);
+        let mes = parseInt(arrayFecha[1]);
+        let año = arrayFecha[0];
+
+        return mes+"/"+dia+"/"+año;
+    }
+
+    _getHistorial = (fecha, historialArray) => {
+        let historial = null;
+
+        for (let index = 0; index < historialArray.length; index++) {
+            const element = historialArray[index];
+            if(this._getFechaVistaToServidor(fecha) === element.fecha.split(",")[0]){
+                historial = element;
+                break;
+            }
+        }
+
+        return historial;
+    }
+
+    _getPorcentajePeriodo = (fechaConsumoInicial, fechaConsumoFinal) => {
+        //Esto devuelve el porcentaje de los días consumidos en el periodo de tiempo actual.
+        if(fechaConsumoInicial && fechaConsumoFinal){
+            let diferenciaFechas = this._getDiferenciaFechas(fechaConsumoInicial, fechaConsumoFinal);//Obtengo el 100% del periodo
+            let fechaActual = new Date().toLocaleString('en-us', { hour12: true }).split(",")[0];
+            let diferenciaFechas_2 = this._getDiferenciaFechas(fechaConsumoInicial, fechaActual);//Saber el numero de dias consumido
+            //Ahora, ¿cuanto equivale el numero de dias consumido en el 100%?
+            return Math.round((diferenciaFechas_2 * 100) / diferenciaFechas);
+        }else{
+            return 0;
+        }
+        
+    }
+
+    componentDidMount(){
+
+        const {tipoLimite} = this.props;
+
+        this.setState({
+            fecha: this._castearFecha(new Date().toLocaleString('en-us', { hour12: true }).split(",")[0]),
+            selectKw: tipoLimite && tipoLimite === 1 ? false : true
+        });
+    }
+
     render() {
 
-        const { consumoMes, limite, tipoLimite, historial } = this.props;//tipolimite 1 = peso, 0 = kw
-        const { selectKw, miNuevoLimite, mensaje } = this.state;
-        const fechaActual = this._obtenerFechaActual();
+        const { consumoMes, limite, tipoLimite, fechaConsumoInicial, fechaConsumoFinal, usuario, consumoRealCargado, limiteCargado, historialCargado, alertaCargada, sistemaCargado } = this.props;//tipolimite 1 = peso, 0 = kw
+        const { selectKw, miNuevoLimite, mensaje, fecha } = this.state;
         let { costoU } = this.props;
+        let { historialArray } = this.props;
         let nombreMes = "--";
-        if(historial){
-            let vectorCadena = historial.fecha.split(",");
-            let vectorFecha = vectorCadena[0].split("/");
-            let numeroMes = vectorFecha[0];
-            nombreMes = this._obtenerNombreMesHistorial(+numeroMes);
-        }
         let porcentajeLimite = 0;
+        let fechaActual2 = new Date().toLocaleString('en-us', { hour12: true }).split(",")[0];
+        let porcentajePeriodo = this._getPorcentajePeriodo(fechaConsumoInicial, fechaConsumoFinal);
+
+        if (!usuario || !consumoRealCargado || !limiteCargado || !historialCargado || !alertaCargada || !sistemaCargado) {
+            return <Cargando />;
+        }
+        
+        let historial = historialArray ? this._getHistorial(fecha, historialArray) : null;
+
+        if (fechaConsumoInicial && fechaConsumoFinal) {
+            nombreMes = this._obtenerNombrePeriodo(fechaConsumoInicial, fechaConsumoFinal);
+        }
+
         if (tipoLimite !== null && limite > 0) {//Tiene un limite definido
 
             if (tipoLimite === 0) {
@@ -157,23 +278,24 @@ class consumoReal extends Component {
         let costoPesos = consumoMes * costoU;
 
         costoPesos = costoPesos.toLocaleString('de-DE', { style: 'decimal' });
-
+        
         return (
             <Row>
+                {/* CONSUMO REAL */}
                 <Col lg={12} md={12} xl={8} sm={12} xm={12}>
-                    <Card style={{ minHeight: '500px' }} >
+                    <Card style={{ minHeight: '535px' }} >
                         <Card.Body>
-                            <Row className="container">
+                            <Row className="container" style={{ marginBottom: "50px", marginTop: "20px" }}>
                                 <Col id="linea" style={{ textAlign: 'center' }}>
                                     <i id="boltIcono" className="fas fa-bolt"></i>
-                                    <h3 className="textoConsumo mt-3">Consumo actual</h3>
+                                    <h3 className="textoConsumo mt-3">Consumo actual del período</h3>
                                     <p className="textoConsumo info">{nombreMes}</p>
                                     <h2 className="valor">{consumoMes}<span id="unidad" className="textoConsumo">Kw/h</span> </h2>
                                 </Col>
 
                                 <Col style={{ textAlign: 'center' }}>
                                     <i id="moneyIcono" className="fas fa-coins"></i>
-                                    <h3 className="textoConsumo mt-3">Costo</h3>
+                                    <h3 className="textoConsumo mt-3">Costo actual del período</h3>
                                     <p className="textoConsumo info" >Costo unitario: ${costoU}</p>
 
                                     <h2 className="valor" id="costoKw">
@@ -183,22 +305,20 @@ class consumoReal extends Component {
                                 </Col>
 
                             </Row>
-                            <Row className="container">
-                                <Col lg={12}>
-                                    <div className="progress m-t-30" style={{ height: '10px' }}>
-                                        <div className="progress-bar progress-c-theme" role="progressbar" style={{ width: porcentajeLimite + "%" }} aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" />
-                                    </div>
-                                </Col>
-
-                            </Row>
-                            <div className="circulo textoConsumo shadow-2 mx-auto mt-3" style={{ textAlign: 'center' }}>{porcentajeLimite + "%"}</div>
+                            <BarraEstado 
+                                porcentajeLimite={porcentajePeriodo}
+                                valorActual={fechaActual2 ? this._getNombreFechaBarra(fechaActual2) : "--"}
+                                limite={fechaConsumoFinal ? this._getNombreFechaBarra(fechaConsumoFinal): "--"}
+                                inicio={fechaConsumoInicial ? this._getNombreFechaBarra(fechaConsumoInicial) : "--" }
+                                unidadBarra={""} 
+                                tema={"progress-c-theme"} 
+                                altura={20} />
                         </Card.Body>
-
                     </Card>
-
                 </Col>
+                {/* LIMITE */}
                 <Col lg={12} md={12} xl={4} sm={12} xm={12} >
-                    <Card style={{ minHeight: '500px' }}>
+                    <Card style={{ minHeight: '535px' }}>
                         <Card.Body id="limite">
                             {mensaje ?
                                 <Alert variant="danger" style={{ backgroundColor: 'red' }} onClose={this._cerrarAlerta} dismissible>
@@ -218,14 +338,17 @@ class consumoReal extends Component {
                             </div>
                             {tipoLimite !== null && limite > 0
                                 ?
-                                <h2 id="hayLimite" className="textoConsumo">{tipoLimite === 0 ? limite + " kwh" : "$ " + limite}</h2>
+                                <div>
+                                    <h2 id="hayLimite" className="textoConsumo">{tipoLimite === 0 ? limite + " kwh" : "$ " + limite}</h2>
+                                    <BarraEstado porcentajeLimite={porcentajeLimite} valorActual={tipoLimite === 0 ? consumoMes : (consumoMes * costoU)} limite={limite} inicio={0} unidadBarra={tipoLimite === 0 ? "kwh" : "$"} />
+                                </div>
                                 :
                                 <div className="mb-4">
                                     <h6 id="noLimite" className="textoConsumo"><i id="alertIcono" className="feather icon-alert-circle mr-1" /> No has definido un limite</h6>
                                 </div>
 
                             }
-                            <h6 className="textoLimite">Determina tu nuevo limite:</h6>
+                            <h6 className="textoLimite mt-3">Determina tu nuevo limite:</h6>
                             <div className="custom-control custom-switch mt-3">
                                 <input type="checkbox" className="custom-control-input switch" id="customSwitch1" checked={selectKw} onChange={this._selectKw} />
                                 <label className="custom-control-label textoLimite" htmlFor="customSwitch1">Kilowatts por hora</label>
@@ -234,7 +357,7 @@ class consumoReal extends Component {
                                 <input type="checkbox" className="custom-control-input switch" id="customSwitch2" checked={!selectKw} onChange={this._selectKw} />
                                 <label className="custom-control-label textoLimite" htmlFor="customSwitch2">Pesos colombianos</label>
                             </div>
-                            <div className="input-group mb-3 fondo mt-2">
+                            <div className="input-group mb-3 fondo mt-3">
                                 <input type="number" className="form-control" value={miNuevoLimite} name='miNuevoLimite' placeholder="Cantidad" onChange={this._teclearFormulario} />
                             </div>
                             <Button className="mt-1 shadow-2 boton" onClick={this._cambiarLimite} variant="primary" size="sm">
@@ -244,16 +367,23 @@ class consumoReal extends Component {
                                 Eliminar limite
                             </Button>
                         </Card.Body>
-
                     </Card>
                 </Col>
-                <Col xl={12} lg={12} md={12} sm={12} xm={12}>
+                {/* HISTORIAL POR DIA */}
+                <Col xl={12} lg={12} md={12} sm={12} xm={12} className="mt-3">
                     {historial === "ERROR" ?
                         <div>Ha ocurrido un error.</div>
                         :
                         <Row>
                             <Col xl={12} lg={12} md={12} sm={12} xm={12} className="textoConsumo mb-4">
-                                <h3>Consumo actual | {fechaActual}</h3>
+                                <div className="mb-1" style={{justifyContent: "center", textAlign: "center"}}>
+                                    <div style={{display: "inline-block"}} className="" htmlFor="Input_FechaRegistro">
+                                        <h3>Consumo real para la fecha:</h3>
+                                    </div>
+                                    <div style={{display: "inline-block"}}>
+                                        <input className="form-control ml-3" type="Date" name="fecha" id="Input_FechaRegistro" value={fecha} onChange={this._teclearFormulario}/>
+                                    </div>
+                                </div>
                             </Col>
                             <Col xl={3} lg={12} md={12} sm={12} xm={12}>
                                 <Card className="cardParteDia">
@@ -330,11 +460,18 @@ class consumoReal extends Component {
 const mapStateToProps = (state) => {
     return {
         consumoMes: state.consumo.consumoMes,
-        costoU: state.consumo.costoU,
         limite: state.consumo.limite,
         tipoLimite: state.consumo.tipoLimite,
         usuario: state.autenticacion.usuario,
-        historial: state.consumo.historial
+        historialArray: state.consumo.historial,
+        consumoRealCargado: state.consumo.consumoRealCargado,
+        limiteCargado: state.consumo.limiteCargado,
+        historialCargado: state.consumo.historialCargado,
+        alertaCargada: state.consumo.alertaCargada,
+        sistemaCargado: state.sistema.sistemaCargado,
+        costoU: state.sistema.costoUnitario,
+        fechaConsumoInicial: state.sistema.fechaIniCorte,
+        fechaConsumoFinal: state.sistema.fechaFinCorte,
     }
 }
 

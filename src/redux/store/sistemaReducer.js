@@ -5,7 +5,10 @@ const initState = {
     variante: null,
     costoUnitario: 0,
     creadoCliente: false,
-    limpiarCampos: false
+    limpiarCampos: false,
+    fechaIniCorte: null,
+    fechaFinCorte: null,
+    sistemaCargado: false
 }
 
 const sistemaReducer = (state = initState, action) => {
@@ -53,7 +56,10 @@ const sistemaReducer = (state = initState, action) => {
         case 'COSTO_UNITARIO':
             return {
                 ...state,
-                costoUnitario: action.costoUnitario
+                costoUnitario: action.costoUnitario,
+                fechaIniCorte: action.fechaIniCorte,
+                fechaFinCorte: action.fechaFinCorte,
+                sistemaCargado: true
             };
         case 'CERRAR_SESION_USUARIO':
             return {
@@ -78,7 +84,10 @@ const sistemaReducer = (state = initState, action) => {
                 consultaLista: false,
                 mensaje: null,
                 variante: null,
-                costoUnitario: 0
+                costoUnitario: 0,
+                fechaIniCorte: null,
+                fechaFinCorte: null,
+                sistemaCargado: false
             };
         default:
             break;

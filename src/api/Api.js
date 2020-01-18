@@ -79,6 +79,9 @@ Api.actualizarContraseña = async (correo, contraseña) => {
 Api.consultarConsumoReal = async (correo) => {
     let consumoMes = 0;
     let costoU = 0;
+    let fechaConsumoInicial = null;
+    let fechaConsumoFinal = null;
+
     const resultado = await fetch(URLSERVER + '/consumo/' + correo, {
         credentials: 'include',
         headers: {
@@ -91,9 +94,32 @@ Api.consultarConsumoReal = async (correo) => {
     if (resultadoJson.estado) {
         consumoMes = resultadoJson.consumoMes.consumoMes;
         costoU = resultadoJson.costoU;
+        fechaConsumoInicial = resultadoJson.consumoMes.fechaInicialCorte;
+        fechaConsumoFinal = resultadoJson.consumoMes.fechaFinalCorte;
     }
 
-    return { consumoMes, costoU };
+    return { consumoMes, costoU, fechaConsumoInicial, fechaConsumoFinal };
+}
+
+Api.consultarAlerta = async (correo) => {
+
+    let Alerta = null;
+
+    const resultado = await fetch(URLSERVER + '/alerta/' + correo, {
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+
+    if(resultadoJson.estado){
+        Alerta = resultadoJson.alerta;
+    }
+
+    return Alerta;
 }
 
 Api.consultarLimite = async (correo) => {
@@ -175,7 +201,7 @@ Api.consultarHistorial = async (correo) => {
     if (resultadoJson.estado) {
         historial = resultadoJson.historial;
     }
-
+    
     return historial;
 }
 
@@ -352,7 +378,7 @@ Api.actualizarCostoUnitario = async (costoUnitario) => {
     });
 
     const resultadoJson = await resultado.json();
-
+    console.log(resultadoJson)
     if (resultadoJson.estado) {
         mensaje = "Costo unitario actualizado con exito.";
         variante = "success";
@@ -367,6 +393,9 @@ Api.actualizarCostoUnitario = async (costoUnitario) => {
 Api.consultarCostoUnitario = async () => {
 
     let costoUnitario = 0;
+    let fechaIniCorte = null;
+    let fechaFinCorte = null;
+    let estado = false;
 
     const resultado = await fetch(URLSERVER + "/sistema", {
         method: 'GET',
@@ -378,13 +407,50 @@ Api.consultarCostoUnitario = async () => {
     });
 
     const resultadoJson = await resultado.json();
+    
     if(resultadoJson.estado){
         if(resultadoJson.sistema){
             costoUnitario = resultadoJson.sistema.costoUnitario;
+            fechaIniCorte = resultadoJson.sistema.fechaInicialPeriodo;
+            fechaFinCorte = resultadoJson.sistema.fechaFinalPeriodo;
+            estado = true;
         }
     }
+    return {costoUnitario, fechaIniCorte, fechaFinCorte, estado};
+}
+
+Api.guardarFechaPeriodo = async (fechaIni, fechaFin) => {
+
+    const resultado = await fetch(URLSERVER + "/sistema/fechaPeriodo", {
+        method: 'POST',
+        credentials: "include",
+        body: JSON.stringify({ fechaIni, fechaFin }),
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
    
-    return costoUnitario;
+    return resultadoJson;
+}
+
+Api.guardarProxFechaPeriodo = async (fechaIni, fechaFin) => {
+
+    const resultado = await fetch(URLSERVER + "/sistema/fechaProxPeriodo", {
+        method: 'POST',
+        credentials: "include",
+        body: JSON.stringify({ fechaIni, fechaFin }),
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Accept': 'application/json'
+        }
+    });
+
+    const resultadoJson = await resultado.json();
+   
+    return resultadoJson;
 }
 
 Api.cerrarSesionUsuario = async (correo) => {
@@ -408,7 +474,7 @@ Api.cerrarSesionUsuario = async (correo) => {
         variante = "success";
     }else{
         mensaje = resultadoJson.mensaje;
-        variante = "warnin";
+        variante = "warning";
     }
     
     return {mensaje, variante};

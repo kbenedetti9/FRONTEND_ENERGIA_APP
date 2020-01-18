@@ -4,8 +4,8 @@ import Loadable from 'react-loadable';
 
 //Redux
 import { connect } from 'react-redux';
-import { autenticacionLista, cerrarSesion } from '../redux/acciones/autenticacionAcciones';
-import { consultarConsumoReal, consultarLimite, consultarHistorial } from '../redux/acciones/clienteAcciones';
+import { autenticacionLista, cerrarSesion, actualizarSocket } from '../redux/acciones/autenticacionAcciones';
+import { consultarConsumoReal, consultarLimite, consultarHistorial, consultarAlerta } from '../redux/acciones/clienteAcciones';
 import {obtenerListaClientes, consultarCostoUnitario} from '../redux/acciones/administradorAcciones';
 
 import Aux from './_Aux/_Aux';
@@ -34,6 +34,7 @@ const ConsumoReal = Loadable({ loader: () => import('./vistas/cliente/consumoRea
 const CambiarContraseña = Loadable({ loader: () => import('./vistas/cliente/CambiarContraseña'), loading: Cargando });
 const Historial = Loadable({ loader: () => import('./vistas/cliente/Historial'), loading: Cargando });
 const Ajustes = Loadable({ loader: () => import('./vistas/cliente/Ajustes'), loading: Cargando });
+const HistoricoAlertas = Loadable({ loader: () => import('./vistas/cliente/HistorialAlertas'), loading: Cargando });
 
 export class App extends Component {
 
@@ -50,9 +51,12 @@ export class App extends Component {
         this.props.consultarConsumoReal(respuesta.usuario.correo);
         this.props.consultarLimite(respuesta.usuario.correo);
         this.props.consultarHistorial(respuesta.usuario.correo);
+        this.props.actualizarSocket(respuesta.usuario.correo);
+        this.props.consultarAlerta(respuesta.usuario.correo);
+        this.props.consultarSistema();
       }else{
         this.props.obtenerListaClientes();
-        this.props.consultarCostoUnitario();
+        // this.props.consultarCostoUnitario();
       }
       this.props.autenticacionLista(respuesta.usuario, respuesta.admin);
     } else {
@@ -82,7 +86,7 @@ export class App extends Component {
               </Switch>
               :
               <Aux>
-                <Menu admin={admin} usuario={usuario} />
+                <Menu admin={admin} usuario={usuario} cerrarSesion={this.props.cerrarSesion} correo={usuario.correo} />
                 <Navbar cerrarSesion={this.props.cerrarSesion} admin={admin} correo={usuario.correo} nombre={usuario.nombre} ocultarMenu={this.ocultarMenu} />
                 <div className="pcoded-main-container" onClick={this.ocultarMenu}>
                   <div className="pcoded-wrapper">
@@ -99,6 +103,7 @@ export class App extends Component {
                               <Route exact path="/App/consumoReal" component={ConsumoReal} />
                               <Route exact path="/App/historial" render={() => <Historial usuario={usuario} />} />
                               <Route exact path="/App/ajustes" component={Ajustes} />
+                              <Route exact path="/App/alertas" component={HistoricoAlertas} />
                               <Route path="/" render={() => <Redirect to='/App/consumoReal' />} />
                             </Switch>
                           }
@@ -140,8 +145,10 @@ const mapDispatchToProps = (dispatch) => {
     consultarConsumoReal: (correo) => { dispatch(consultarConsumoReal(correo)) },
     consultarLimite: (correo) => {dispatch(consultarLimite(correo))},
     obtenerListaClientes: () => dispatch(obtenerListaClientes()),
-    consultarCostoUnitario: () => dispatch(consultarCostoUnitario()),
-    consultarHistorial: (correo) => dispatch(consultarHistorial(correo))
+    consultarSistema: () => dispatch(consultarCostoUnitario()),
+    consultarHistorial: (correo) => dispatch(consultarHistorial(correo)),
+    actualizarSocket: (correo) => dispatch(actualizarSocket(correo)),
+    consultarAlerta: (correo) => dispatch(consultarAlerta(correo))
   }
 }
 

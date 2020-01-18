@@ -10,6 +10,19 @@ function onDenied() {
     console.log("Rechazada")
 }
 
+const imprimirNotificacion = (notificacion, simbol) => {
+
+    const body = simbol === "$" ? `Limite definido: $${notificacion.limite}. \nConsumo actual: ${notificacion.consumo} kw/h. \nCosto: $${notificacion.costo}.` : `Limite definido: ${notificacion.limite} kw/h. \nConsumo actual: ${notificacion.consumo} kw/h. \nCosto: $${notificacion.costo}.`;
+
+    Push.create(`${notificacion.mensaje} establecido.`, {
+        body,
+        timeout: 40000,
+        onClick: function () {
+            console.log(this);
+        }
+    });
+}
+
 export const iniciarSesion = (credenciales) => {
     return (dispatch, getState, Api) => {
         dispatch({ type: 'INICIANDO_SESION' });
@@ -22,11 +35,11 @@ export const iniciarSesion = (credenciales) => {
                     }).catch((error) => {
                         console.log(error);
                     });
-                    Api.consultarCostoUnitario().then((costoUnitario) => {
-                        dispatch({ type: "COSTO_UNITARIO", costoUnitario })
-                    }).catch((error) => {
-                        console.log(error);
-                    });
+                    // Api.consultarCostoUnitario().then((respuestasistema) => {
+                    //     dispatch({ type: "COSTO_UNITARIO", costoUnitario: respuestasistema.costoUnitario, fechaIniCorte: respuestasistema.fechaIniCorte, fechaFinCorte: respuestasistema.fechaFinCorte });
+                    // }).catch((error) => {
+                    //     console.log(error);
+                    // });
                     dispatch({ type: 'INICIANDO_SESION_FIN' });
                 } else {
                     const socket = socketIOClient(URLSERVER);
@@ -41,58 +54,69 @@ export const iniciarSesion = (credenciales) => {
 
                             socket.on('consumoReal', (objeto) => {
                                 console.log(objeto);
-                                dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.ultimoConsumo });
+                               
+                                dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.ConsumoReal.consumoMes, fechaConsumoInicial: objeto.ConsumoReal.fechaInicialCorte, fechaConsumoFinal: objeto.ConsumoReal.fechaFinalCorte });
+
                                 dispatch({ type: 'COSTO_U', costoU: objeto.costoU });
+
                                 Api.consultarHistorial(resultado.usuario.correo).then((respuesta) => {
                                     if (respuesta.length > 0) {
-                                        dispatch({ type: 'ULTIMO_HISTORIAL', historial: respuesta[respuesta.length - 1] });
+                                        dispatch({ type: 'HISTORIAL', historial: respuesta });
                                     } else {
-                                        dispatch({ type: 'ULTIMO_HISTORIAL', historial: null });
+                                        dispatch({ type: 'HISTORIAL', historial: null });
                                     }
-                                }).catch((error)=>{
-                                    dispatch({ type: 'ULTIMO_HISTORIAL_ERROR', error: error });
+                                }).catch((error) => {
+                                    dispatch({ type: 'HISTORIAL_ERROR', error: error });
+                                });
+
+                                Api.consultarAlerta(resultado.usuario.correo).then((respuesta) => {
+                                    dispatch({ type: 'ALERTA', Alerta: respuesta, consultaAlerta: true });
+                                }).catch((error) => {
+                                    dispatch({ type: 'ALERTA_ERROR', error: error, consultaAlerta: true });
                                 });
                             });
 
                             socket.on('limiteKwh', (notificacion) => {
-                                Push.create(notificacion.mensaje, {
-                                    body: "Limite: " + notificacion.limite + "/nConsumo: " + notificacion.consumo + "/nCosto: " + notificacion.costo,
-                                    timeout: 10000,
-                                    onClick: function () {
-                                        console.log(this);
-                                    }
-                                });
+                                imprimirNotificacion(notificacion, "kw/h");
                             });
 
                             socket.on('limiteCosto', (notificacion) => {
-                                Push.create(notificacion.mensaje, {
-                                    body: "Limite: " + notificacion.limite + "/nConsumo: " + notificacion.consumo + "/nCosto: " + notificacion.costo,
-                                    timeout: 10000,
-                                    onClick: function () {
-                                        console.log(this);
-                                    }
-                                });
+                                imprimirNotificacion(notificacion, "$");
                             });
 
                             Api.consultarConsumoReal(resultado.usuario.correo).then((respuesta) => {
-                                dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes });
+                                dispatch({ type: 'CONSUMO_REAL', consumoMes: respuesta.consumoMes, fechaConsumoInicial: respuesta.fechaConsumoInicial, fechaConsumoFinal: respuesta.fechaConsumoFinal });
                                 dispatch({ type: 'COSTO_U', costoU: respuesta.costoU });
                             }).catch((error) => {
                                 console.log(error);
                             });
+
                             Api.consultarLimite(resultado.usuario.correo).then((respuesta) => {
                                 dispatch({ type: 'LIMITE', limite: respuesta.limite, tipoLimite: respuesta.tipoLimite });
                             }).catch((error) => {
                                 console.log(error);
                             });
+
                             Api.consultarHistorial(resultado.usuario.correo).then((respuesta) => {
                                 if (respuesta.length > 0) {
-                                    dispatch({ type: 'ULTIMO_HISTORIAL', historial: respuesta[respuesta.length - 1] });
+                                    dispatch({ type: 'HISTORIAL', historial: respuesta });
                                 } else {
-                                    dispatch({ type: 'ULTIMO_HISTORIAL', historial: null });
+                                    dispatch({ type: 'HISTORIAL', historial: null });
                                 }
-                            }).catch((error)=>{
-                                dispatch({ type: 'ULTIMO_HISTORIAL_ERROR', error: error });
+                            }).catch((error) => {
+                                dispatch({ type: 'HISTORIAL_ERROR', error: error });
+                            });
+
+                            Api.consultarAlerta(resultado.usuario.correo).then((respuesta) => {
+                                dispatch({ type: 'ALERTA', Alerta: respuesta, consultaAlerta: true });
+                            }).catch((error) => {
+                                dispatch({ type: 'ALERTA_ERROR', error: error, consultaAlerta: true });
+                            });
+
+                            Api.consultarCostoUnitario().then((respuestasistema)=>{
+                                dispatch({ type: "COSTO_UNITARIO", costoUnitario: respuestasistema.costoUnitario, fechaIniCorte: respuestasistema.fechaIniCorte, fechaFinCorte: respuestasistema.fechaFinCorte })
+                            }).catch((error) => {
+                                console.log(error);
                             });
 
                             dispatch({ type: 'INICIANDO_SESION_FIN' });
@@ -107,6 +131,46 @@ export const iniciarSesion = (credenciales) => {
         }).catch((error) => {
             dispatch({ type: 'INICIAR_SESION_ERROR', error });
             dispatch({ type: 'INICIANDO_SESION_FIN' });
+        });
+    }
+}
+
+export const actualizarSocket = (correo) => {
+    return (dispatch, getState, Api) => {
+        const socket = socketIOClient(URLSERVER);
+        socket.emit('actualizarSocket', correo);
+        socket.on('recibido', () => {
+            socket.on('consumoReal', (objeto) => {
+                console.log(objeto);
+                
+                dispatch({ type: 'CONSUMO_REAL', consumoMes: objeto.ConsumoReal.consumoMes, fechaConsumoInicial: objeto.ConsumoReal.fechaInicialCorte, fechaConsumoFinal: objeto.ConsumoReal.fechaFinalCorte });
+                
+                dispatch({ type: 'COSTO_U', costoU: objeto.costoU });
+                
+                Api.consultarHistorial(correo).then((respuesta) => {
+                    if (respuesta.length > 0) {
+                        dispatch({ type: 'HISTORIAL', historial: respuesta });
+                    } else {
+                        dispatch({ type: 'HISTORIAL', historial: null });
+                    }
+                }).catch((error) => {
+                    dispatch({ type: 'HISTORIAL_ERROR', error: error });
+                });
+
+                Api.consultarAlerta(correo).then((respuesta) => {
+                    dispatch({ type: 'ALERTA', Alerta: respuesta, consultaAlerta: true });
+                }).catch((error) => {
+                    dispatch({ type: 'ALERTA_ERROR', error: error, consultaAlerta: true });
+                });
+            });
+
+            socket.on('limiteKwh', (notificacion) => {
+                imprimirNotificacion(notificacion, "kw/h");
+            });
+
+            socket.on('limiteCosto', (notificacion) => {
+                imprimirNotificacion(notificacion, "$");
+            });
         });
     }
 }
@@ -139,7 +203,7 @@ export const cerrarSesion = (correo, admin) => {
                     });
                 }
             }
-        }).catch((error)=>{
+        }).catch((error) => {
             dispatch({ type: 'CERRANDO_SESION_FIN' });
         });
     }

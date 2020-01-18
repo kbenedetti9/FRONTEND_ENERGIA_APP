@@ -4,7 +4,7 @@ class PDFService {
     createPdf = (html) => {
         savePDF(html, {
             paperSize: 'letter',
-            fileName: 'form.pdf',
+            fileName: 'Reporte.pdf',
             margin: { top: '2cm', left: '1.5cm', right: '1.5cm', bottom: '2cm' },
             scale: 0.7,
         })
