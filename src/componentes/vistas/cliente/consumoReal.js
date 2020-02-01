@@ -287,14 +287,14 @@ class consumoReal extends Component {
                         <Card.Body>
                             <Row className="container" style={{ marginBottom: "50px", marginTop: "20px" }}>
                                 <Col id="linea" style={{ textAlign: 'center' }}>
-                                    <i id="boltIcono" className="fas fa-bolt"></i>
+                                    <i id="boltIcono" className="fas fa-bolt" title="ConsumoKwh"></i>
                                     <h3 className="textoConsumo mt-3">Consumo actual del período</h3>
                                     <p className="textoConsumo info">{nombreMes}</p>
                                     <h2 className="valor">{consumoMes}<span id="unidad" className="textoConsumo">Kw/h</span> </h2>
                                 </Col>
 
                                 <Col style={{ textAlign: 'center' }}>
-                                    <i id="moneyIcono" className="fas fa-coins"></i>
+                                    <i id="moneyIcono" className="fas fa-coins" title="ConsumoDinero"></i>
                                     <h3 className="textoConsumo mt-3">Costo actual del período</h3>
                                     <p className="textoConsumo info" >Costo unitario: ${costoU}</p>
 
