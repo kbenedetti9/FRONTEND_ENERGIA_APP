@@ -296,7 +296,7 @@ class consumoReal extends Component {
                                 <Col style={{ textAlign: 'center' }}>
                                     <i id="moneyIcono" className="fas fa-coins" title="ConsumoDinero"></i>
                                     <h3 className="textoConsumo mt-3">Costo actual del período</h3>
-                                    <p className="textoConsumo info" >Costo unitario: ${costoU}</p>
+                                    <p className="textoConsumo info" >Costo por kw/h: ${costoU}</p>
 
                                     <h2 className="valor" id="costoKw">
                                         <i id="dollarIcono" className="fas fa-dollar-sign"></i>
