@@ -10,6 +10,7 @@ import imgMañana from '../../../asset/images/Mañana.png';
 import imgTarde from '../../../asset/images/Tarde.png';
 import Cargando from '../../cargando/cargando';
 import BarraEstado from './BarraEstado'
+import GraficaPromedio from './GraficaPromedio';
 
 class consumoReal extends Component {
 
@@ -245,6 +246,7 @@ class consumoReal extends Component {
 
         const { consumoMes, limite, tipoLimite, fechaConsumoInicial, fechaConsumoFinal, usuario, consumoRealCargado, limiteCargado, historialCargado, alertaCargada, sistemaCargado } = this.props;//tipolimite 1 = peso, 0 = kw
         const { selectKw, miNuevoLimite, mensaje, fecha } = this.state;
+        
         let { costoU } = this.props;
         let { historialArray } = this.props;
         let nombreMes = "--";
@@ -256,7 +258,7 @@ class consumoReal extends Component {
             return <Cargando />;
         }
         
-        let historial = historialArray ? this._getHistorial(fecha, historialArray) : null;
+        let historial = historialArray ? this._getHistorial(fecha, historialArray) : null;       
 
         if (fechaConsumoInicial && fechaConsumoFinal) {
             nombreMes = this._obtenerNombrePeriodo(fechaConsumoInicial, fechaConsumoFinal);
@@ -451,6 +453,11 @@ class consumoReal extends Component {
                             </Col>
                         </Row>
                     }
+                </Col>
+                {/* GRÁFICA DE HISTORIAL ACTUAL */}
+                <Col xl={12} lg={12} md={12} sm={12} xm={12} className="mt-3">
+                    {historialArray && historialArray.length > 0 && <h3 className="textoConsumo mt-3" style={{textAlign: 'center'}} >Historico del período actual</h3>}
+                    {historialArray && historialArray.length > 0 && <GraficaPromedio historial={historialArray} fechaConsumoInicial={fechaConsumoInicial} fechaConsumoFinal={fechaConsumoFinal} />}
                 </Col>
             </Row>
         )

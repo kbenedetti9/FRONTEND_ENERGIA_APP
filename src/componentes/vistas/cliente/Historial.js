@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { Card, Row, Col, Button, Table } from 'react-bootstrap';
+import { _sumarDiasFecha, _castearFechaServerToFront, _castearFechaFrontToServer } from '../functions';
+import HistorialDia from '../../VentanaModal/HistorialDia';
 import Api from '../../../api/Api';
 import Cargando from '../../cargando/cargando';
 import Chart from 'chart.js';
 import Pdf from '../../pdf/PDFService';
 import Excel from '../../Excel/Excel';
 import '../cliente/Historial.css';
+
+
 let obj = [];
 let grafica = null;
 let mesSeleccionado = null;
@@ -19,7 +23,9 @@ class Historial extends Component {
         historial: [],
         mostrarGrafica: false,
         mostratDatosReporte: false,
-        dataGrafica: null
+        dataGrafica: null,
+        historialDiaFecha: null,
+        historialDiaEstado: false
     }
 
     _obtenerNombrePeriodo = (mes, diaIni, diaFin) => {
@@ -102,21 +108,44 @@ class Historial extends Component {
                             display: true,
                             labelString: 'DÍAS DEL PERÍODO'
                         }
-                        
+
                     }]
                 },
                 responsive: true
             }
         });
+
+        ctx.onclick = evento => {
+
+            const activePoints = grafica.getElementsAtEvent(evento);
+            if (activePoints && activePoints.length > 0) {
+                // const barra = activePoints[0]._model;
+                // const diaHistorial = barra.label;
+                const fechaHistorial = data.fechaInicio;
+                const indexHistorial = activePoints[0]._index;
+                const fechaBuscar = _castearFechaFrontToServer(_sumarDiasFecha(_castearFechaServerToFront(fechaHistorial), indexHistorial + 1));
+                this.setState({
+                    historialDiaFecha: fechaBuscar,
+                    historialDiaEstado: true
+                });
+            }
+        }
+    }
+
+    _ocultarHistorialDia = () => {
+        this.setState({
+            historialDiaFecha: null,
+            historialDiaEstado: false
+        });
     }
 
     _getDiferenciaFechas = (fecha_1, fecha_2) => {
         let fechaInicio = new Date(fecha_1).getTime();
-        let fechaFin    = new Date(fecha_2).getTime();
+        let fechaFin = new Date(fecha_2).getTime();
 
         let diff = fechaInicio - fechaFin;
 
-        return diff/(1000*60*60*24);
+        return diff / (1000 * 60 * 60 * 24);
     }
 
     _obtenerHistorialMes = (evento, reporte, periodo, objMes) => {
@@ -142,7 +171,7 @@ class Historial extends Component {
 
         let labels = [];
         let contador = parseInt(objMes.diaIni);//objMes.diaIni  diaFin
-        let nombrePeriodo = this.state.arrayNMes[objMes.fechaIni.split("/")[0]-1];
+        let nombrePeriodo = this.state.arrayNMes[objMes.fechaIni.split("/")[0] - 1];
         nombrePeriodo = nombrePeriodo.toUpperCase();
         let parar = false;
         while (parar === false) {
@@ -276,7 +305,7 @@ class Historial extends Component {
     }
 
     render() {
-        const { datosTabla, arrayNMes, mostrarGrafica, mostratDatosReporte, dataGrafica } = this.state;
+        const { datosTabla, arrayNMes, mostrarGrafica, mostratDatosReporte, dataGrafica, historialDiaFecha, historial, historialDiaEstado } = this.state;
         const { usuario } = this.props;
 
         if (datosTabla && datosTabla.length === 0) {
@@ -290,6 +319,8 @@ class Historial extends Component {
         return (
 
             <Card>
+                {historialDiaFecha && <HistorialDia fecha={historialDiaFecha} historial={historial} estado={historialDiaEstado} ocultarVentana={this._ocultarHistorialDia} /> }
+                
                 <Card.Header id="historialTitulo" className="textoHistorial">
 
                     Mi historial
@@ -297,7 +328,7 @@ class Historial extends Component {
 
                 </Card.Header>
                 <Card.Body className="container">
-                    
+
                     {!mostrarGrafica ?
                         <Table responsive hover width="100%">
                             <thead id="encabezadoTabla" style={{ textAlign: 'center' }}>

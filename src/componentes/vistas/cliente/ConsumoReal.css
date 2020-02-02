@@ -152,6 +152,13 @@ font-size:30px;
     height: 100%;
 }
 
+.chart-container-dia {
+    position: relative;
+    margin: auto;
+    height: 50vh;
+    width: 55vw;
+  }
+
 /* Extra small devices (portrait phones, less than 576px) */
 @media (max-width: 575.98px) { 
     #linea{
@@ -176,6 +183,12 @@ font-size:30px;
     #costoKw{
         font-size:30px;
     } 
+    .chart-container{
+        position: relative;
+        margin: auto;
+        height: 40vh;
+        width: 75vw;
+    }
     /* .valorParteDia{
         font-size:60px;
     }
@@ -188,6 +201,12 @@ font-size:30px;
 @media (min-width: 768px) and (max-width: 991.98px) { 
     #linea{
         border-right: none ;
+    }
+    .chart-container{
+        position: relative;
+        margin: auto;
+        height: 40vh;
+        width: 85vw;
     }
     /* .valorParteDia{
         font-size:60px;
@@ -202,6 +221,12 @@ font-size:30px;
     #linea{
         border-right: none ;
     }
+    .chart-container{
+        position: relative;
+        margin: auto;
+        height: 30vh;
+        width: 60vw;
+    }
     /* .valorParteDia{
         font-size:60px;
     }
@@ -211,6 +236,12 @@ font-size:30px;
  }
 
  @media (min-width: 1200px) and (max-width: 1580px){
+    .chart-container{
+        position: relative;
+        margin: auto;
+        height: 45vh;
+        width: 65vw;
+    }
     /* .valorParteDia{
         font-size:30px;
     }
